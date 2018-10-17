@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.TOrderMapper">
+
+    <select id="getNameById" resultType="String">
+        select CLIENTNAME_ from
+        t_order where ID_=#{id}
+    </select>
+
+    <select id="getNameList" resultType="String">
+        select CLIENTNAME_ from
+        t_order
+    </select>
+
+    <select id="getList" resultType="TOrder" parameterType="TOrder">
+        select ID_ orderId,CLIENTNAME_ clientname from t_order t
+        <where>
+
+        </where>
+    </select>
+
+    <select id="getListCount" resultType="int" parameterType="TOrder">
+        select count(1) from t_order t
+    </select>
+
+    <select id="getTOrderList" resultType="TOrder" parameterType="TOrder">
+        select ID_ orderId,CLIENTNAME_ clientname from t_order t
+        <where>
+            <if test="clientname !=null and clientname.length()!=0 ">
+                AND t.AMOUNT_ = #{clientname}
+            </if>
+            <if test="_databaseId == 'oracle'">
+                and CLIENTNAME_ = 'oracle'
+            </if>
+            <if test="_databaseId == 'mysql'">
+                and CLIENTNAME_ = 'mysql'
+            </if>
+        </where>
+    </select>
+
+    <select id="getTOrderList" resultType="TOrder" databaseId="mysql">
+        select ID_ orderId,CLIENTNAME_ clientname from t_order t
+        <where>
+            <if test="clientname !=null and clientname.length()!=0 ">
+                AND t.AMOUNT_ = #{clientname} and 2
+            </if>
+            <if test="testName !=null and testName.length()!=0 ">
+                AND t.CLIENTNAME_ like '%${testName}%' and 2
+            </if>
+
+        </where>
+    </select>
+
+    <select id="getTOrderList" resultType="TOrder" databaseId="oracle">
+        select ID_ orderId,CLIENTNAME_ clientname from t_order t
+        <where>
+            <if test="clientname !=null and clientname.length()!=0 ">
+                AND t.AMOUNT_ = #{clientname} and 3
+            </if>
+            <if test="testName !=null and testName.length()!=0 ">
+                AND t.CLIENTNAME_ like '%${testName}%' and 3
+            </if>
+            or 1
+        </where>
+    </select>
+
+    <select id="getTOrderListBySql" resultType="TOrder"
+        parameterType="java.util.Map">
+        select ID_ orderId,CLIENTNAME_ clientname from t_order t
+        <where>
+            CLIENTNAME_ = #{testName} 
+            and CLIENTNAME_ = #{testName} 
+            and CLIENTNAME_ = #{submap.subTestname} 
+            and CLIENTNAME_ = '${submap.subTestname}'
+            and ${suborder.testSubSql} 
+            and CLIENTNAME_ = '${suborder.testName}' 
+            and CLIENTNAME_ in 
+           <foreach item="item" index="index" collection="testName22"
+              open="(" separator="," close=")">
+                '${item}'
+          </foreach>
+
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into T_ORDER (AMOUNT_, CLIENTNAME_) values
+        (#{amount}, #{clientname})
+    </insert>
+
+    <update id="update" parameterType="TOrder">
+        UPDATE t_order
+        SET
+        CLIENTNAME_ = #{clientname}
+    </update>
+
+    <delete id="delete" parameterType="TOrder">
+        DELETE FROM t_order
+        WHERE
+        ID_=#{orderId}
+    </delete>
+
+</mapper>

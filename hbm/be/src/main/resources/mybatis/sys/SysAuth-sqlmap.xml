@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysAuthMapper">
+
+    <!-- result map -->
+    <resultMap type="SysAuth" id="sysAuthMap">
+        <id property="authId" column="authId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="authCode" column="authCode" />
+        <result property="authName" column="authName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="modelId" column="modelId" />
+        <result property="authCategory" column="authCategory" />
+        <result property="operationId" column="operationId" />
+        <result property="isInheritable" column="isInheritable" />
+        <result property="style" column="style" />
+        <result property="bsStyle" column="bsStyle" />
+        <result property="uri" column="uri" />
+        <result property="sortNo" column="sortNo" />
+        <result property="isVisible" column="isVisible" />
+        <result property="tip" column="tip" />
+        <result property="descr" column="descr"/>
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <result property="iconId" column="iconId" />
+        <result property="isPublic" column="isPublic" />
+        <association property="sysIcon" column="iconId" select="com.hginfo.hbm.be.mapper.sys.SysIconMapper.getById" />
+        <association property="sysModel" column="modelId" select="com.hginfo.hbm.be.mapper.sys.SysModelMapper.getById" />
+        <association property="sysOperation" column="operationId" select="com.hginfo.hbm.be.mapper.sys.SysOperationMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_AUTH_COLUMN">
+        sa.AUTH_ID_ authId,
+        sa.TENANT_ID_ tenantId,
+        sa.AUTH_CODE_ authCode,
+        sa.AUTH_NAME_ authName,
+        sa.ENG_NAME_ engName,
+        sa.I18N_CODE_ i18nCode,
+        sa.MODEL_ID_ modelId,
+        sa.AUTH_CATEGORY_ authCategory,
+        sa.OPERATION_ID_ operationId,
+        sa.IS_INHERITABLE_ isInheritable,
+        sa.STYLE_ style,
+        sa.BS_STYLE_ bsStyle,
+        sa.URI_ uri,
+        sa.SORT_NO_ sortNo,
+        sa.IS_VISIBLE_ isVisible,
+        sa.TIP_ tip,
+        <if test="_databaseId == 'oracle'">
+            to_char(sa.DESCR_) descr,
+        </if>
+        <if test="_databaseId == 'mysql'">
+            sa.DESCR_ descr,
+        </if>
+        sa.IS_DELETE_ isDelete,
+        sa.IS_FINAL_ isFinal,
+        sa.CRT_TIME_ crtTime,
+        sa.UPD_TIME_ updTime,
+        sa.CRT_USER_ID_ crtUserId,
+        sa.UPD_USER_ID_ updUserId,
+        sa.ICON_ID_ iconId,
+        sa.IS_PUBLIC isPublic
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_AUTH_WHERE">
+        <if test="authId != null">
+            AND sa.AUTH_ID_ = #{authId}
+        </if>
+        <if test="tenantId != null">
+            AND sa.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="authCode != null and authCode.length() != 0">
+            AND sa.AUTH_CODE_ = #{authCode}
+        </if>
+        <if test="authCodeLike != null and authCodeLike.length() != 0">
+            AND sa.AUTH_CODE_ LIKE '%${authCodeLike}%'
+        </if>
+        <if test="authName != null and authName.length() != 0">
+            AND sa.AUTH_NAME_ LIKE CONCAT(CONCAT('%',#{authName}),'%') 
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sa.ENG_NAME_ LIKE CONCAT(CONCAT('%',#{engName}),'%')
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sa.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="modelId != null">
+            AND sa.MODEL_ID_ = #{modelId}
+        </if>
+        <if test="authCategory != null">
+            AND sa.AUTH_CATEGORY_ = #{authCategory}
+        </if>
+        <if test="operationId != null">
+            AND sa.OPERATION_ID_ = #{operationId}
+        </if>
+        <if test="isInheritable != null">
+            AND sa.IS_INHERITABLE_ = #{isInheritable}
+        </if>
+        <if test="style != null and style.length() != 0">
+            AND sa.STYLE_ = #{style}
+        </if>
+        <if test="bsStyle != null and bsStyle.length() != 0">
+            AND sa.BS_STYLE_ = #{bsStyle}
+        </if>
+        <if test="uri != null and uri.length() != 0">
+            AND sa.URI_ = #{uri}
+        </if>
+        <if test="uriLike != null and uriLike.length() != 0">
+            AND sa.URI_ LIKE  '%${uriLike}%'
+        </if>
+        <if test="sortNo != null">
+            AND sa.SORT_NO_ = #{sortNo}
+        </if>
+        <if test="isVisible != null">
+            AND sa.IS_VISIBLE_ = #{isVisible}
+        </if>
+        <if test="tip != null and tip.length() != 0">
+            AND sa.TIP_ LIKE '%${tip}%'
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            <if test="_databaseId == 'oracle'">
+                AND to_char(sa.DESCR_) LIKE '%${descr}%'
+            </if>
+            <if test="_databaseId == 'mysql'">
+                AND sa.DESCR_ LIKE '%${descr}%'
+            </if>
+        </if>
+        <if test="isDelete != null">
+            AND sa.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sa.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sa.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sa.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sa.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sa.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="iconId != null">
+            AND sa.ICON_ID_ = #{iconId}
+        </if>
+        <if test="isPublic != null">
+            AND sa.IS_PUBLIC = #{isPublic}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysAuthMap">
+        select <include  refid="SQL_SYS_AUTH_COLUMN" />
+        from SYS_AUTH sa
+        <where>
+            sa.AUTH_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysAuth" resultType="sysAuth">
+        select <include  refid="SQL_SYS_AUTH_COLUMN"/>
+        from SYS_AUTH sa
+        <where>
+            <include  refid="SQL_SYS_AUTH_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sa.AUTH_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysAuth" resultType="int">
+        select count(
+            sa.AUTH_ID_
+        ) as counts
+        from SYS_AUTH sa
+        <where>
+            <include  refid="SQL_SYS_AUTH_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysAuth" resultType="int">
+        select count(
+            sa.AUTH_ID_
+        ) as counts
+        from SYS_AUTH sa
+        <where>
+            <if test="authId != null">
+                AND sa.AUTH_ID_ != #{authId}
+            </if>
+            <if test="tenantId != null">
+                AND sa.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="authCode != null and authCode.length() != 0">
+                AND sa.AUTH_CODE_ = #{authCode}
+            </if>
+            <if test="authName != null and authName.length() != 0">
+                AND sa.AUTH_NAME_ = #{authName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sa.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sa.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="modelId != null">
+                AND sa.MODEL_ID_ = #{modelId}
+            </if>
+            <if test="authCategory != null">
+                AND sa.AUTH_CATEGORY_ = #{authCategory}
+            </if>
+            <if test="operationId != null">
+                AND sa.OPERATION_ID_ = #{operationId}
+            </if>
+            <if test="isInheritable != null">
+                AND sa.IS_INHERITABLE_ = #{isInheritable}
+            </if>
+            <if test="style != null and style.length() != 0">
+                AND sa.STYLE_ = #{style}
+            </if>
+            <if test="bsStyle != null and bsStyle.length() != 0">
+                AND sa.BS_STYLE_ = #{bsStyle}
+            </if>
+            <if test="uri != null and uri.length() != 0">
+                AND sa.URI_ = #{uri}
+            </if>
+            <if test="sortNo != null">
+                AND sa.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="isVisible != null">
+                AND sa.IS_VISIBLE_ = #{isVisible}
+            </if>
+            <if test="tip != null and tip.length() != 0">
+                AND sa.TIP_ = #{tip}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sa.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sa.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sa.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sa.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sa.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sa.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sa.UPD_USER_ID_ = #{updUserId}
+            </if>
+            <if test="iconId != null">
+                AND sa.ICON_ID_ = #{iconId}
+            </if>
+            <if test="isPublic != null">
+                AND sa.IS_PUBLIC = #{isPublic}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 获取权限的公共子sql -->
+    <sql id="GETALLSYSAUTHBYUSERID_EXISTSSQL">
+        SELECT
+            SRA.AUTH_ID_
+        FROM
+            SYS_ROLE_AUTH SRA
+        WHERE
+            SRA.ROLE_ID_ IN (
+                SELECT
+                    SUR.ROLE_ID_
+                FROM
+                    SYS_USER_ROLE SUR
+                WHERE
+                    SUR.USER_ID_ = #{userId}
+            )
+        UNION
+            SELECT
+                SUA.AUTH_ID_
+            FROM
+                SYS_USER_AUTH SUA
+            WHERE
+                SUA.USER_ID_ = #{userId}
+            AND SUA.AUTH_TYPE_ = 1
+        UNION
+            SELECT
+                SAI.AUTH_ID_
+            FROM
+                SYS_AUTH SAI
+            WHERE
+                SAI.IS_PUBLIC = 0
+    </sql>
+
+    <select id="getAllSysAuthByUserId" resultType="SysAuth">
+        SELECT <include  refid="SQL_SYS_AUTH_COLUMN"/>
+        FROM
+            SYS_AUTH sa
+        WHERE
+            sa.IS_DELETE_ = 0 
+            <!-- 1:查询所有权限(包括附属权限)  null/其他：查询主权限 -->
+            <if test="type == null or type != 1">
+                and sa.AUTH_CATEGORY_ = 1
+            </if>
+            AND
+            (
+                EXISTS (
+                    SELECT
+                        1
+                    FROM (
+                        <include  refid="GETALLSYSAUTHBYUSERID_EXISTSSQL"/>
+                    ) ZSQ_MAIN
+                    WHERE
+                        ZSQ_MAIN.AUTH_ID_ = sa.AUTH_ID_
+                )
+                <!-- 1:查询所有权限(包括附属权限)  null/其他：查询主权限 -->
+                <if test="type != null and type == 1">
+                    OR
+                    EXISTS (
+                        SELECT
+                            1
+                        FROM
+                            sys_auth_join SAJ_ATTACH
+                        WHERE
+                            sa.AUTH_ID_ = SAJ_ATTACH.ATTACH_AUTH_ID_
+                        AND EXISTS (
+                            SELECT
+                                1
+                            FROM (
+                                <include  refid="GETALLSYSAUTHBYUSERID_EXISTSSQL"/>
+                            ) ZSQ_ATTACH
+                            WHERE
+                                ZSQ_ATTACH.AUTH_ID_ = SAJ_ATTACH.MAIN_AUTH_ID_
+                        )
+                    )
+                </if>
+            
+            )
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                SYS_USER_AUTH SUA
+            WHERE
+                SUA.USER_ID_ = #{userId}
+            AND SUA.AUTH_TYPE_ = - 1
+            AND SUA.AUTH_ID_ = sa.AUTH_ID_
+        )
+    </select>
+    
+    <select id="getAllSysAuthAndModel" parameterType="Integer" resultType="SysAuth" >
+    SELECT sma.authId,sma.authName,sma.authShowType,sma.authCode,sma.engName,sma.i18nCode,sma.iconId,sma.style,sma.uri,sma.sortNo,sma.tip,sma.descr,sma.isTopMenu,sma.isSubMenu,sma.isBsTopMenu,sma.isBsSubMenu,sma.fid,sma.isFinal from (
+    SELECT
+        sa.AUTH_ID_ authId,
+        sa.AUTH_NAME_ authName,
+        2 authShowType,
+        sa.AUTH_CODE_ authCode,
+        sa.ENG_NAME_ engName,
+        sa.I18N_CODE_ i18nCode,
+        sa.ICON_ID_ iconId,
+        sa.STYLE_ style,
+        sa.BS_STYLE_ bsStyle,
+        sa.URI_ uri,
+        sa.SORT_NO_ sortNo,
+        sa.TIP_ tip,
+        <if test="_databaseId == 'oracle'">
+            to_char(sa.DESCR_) descr,
+        </if>
+        <if test="_databaseId == 'mysql'">
+            sa.DESCR_ descr,
+        </if>
+        null isTopMenu,
+        null isSubMenu,
+        null isBsTopMenu,
+        null isBsSubMenu,
+        sa.MODEL_ID_ fid,
+        sa.IS_FINAL_ isFinal
+    FROM
+        SYS_AUTH sa
+    WHERE sa.IS_DELETE_ = 0
+        <if test="category != null">
+            and sa.AUTH_CATEGORY_ = #{category}
+        </if>
+    UNION    
+    SELECT
+        sml.MODEL_ID_ authId,
+        sml.MODEL_NAME_ authName,
+        1 authShowType,
+        sml.MODEL_CODE_ authCode,
+        sml.ENG_NAME_ engName,
+        sml.I18N_CODE_ i18nCode,
+        sml.ICON_ID_ iconId,
+        sml.STYLE_ style,
+        sml.BS_STYLE_ bsStyle,
+        sml.URI_ uri,
+        sml.SORT_NO_ sortNo,
+        sml.TIP_ tip,
+        <if test="_databaseId == 'oracle'">
+            to_char(sml.DESCR_) descr,
+        </if>
+        <if test="_databaseId == 'mysql'">
+            sml.DESCR_ descr,
+        </if>
+        sml.IS_TOP_MENU_ isTopMenu,
+        sml.IS_SUB_MENU_ isSubMenu,
+        sml.IS_BS_TOP_MENU_ isBsTopMenu,
+        sml.IS_BS_SUB_MENU_ isBsSubMenu,
+        sml.FID_ fid,
+        sml.IS_FINAL_ isFinal
+    FROM
+        SYS_MODEL sml
+    WHERE sml.IS_DELETE_ = 0
+        ) sma
+    </select>
+    
+    <select id="getAuthsByRoles" resultType="SysAuth">
+        select <include  refid="SQL_SYS_AUTH_COLUMN" />,sra.ROLE_ID_ roleId
+        from SYS_AUTH sa right join sys_role_auth sra
+        on sa.AUTH_ID_ = sra.AUTH_ID_
+        <where>
+            sa.IS_DELETE_ =0 and 
+            sra.ROLE_ID_ in
+            <foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+                #{item}   
+            </foreach>
+        </where>
+    </select>
+    
+    <select id="getAuthsByUser" parameterType="SysUserAuth" resultType="SysAuth">
+        select <include  refid="SQL_SYS_AUTH_COLUMN" />,sua.AUTH_TYPE_ authType
+        from SYS_AUTH sa right join sys_user_auth sua
+        on sa.AUTH_ID_ = sua.AUTH_ID_
+        <where>
+            sa.IS_DELETE_ = 0
+            <if test="userId != null">
+                AND sua.USER_ID_ = #{userId}
+            </if>
+            <if test="authType != null">
+                AND sua.AUTH_TYPE_ = #{authType}
+            </if>
+        </where>
+    </select>
+    <!-- 查询用户权限(正授权) -->
+    <select id="queryUserAuths" parameterType="Long" resultType="SysAuth">
+        select authAll.auth_id_ authId,authAll.auth_code_ authCode,authAll.auth_name_ authName,
+            authAll.SORT_NO_ sortNo,authAll.MODEL_ID_ modelId,
+            <if test="_databaseId == 'mysql'">
+                GROUP_CONCAT(authAll.authFrom) userAuthFrom
+            </if>
+            <if test="_databaseId == 'oracle'">
+                WM_CONCAT(authAll.authFrom) userAuthFrom
+            </if>
+         from
+            (SELECT a.auth_id_,a.auth_code_,a.auth_name_,a.SORT_NO_,a.MODEL_ID_,
+                 '用户权限' authFrom
+              FROM Sys_Auth a 
+             LEFT JOIN sys_user_auth b ON b.auth_id_ = a.auth_id_
+             WHERE b.user_id_=#{userID} AND b.AUTH_TYPE_ = 1 and a.AUTH_CATEGORY_=1   
+             GROUP BY a.auth_id_,a.auth_code_,a.auth_name_,a.SORT_NO_,a.MODEL_ID_
+    
+             union all 
+    
+             SELECT a.auth_id_,a.auth_code_,a.auth_name_,a.SORT_NO_,a.MODEL_ID_,
+                 <if test="_databaseId == 'mysql'">
+                    concat('角色授权[',GROUP_CONCAT(cr.role_name_),']') authFrom
+                 </if>
+                 <if test="_databaseId == 'oracle'">
+                    '角色授权[' || WM_CONCAT(cr.role_name_) || ']' authFrom
+                 </if>
+              FROM Sys_Auth a 
+             LEFT JOIN Sys_Role_Auth c ON c.auth_id_=a.auth_id_
+             LEFT JOIN sys_role cr ON cr.role_id_=c.role_id_
+             LEFT JOIN sys_user_role d ON d.role_id_=c.role_id_
+             WHERE  d.user_id_=#{userID} and a.AUTH_CATEGORY_=1
+             GROUP BY a.auth_id_,a.auth_code_,a.auth_name_,a.SORT_NO_,a.MODEL_ID_)authAll
+        group by authAll.auth_id_,authAll.auth_code_,authAll.auth_name_,authAll.SORT_NO_,authAll.MODEL_ID_
+
+    </select>
+    
+    <select id="getEqAndContainCode" parameterType="SysAuth" resultType="Integer" >
+    SELECT
+        count(1)
+    FROM
+        SYS_AUTH sa
+    WHERE sa.IS_DELETE_ = 0
+    <if test="authCode != null and authCode.length() != 0">
+         AND (sa.AUTH_CODE_ = #{authCode} OR sa.AUTH_CODE_ LIKE '%${authCode}:%' )
+     </if>
+     <if test="authId != null">
+         AND sa.AUTH_ID_ != #{authId}
+     </if>
+    </select>
+    
+    <select id="getEqAndContainURI" parameterType="SysAuth" resultType="Integer" >
+    SELECT
+        count(1)
+    FROM
+        SYS_AUTH sa
+    WHERE sa.IS_DELETE_ = 0
+    <if test="uri != null and uri.length() != 0">
+         AND REPLACE(REPLACE(sa.URI_, '%d', 'wildcard'),'%s', 'wildcard') = #{uri}
+     </if>
+     <if test="authId != null">
+         AND sa.AUTH_ID_ != #{authId}
+     </if>
+    </select>
+    
+    <select id="checkAuthRelation" parameterType="Integer" resultType="Integer" >
+    SELECT count(1) from (
+        SELECT sra.AUTH_ID_ 
+        FROM sys_role_auth sra
+        left join sys_auth sa on sra.AUTH_ID_=sa.AUTH_ID_
+        left join sys_role role on sra.ROLE_ID_=role.ROLE_ID_
+        WHERE role.IS_DELETE_=0 and sa.IS_DELETE_=0
+        <if test="authId != null">
+          AND sra.AUTH_ID_ = ${authId}
+        </if>
+        UNION
+        SELECT sua.AUTH_ID_ 
+        FROM sys_user_auth sua
+        left join sys_auth sa on sua.AUTH_ID_=sa.AUTH_ID_
+        left join sys_user usr on sua.USER_ID_=usr.USER_ID_ 
+        WHERE usr.IS_DELETE_=0 and sa.IS_DELETE_=0
+        <if test="authId != null">
+          AND sua.AUTH_ID_ = ${authId}
+        </if>
+        UNION
+        SELECT saj.AUTH_JOIN_ID_ 
+        FROM sys_auth_join saj
+        WHERE
+        <if test="authId != null">
+            (saj.MAIN_AUTH_ID_ = ${authId} OR saj.ATTACH_AUTH_ID_ = ${authId})
+        </if>
+    ) t
+    </select>
+    
+    <select id="getPreUriList" parameterType="SysAuth" resultType="SysAuth" >
+    SELECT
+        sa.URI_ uri
+    FROM
+        SYS_AUTH sa
+    WHERE sa.IS_DELETE_ = 0
+     <if test="authId != null">
+         AND sa.AUTH_ID_ != #{authId}
+     </if>
+    </select>
+</mapper>

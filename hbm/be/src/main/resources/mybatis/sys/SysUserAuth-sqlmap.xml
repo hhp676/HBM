@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysUserAuthMapper">
+
+    <!-- result map -->
+    <resultMap type="SysUserAuth" id="sysUserAuthMap">
+        <id property="userAuthId" column="userAuthId" />
+        <result property="userId" column="userId" />
+        <result property="authId" column="authId" />
+        <result property="authType" column="authType" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <association property="sysAuth" column="authId" select="com.hginfo.hbm.be.mapper.sys.SysAuthMapper.getById" />
+        <association property="sysUser" column="userId" select="com.hginfo.hbm.be.mapper.sys.SysUserMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_AUTH_COLUMN">
+        sua.USER_AUTH_ID_ userAuthId,
+        sua.USER_ID_ userId,
+        sua.AUTH_ID_ authId,
+        sua.AUTH_TYPE_ authType,
+        sua.IS_FINAL_ isFinal,
+        sua.CRT_TIME_ crtTime,
+        sua.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_AUTH_WHERE">
+        <if test="userAuthId != null">
+            AND sua.USER_AUTH_ID_ = #{userAuthId}
+        </if>
+        <if test="userId != null">
+            AND sua.USER_ID_ = #{userId}
+        </if>
+        <if test="authId != null">
+            AND sua.AUTH_ID_ = #{authId}
+        </if>
+        <if test="authType != null">
+            AND sua.AUTH_TYPE_ = #{authType}
+        </if>
+        <if test="isFinal != null">
+            AND sua.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sua.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sua.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysUserAuthMap">
+        select <include  refid="SQL_SYS_USER_AUTH_COLUMN" />
+        from SYS_USER_AUTH sua
+        <where>
+            sua.USER_AUTH_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysUserAuth" resultMap="sysUserAuthMap">
+        select <include  refid="SQL_SYS_USER_AUTH_COLUMN"/>
+        from SYS_USER_AUTH sua
+        <where>
+            <include  refid="SQL_SYS_USER_AUTH_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sua.USER_AUTH_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysUserAuth" resultType="int">
+        select count(
+            sua.USER_AUTH_ID_
+        ) as counts
+        from SYS_USER_AUTH sua
+        <where>
+            <include  refid="SQL_SYS_USER_AUTH_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysUserAuth" resultType="int">
+        select count(
+            sua.USER_AUTH_ID_
+        ) as counts
+        from SYS_USER_AUTH sua
+        <where>
+            <if test="userAuthId != null">
+                AND sua.USER_AUTH_ID_ != #{userAuthId}
+            </if>
+            <if test="userId != null">
+                AND sua.USER_ID_ = #{userId}
+            </if>
+            <if test="authId != null">
+                AND sua.AUTH_ID_ = #{authId}
+            </if>
+            <if test="authType != null">
+                AND sua.AUTH_TYPE_ = #{authType}
+            </if>
+            <if test="isFinal != null">
+                AND sua.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sua.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sua.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

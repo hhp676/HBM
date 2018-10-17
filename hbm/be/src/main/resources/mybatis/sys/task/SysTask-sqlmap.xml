@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.task.SysTaskMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_TASK_COLUMN">
+        st.TASK_ID_ taskId,
+        st.BUSINESS_ID_ businessId,
+        st.TASK_TYPE_ID_ taskTypeId,
+        st.TASK_NAME_ taskName,
+        st.CROSSDOMAIN_APPURL_ crossDomainAppUrl,
+        st.TASK_HANDLE_URL_ taskHandleUrl,
+        st.TASK_VIEW_URL_ taskViewUrl,
+        st.TASK_CRT_TIME_ taskCrtTime,
+        st.TASK_END_TIME_ taskEndTime,
+        st.TASK_LATER_TIME_ taskLaterTime,
+        st.TASK_STATUS_ taskStatus,
+        st.DESCR_ descr,
+        st.IS_DELETE_ isDelete,
+        st.IS_FINAL_ isFinal,
+        st.CRT_TIME_ crtTime,
+        st.UPD_TIME_ updTime,
+        st.CRT_USER_ID_ crtUserId,
+        st.UPD_USER_ID_ updUserId
+    </sql>
+    
+    <sql id="SQL_SYS_TASK_GROUP_COLUMN">
+        st.TASK_ID_ ,
+        st.BUSINESS_ID_ ,
+        st.TASK_TYPE_ID_ ,
+        st.TASK_NAME_ ,
+        st.CROSSDOMAIN_APPURL_ ,
+        st.TASK_HANDLE_URL_ ,
+        st.TASK_VIEW_URL_ ,
+        st.TASK_CRT_TIME_ ,
+        st.TASK_END_TIME_ ,
+        st.TASK_LATER_TIME_ ,
+        st.TASK_STATUS_ ,
+        st.DESCR_ ,
+        st.IS_DELETE_ ,
+        st.IS_FINAL_ ,
+        st.CRT_TIME_ ,
+        st.UPD_TIME_ ,
+        st.CRT_USER_ID_ ,
+        st.UPD_USER_ID_ 
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_TASK_WHERE">
+        <if test="id != null">
+            AND st.TASK_ID_ = #{id}
+        </if>
+        <if test="businessId != null">
+            AND st.BUSINESS_ID_ = #{businessId}
+        </if>
+        <if test="taskTypeId != null ">
+            AND st.TASK_TYPE_ID_ = #{taskTypeId}
+        </if>
+        <if test="taskName != null and taskName.length() != 0">
+            AND st.TASK_NAME_ = #{taskName}
+        </if>
+        <if test="bo.taskNameLike != null and bo.taskNameLike.length() != 0">
+            AND st.TASK_NAME_ like '%${bo.taskNameLike}%'
+        </if>
+        <if test="taskHandleUrl != null and taskHandleUrl.length() != 0">
+            AND st.TASK_HANDLE_URL_ = #{taskHandleUrl}
+        </if>
+        <if test="taskCrtTime != null">
+            AND st.TASK_CRT_TIME_ = #{taskCrtTime}
+        </if>
+        <if test="taskEndTime != null">
+            AND st.TASK_END_TIME_ = #{taskEndTime}
+        </if>
+        <if test="taskLaterTime != null">
+            AND st.TASK_LATER_TIME_ = #{taskLaterTime}
+        </if>
+        <if test="taskStatus != null and taskStatus.length() != 0">
+            AND st.TASK_STATUS_ = #{taskStatus}
+        </if>
+        <if test="bo != null">
+            <if test="bo.doHandlerId != null">
+                AND sth.USER_ID_ = #{bo.doHandlerId}
+            </if>
+            <if test="bo.historyHandlerId != null">
+                AND stlog.USER_ID_ = #{bo.historyHandlerId}
+            </if>
+            <if test="bo.taskCrtStartTime != null">
+               AND st.TASK_CRT_TIME_ > #{bo.taskCrtStartTime}
+            </if>
+            <if test="bo.taskCrtEndTime != null">
+               AND st.TASK_CRT_TIME_ &lt; #{bo.taskCrtEndTime}
+            </if>
+            <if test="bo.taskHandleStartTime != null">
+               AND stlog.TASK_HANDLE_TIME_ > #{bo.taskHandleStartTime}
+            </if>
+            <if test="bo.taskHandleEndTime != null">
+               AND stlog.TASK_HANDLE_TIME_ &lt; #{bo.taskHandleEndTime}
+            </if>
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND st.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND st.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND st.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND st.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND st.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND st.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND st.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysTask">
+        select <include refid="SQL_SYS_TASK_COLUMN"/>
+        from SYS_TASK st
+        <where>
+            st.TASK_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysTask" resultType="SysTask">
+        select <include refid="SQL_SYS_TASK_COLUMN"/>
+        from SYS_TASK st
+        left join sys_task_handler sth on sth.TASK_ID_=st.TASK_ID_
+        left join sys_task_handle_log stlog on stlog.TASK_ID_ = st.TASK_ID_
+        <where>
+            <include refid="SQL_SYS_TASK_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        GROUP BY <include refid="SQL_SYS_TASK_GROUP_COLUMN"/>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                st.TASK_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysTask" resultType="int">
+        select count(
+            st.TASK_ID_
+        ) as counts
+        from SYS_TASK st
+        left join sys_task_handler sth on sth.TASK_ID_=st.TASK_ID_
+        left join sys_task_handle_log stlog on stlog.TASK_ID_ = st.TASK_ID_
+        <where>
+            <include refid="SQL_SYS_TASK_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysTask" resultType="int">
+        select count(
+            st.TASK_ID_
+        ) as counts
+        from SYS_TASK st
+        <where>
+            <if test="id != null">
+                AND st.TASK_ID_ != #{id}
+            </if>
+            <if test="businessId != null">
+                AND st.BUSINESS_ID_ = #{businessId}
+            </if>
+            <if test="taskTypeId != null ">
+                AND st.TASK_TYPE_ID_ = #{taskTypeId}
+            </if>
+            <if test="taskName != null and taskName.length() != 0">
+                AND st.TASK_NAME_ = #{taskName}
+            </if>
+            <if test="taskHandleUrl != null and taskHandleUrl.length() != 0">
+                AND st.TASK_HANDLE_URL_ = #{taskHandleUrl}
+            </if>
+            <if test="taskCrtTime != null">
+                AND st.TASK_CRT_TIME_ = #{taskCrtTime}
+            </if>
+            <if test="taskEndTime != null">
+                AND st.TASK_END_TIME_ = #{taskEndTime}
+            </if>
+            <if test="taskLaterTime != null">
+                AND st.TASK_LATER_TIME_ = #{taskLaterTime}
+            </if>
+            <if test="taskStatus != null and taskStatus.length() != 0">
+                AND st.TASK_STATUS_ = #{taskStatus}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND st.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND st.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND st.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND st.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND st.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND st.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND st.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

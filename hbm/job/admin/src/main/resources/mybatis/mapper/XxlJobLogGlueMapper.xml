@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobLogGlueMapper">
+	
+	<resultMap id="XxlJobLogGlue" type="com.xxl.job.admin.core.model.XxlJobLogGlue" >
+		<result column="id_" property="id" />
+	    <result column="job_id_" property="jobId" />
+		<result column="glue_type_" property="glueType" />
+	    <result column="glue_source_" property="glueSource" />
+	    <result column="glue_remark_" property="glueRemark" />
+	    <result column="add_time_" property="addTime" />
+	    <result column="update_time_" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id_,
+		t.job_id_,
+		t.glue_type_,
+		t.glue_source_,
+		t.glue_remark_,
+		t.add_time_,
+		t.update_time_
+	</sql>
+    
+    <sql id="save_sql">
+        INSERT INTO JOB_TRIGGER_LOGGLUE (
+            <if test="_databaseId == 'oracle'">
+                id_, 
+            </if>
+            job_id_,
+            glue_type_,
+            glue_source_,
+            glue_remark_,
+            add_time_, 
+            update_time_
+        ) VALUES (
+            <if test="_databaseId == 'oracle'">
+                #{id}, 
+            </if>
+            #{jobId},
+            #{glueType},
+            #{glueSource},
+            #{glueRemark},
+            <choose>  
+                <when test="_databaseId == 'oracle'">
+                    sysdate,
+                    sysdate
+                </when>
+                <otherwise>
+                    NOW(),
+                    NOW()
+                </otherwise>
+            </choose>
+        )
+    </sql>
+	
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+		<include refid="save_sql" />
+	</insert>
+    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" databaseId="oracle" >
+        <selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id"> 
+            select seq_job_trigger_logglue_id.nextval from dual
+        </selectKey> 
+        <include refid="save_sql" />
+    </insert>
+	
+	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_TRIGGER_LOGGLUE  t
+		WHERE t.job_id_ = #{jobId}
+		ORDER BY id_ DESC
+	</select>
+    
+    <sql id="removeOld_selectId">
+        SELECT id_ FROM JOB_TRIGGER_LOGGLUE
+        WHERE job_id_ = #{jobId}
+        ORDER BY update_time_ desc
+    </sql>
+	
+	<delete id="removeOld" parameterType="java.util.HashMap" >
+		DELETE FROM JOB_TRIGGER_LOGGLUE
+		WHERE id_ NOT in(
+			SELECT id_ FROM(
+				<choose>  
+                    <when test="_databaseId == 'oracle'">
+                        select * from ( 
+                            <include refid="removeOld_selectId" />
+                         ) where rownum <![CDATA[ <= ]]> #{limit}
+                    </when>
+                    <otherwise>
+                        <include refid="removeOld_selectId" />
+        				LIMIT 0, #{limit}
+                    </otherwise>
+                </choose>
+			) t1
+		) AND job_id_ = #{jobId}
+	</delete>
+	
+	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
+		DELETE FROM JOB_TRIGGER_LOGGLUE
+		WHERE job_id_ = #{jobId}
+	</delete>
+	
+</mapper>

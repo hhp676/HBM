@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.task.SysTaskHandleLogMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_TASK_HANDLE_LOG_COLUMN">
+        sthl.TASK_HANDLE_LOG_ID_ taskHandleLogId,
+        sthl.TASK_ID_ taskId,
+        sthl.USER_ID_ userId,
+        sthl.TASK_HANDLE_TIME_ taskHandleTime,
+        sthl.TASK_HANDLE_TYPE_ taskHandleType,
+        sthl.DESCR_ descr,
+        sthl.CRT_TIME_ crtTime,
+        sthl.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_TASK_HANDLE_LOG_WHERE">
+        <if test="id != null">
+            AND sthl.TASK_HANDLE_LOG_ID_ = #{id}
+        </if>
+        <if test="taskId != null">
+            AND sthl.TASK_ID_ = #{taskId}
+        </if>
+        <if test="userId != null">
+            AND sthl.USER_ID_ = #{userId}
+        </if>
+        <if test="taskHandleTime != null">
+            AND sthl.TASK_HANDLE_TIME_ = #{taskHandleTime}
+        </if>
+        <if test="taskHandleType != null and taskHandleType.length() != 0">
+            AND sthl.TASK_HANDLE_TYPE_ = #{taskHandleType}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sthl.DESCR_ = #{descr}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysTaskHandleLog">
+        select <include refid="SQL_SYS_TASK_HANDLE_LOG_COLUMN"/>
+        from SYS_TASK_HANDLE_LOG sthl
+        <where>
+            sthl.TASK_HANDLE_LOG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysTaskHandleLog" resultType="SysTaskHandleLog">
+        select <include refid="SQL_SYS_TASK_HANDLE_LOG_COLUMN"/>
+        from SYS_TASK_HANDLE_LOG sthl
+        <where>
+            <include refid="SQL_SYS_TASK_HANDLE_LOG_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sthl.TASK_HANDLE_LOG_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysTaskHandleLog" resultType="int">
+        select count(
+            sthl.TASK_HANDLE_LOG_ID_
+        ) as counts
+        from SYS_TASK_HANDLE_LOG sthl
+        <where>
+            <include refid="SQL_SYS_TASK_HANDLE_LOG_WHERE"/>
+        </where>
+    </select>
+    
+    <!-- 查询时间点后,对应人员的待办任务数量 -->
+    <select id="getAfterDateNewTaskUserIds" parameterType="java.util.Date" resultType="CaseIgnoreMap">
+        select sth.USER_ID_ userId,count(1) count
+         from sys_task_handle_log stlog
+        left join sys_task st on stlog.TASK_ID_ =st.TASK_ID_
+        left join sys_task_handler sth on st.TASK_ID_ = sth.TASK_ID_ 
+        where st.IS_DELETE_ = 0
+        and stlog.TASK_HANDLE_TYPE_ ='0'
+        and stlog.TASK_HANDLE_TIME_ >= #{startTime}
+        GROUP BY sth.USER_ID_
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysTaskHandleLog" resultType="int">
+        select count(
+            sthl.TASK_HANDLE_LOG_ID_
+        ) as counts
+        from SYS_TASK_HANDLE_LOG sthl
+        <where>
+            <if test="id != null">
+                AND sthl.TASK_HANDLE_LOG_ID_ != #{id}
+            </if>
+            <if test="taskId != null">
+                AND sthl.TASK_ID_ = #{taskId}
+            </if>
+            <if test="userId != null">
+                AND sthl.USER_ID_ = #{userId}
+            </if>
+            <if test="taskHandleTime != null">
+                AND sthl.TASK_HANDLE_TIME_ = #{taskHandleTime}
+            </if>
+            <if test="taskHandleType != null and taskHandleType.length() != 0">
+                AND sthl.TASK_HANDLE_TYPE_ = #{taskHandleType}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sthl.DESCR_ = #{descr}
+            </if>
+        </where>
+    </select>
+
+</mapper>

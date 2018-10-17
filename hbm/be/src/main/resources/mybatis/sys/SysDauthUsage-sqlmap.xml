@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthUsageMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDauthUsage" id="sysDauthUsageMap">
+        <id property="usageId" column="usageId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="dauthId" column="dauthId" />
+        <result property="methodName" column="methodName" />
+        <result property="methodShortName" column="methodShortName" />
+        <result property="methodZhName" column="methodZhName" />
+        <result property="methodEngName" column="methodEngName" />
+        <result property="methodI18nCode" column="methodI18nCode" />
+        <result property="isValid" column="isValid" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysDauth" column="dauthId" select="com.hginfo.hbm.be.mapper.sys.SysDauthMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_USAGE_COLUMN">
+        sdu.USAGE_ID_ usageId,
+        sdu.TENANT_ID_ tenantId,
+        sdu.DAUTH_ID_ dauthId,
+        sdu.METHOD_NAME_ methodName,
+        sdu.METHOD_SHORT_NAME_ methodShortName,
+        sdu.METHOD_ZH_NAME_ methodZhName,
+        sdu.METHOD_ENG_NAME_ methodEngName,
+        sdu.METHOD_I18N_CODE_ methodI18nCode,
+        sdu.IS_VALID_ isValid,
+        sdu.DESCR_ descr,
+        sdu.IS_DELETE_ isDelete,
+        sdu.IS_FINAL_ isFinal,
+        sdu.CRT_TIME_ crtTime,
+        sdu.UPD_TIME_ updTime,
+        sdu.CRT_USER_ID_ crtUserId,
+        sdu.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_USAGE_WHERE">
+        <if test="usageId != null">
+            AND sdu.USAGE_ID_ = #{usageId}
+        </if>
+        <if test="tenantId != null">
+            AND sdu.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="dauthId != null">
+            AND sdu.DAUTH_ID_ = #{dauthId}
+        </if>
+        <if test="methodName != null and methodName.length() != 0">
+            AND sdu.METHOD_NAME_ = #{methodName}
+        </if>
+        <if test="methodShortName != null and methodShortName.length() != 0">
+            AND sdu.METHOD_SHORT_NAME_ = #{methodShortName}
+        </if>
+        <if test="methodZhName != null and methodZhName.length() != 0">
+            AND sdu.METHOD_ZH_NAME_ = #{methodZhName}
+        </if>
+        <if test="methodEngName != null and methodEngName.length() != 0">
+            AND sdu.METHOD_ENG_NAME_ = #{methodEngName}
+        </if>
+        <if test="methodI18nCode != null and methodI18nCode.length() != 0">
+            AND sdu.METHOD_I18N_CODE_ = #{methodI18nCode}
+        </if>
+        <if test="isValid != null">
+            AND sdu.IS_VALID_ = #{isValid}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdu.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdu.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdu.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdu.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdu.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdu.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdu.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDauthUsageMap">
+        select <include  refid="SQL_SYS_DAUTH_USAGE_COLUMN" />
+        from SYS_DAUTH_USAGE sdu
+        <where>
+            sdu.USAGE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthUsage" resultMap="sysDauthUsageMap">
+        select <include  refid="SQL_SYS_DAUTH_USAGE_COLUMN"/>
+        from SYS_DAUTH_USAGE sdu
+        left join sys_dauth sd on sdu.DAUTH_ID_ = sd.DAUTH_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_USAGE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdu.IS_VALID_ asc, sdu.METHOD_NAME_ asc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthUsage" resultType="int">
+        select count(
+            sdu.USAGE_ID_
+        ) as counts
+        from SYS_DAUTH_USAGE sdu
+        left join sys_dauth sd on sdu.DAUTH_ID_ = sd.DAUTH_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_USAGE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthUsage" resultType="int">
+        select count(
+            sdu.USAGE_ID_
+        ) as counts
+        from SYS_DAUTH_USAGE sdu
+        <where>
+            <if test="usageId != null">
+                AND sdu.USAGE_ID_ != #{usageId}
+            </if>
+            <if test="tenantId != null">
+                AND sdu.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="dauthId != null">
+                AND sdu.DAUTH_ID_ = #{dauthId}
+            </if>
+            <if test="methodName != null and methodName.length() != 0">
+                AND sdu.METHOD_NAME_ = #{methodName}
+            </if>
+            <if test="methodShortName != null and methodShortName.length() != 0">
+                AND sdu.METHOD_SHORT_NAME_ = #{methodShortName}
+            </if>
+            <if test="methodZhName != null and methodZhName.length() != 0">
+                AND sdu.METHOD_ZH_NAME_ = #{methodZhName}
+            </if>
+            <if test="methodEngName != null and methodEngName.length() != 0">
+                AND sdu.METHOD_ENG_NAME_ = #{methodEngName}
+            </if>
+            <if test="methodI18nCode != null and methodI18nCode.length() != 0">
+                AND sdu.METHOD_I18N_CODE_ = #{methodI18nCode}
+            </if>
+            <if test="isValid != null">
+                AND sdu.IS_VALID_ = #{isValid}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdu.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdu.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdu.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdu.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdu.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdu.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdu.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getDauthUsage" resultType="SysDauthUsage">
+        select <include  refid="SQL_SYS_DAUTH_USAGE_COLUMN" />
+        from SYS_DAUTH_USAGE sdu
+        <where>
+            sdu.METHOD_NAME_ = #{methodName}
+        </where>
+    </select>
+    <select id="getDauthCodeByMethodName" resultType="String">
+        SELECT sd.DAUTH_CODE_ dauthCode
+        FROM SYS_DAUTH_USAGE sdu
+        LEFT JOIN sys_dauth sd ON sdu.DAUTH_ID_ = sd.DAUTH_ID_
+        <where>
+            sdu.METHOD_NAME_ = #{methodName}
+            AND sd.IS_DELETE_ = 0
+        </where>
+    </select>
+    
+    <update id="setAllInvalid">
+        update SYS_DAUTH_USAGE set IS_VALID_ = 1
+    </update>
+
+</mapper>

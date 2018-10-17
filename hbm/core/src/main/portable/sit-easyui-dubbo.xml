@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+    <config-file path="env.properties">
+        <replace key="jdbc.driverUrl.hbm">jdbc:mysql://192.168.8.160:3306/db_hbm_dev?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull</replace>
+        <replace key="jdbc.username.hbm">hbm_dev</replace>
+        <replace key="jdbc.password.hbm">FFX5BbiDjC36GrDtUjtQqooYBDodschtyYU5djvhQgR1ryiku8QMsk8eYq9JZsOSXzokPQEs9RoM847gHA8Rng==</replace>
+        <replace key="jdbc.publickey.hbm">MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAM4inIOsC6wpQg6kBnZV2v5VKT/1vcMv899JjytIfSuH2fBT1sXZVvQEvuOsAhE07brZhVQG7cuT1Jwq2ACn/McCAwEAAQ==</replace>
+        <replace key="jdbc.driverUrl.test">jdbc:mysql://192.168.8.160:3306/db_hbm_dev?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull</replace>
+        <replace key="jdbc.username.test">hbm_dev</replace>
+        <replace key="jdbc.password.test">FFX5BbiDjC36GrDtUjtQqooYBDodschtyYU5djvhQgR1ryiku8QMsk8eYq9JZsOSXzokPQEs9RoM847gHA8Rng==</replace>
+        <replace key="jdbc.publickey.test">MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAM4inIOsC6wpQg6kBnZV2v5VKT/1vcMv899JjytIfSuH2fBT1sXZVvQEvuOsAhE07brZhVQG7cuT1Jwq2ACn/McCAwEAAQ==</replace>
+        <replace key="jdbc.schema">db_hbm_test</replace>
+        <replace key="hdubbo.registry.address">zookeeper://192.168.2.183:2181</replace>
+        <replace key="file.uploadPath">/home/hbm/upload</replace>
+        <replace key="ueditor.imageUrlPrefix">http://192.168.2.183:8780/hbm</replace>
+        
+        <replace key="xxl.job.executor.port">19992</replace>
+        <replace key="xxl.job.executor.logpath">/var/log/hdp/hbm-job-executor/</replace>
+    </config-file>
+    <config-file path="cache/redis.properties">
+        <replace key="redis.host">192.168.2.189</replace>
+    </config-file>
+</portable-config>

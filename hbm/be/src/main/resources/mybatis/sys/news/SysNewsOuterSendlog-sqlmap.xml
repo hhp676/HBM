@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.news.SysNewsOuterSendlogMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NEWS_OUTER_SENDLOG_COLUMN">
+        snos.NEWS_OUTER_SENDLOG_ID_ newsOuterSendlogId,
+        snos.NEWS_OUTER_ID_ newsOuterId,
+        snos.SEND_TIME_ sendTime,
+        snos.IS_SUCCESS_ isSuccess,
+        snos.DESCR_ descr,
+        snos.IS_DELETE_ isDelete,
+        snos.IS_FINAL_ isFinal,
+        snos.CRT_TIME_ crtTime,
+        snos.UPD_TIME_ updTime,
+        snos.CRT_USER_ID_ crtUserId,
+        snos.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NEWS_OUTER_SENDLOG_WHERE">
+        <if test="newsOuterSendlogId != null">
+            AND snos.NEWS_OUTER_SENDLOG_ID_ = #{newsOuterSendlogId}
+        </if>
+        <if test="newsOuterId != null">
+            AND snos.NEWS_OUTER_ID_ = #{newsOuterId}
+        </if>
+        <if test="sendTime != null">
+            AND snos.SEND_TIME_ = #{sendTime}
+        </if>
+        <if test="isSuccess != null">
+            AND snos.IS_SUCCESS_ = #{isSuccess}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND snos.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND snos.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND snos.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND snos.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND snos.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND snos.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND snos.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNewsOuterSendlog">
+        select <include refid="SQL_SYS_NEWS_OUTER_SENDLOG_COLUMN"/>
+        from SYS_NEWS_OUTER_SENDLOG snos
+        <where>
+            snos.NEWS_OUTER_SENDLOG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNewsOuterSendlog" resultType="SysNewsOuterSendlog">
+        select <include refid="SQL_SYS_NEWS_OUTER_SENDLOG_COLUMN"/>
+        from SYS_NEWS_OUTER_SENDLOG snos
+        <where>
+            <include refid="SQL_SYS_NEWS_OUTER_SENDLOG_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                snos.NEWS_OUTER_SENDLOG_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNewsOuterSendlog" resultType="int">
+        select count(
+            snos.NEWS_OUTER_SENDLOG_ID_
+        ) as counts
+        from SYS_NEWS_OUTER_SENDLOG snos
+        <where>
+            <include refid="SQL_SYS_NEWS_OUTER_SENDLOG_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNewsOuterSendlog" resultType="int">
+        select count(
+            snos.NEWS_OUTER_SENDLOG_ID_
+        ) as counts
+        from SYS_NEWS_OUTER_SENDLOG snos
+        <where>
+            <if test="newsOuterSendlogId != null">
+                AND snos.NEWS_OUTER_SENDLOG_ID_ != #{newsOuterSendlogId}
+            </if>
+            <if test="newsOuterId != null">
+                AND snos.NEWS_OUTER_ID_ = #{newsOuterId}
+            </if>
+            <if test="sendTime != null">
+                AND snos.SEND_TIME_ = #{sendTime}
+            </if>
+            <if test="isSuccess != null">
+                AND snos.IS_SUCCESS_ = #{isSuccess}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND snos.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND snos.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND snos.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND snos.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND snos.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND snos.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND snos.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

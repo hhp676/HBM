@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+    <config-file path="logback.xml">
+        <!-- hbuild：第一个属性配置需要是LOG路径。 -->
+        <replace xpath="/configuration/property[@name='LOG_DIR']/@value">/var/log/hdp/hbm-be-easyui-dubbo/</replace>
+        <replace xpath="/configuration/root/@level">INFO</replace>
+        <replace xpath="/configuration/property[@name='LOG_REF']/@value">FILE</replace>
+    </config-file>
+</portable-config>

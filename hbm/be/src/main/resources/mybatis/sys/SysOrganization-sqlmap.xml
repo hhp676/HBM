@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysOrganizationMapper">
+
+    <!-- result map -->
+    <resultMap type="SysOrganization" id="sysOrganizationMap">
+        <id property="orgId" column="orgId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="orgName" column="orgName" />
+        <result property="orgFullname" column="orgFullname" />
+        <result property="orgCode" column="orgCode" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="fid" column="fid" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="parent" column="fid" select="com.hginfo.hbm.be.mapper.sys.SysOrganizationMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_ORGANIZATION_COLUMN">
+        so.ORG_ID_ orgId,
+        so.TENANT_ID_ tenantId,
+        so.ORG_NAME_ orgName,
+        so.ORG_FULLNAME_ orgFullname,
+        so.ORG_CODE_ orgCode,
+        so.ENG_NAME_ engName,
+        so.I18N_CODE_ i18nCode,
+        so.FID_ fid,
+        so.DESCR_ descr,
+        so.IS_DELETE_ isDelete,
+        so.IS_FINAL_ isFinal,
+        so.CRT_TIME_ crtTime,
+        so.UPD_TIME_ updTime,
+        so.CRT_USER_ID_ crtUserId,
+        so.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_ORGANIZATION_WHERE">
+        <if test="orgId != null">
+            AND so.ORG_ID_ = #{orgId}
+        </if>
+        <if test="tenantId != null">
+            AND so.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="orgName != null and orgName.length() != 0">
+            AND so.ORG_NAME_ like '%${orgName}%'
+        </if>
+        <if test="orgFullname != null and orgFullname.length() != 0">
+            AND so.ORG_FULLNAME_ = #{orgFullname}
+        </if>
+        <if test="orgCode != null and orgCode.length() != 0">
+            AND so.ORG_CODE_ like '%${orgCode}%'
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND so.ENG_NAME_ like '%${engName}%'
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND so.I18N_CODE_ like '%${i18nCode}%'
+        </if>
+        <if test="fid == 0">
+            AND so.FID_ is NULL
+        </if>
+        <if test="fid != null and fid != 0">
+            AND so.FID_ = #{fid}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND so.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND so.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND so.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND so.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND so.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND so.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND so.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysOrganizationMap">
+        select <include  refid="SQL_SYS_ORGANIZATION_COLUMN" />
+        from SYS_ORGANIZATION so
+        <where>
+            so.ORG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysOrganization" resultMap="sysOrganizationMap">
+        select <include  refid="SQL_SYS_ORGANIZATION_COLUMN"/>
+        from SYS_ORGANIZATION so
+        <where>
+            <include  refid="SQL_SYS_ORGANIZATION_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                so.CRT_TIME_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysOrganization" resultType="int">
+        select count(
+            so.ORG_ID_
+        ) as counts
+        from SYS_ORGANIZATION so
+        <where>
+            <include  refid="SQL_SYS_ORGANIZATION_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysOrganization" resultType="int">
+        select count(
+            so.ORG_ID_
+        ) as counts
+        from SYS_ORGANIZATION so
+        <where>
+            <if test="orgId != null">
+                AND so.ORG_ID_ != #{orgId}
+            </if>
+            <if test="tenantId != null">
+                AND so.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="orgName != null and orgName.length() != 0">
+                AND so.ORG_NAME_ = #{orgName}
+            </if>
+            <if test="orgFullname != null and orgFullname.length() != 0">
+                AND so.ORG_FULLNAME_ = #{orgFullname}
+            </if>
+            <if test="orgCode != null and orgCode.length() != 0">
+                AND so.ORG_CODE_ = #{orgCode}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND so.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND so.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="fid != null">
+                AND so.FID_ = #{fid}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND so.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND so.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND so.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND so.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND so.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND so.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND so.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <!--  按照部门统计有效人员 -->
+    <select id="queryOrgUserList" resultType="CaseIgnoreMap">
+        SELECT
+             org.ORG_ID_,org.ORG_NAME_,org.ORG_CODE_,org.FID_,usrpos.USER_ID_
+        FROM
+             sys_organization org
+        LEFT JOIN SYS_POSITION pos ON org.ORG_ID_ = pos.ORG_ID_ AND pos.IS_DELETE_ = 0
+        LEFT JOIN SYS_USER_POSITION usrpos ON pos.POSITION_ID_ = usrpos.POSITION_ID_
+        LEFT JOIN sys_user usr ON usrpos.USER_ID_ = usr.USER_ID_
+        WHERE
+                org.IS_DELETE_ = 0
+                AND usr.IS_DELETE_ = 0
+        GROUP BY
+             org.ORG_ID_, org.ORG_NAME_, org.ORG_CODE_, org.FID_,usrpos.USER_ID_
+    </select>
+</mapper>

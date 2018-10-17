@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysMetaConstraintDetailMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_META_CONSTRAINT_DETAIL_COLUMN">
+        smcdt.DETAIL_ID_ detailId,
+        smcdt.TENANT_ID_ tenantId,
+        smcdt.DEF_ID_ defId,
+        smcdt.FIELD_ID_ fieldId,
+        smcdt.REF_DETAIL_ID_ refDetailId,
+        smcdt.DESCR_ descr,
+        smcdt.IS_DELETE_ isDelete,
+        smcdt.IS_FINAL_ isFinal,
+        smcdt.CRT_TIME_ crtTime,
+        smcdt.UPD_TIME_ updTime,
+        smcdt.CRT_USER_ID_ crtUserId,
+        smcdt.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_META_CONSTRAINT_DETAIL_WHERE">
+        <if test="detailId != null">
+            AND smcdt.DETAIL_ID_ = #{detailId}
+        </if>
+        <if test="tenantId != null">
+            AND smcdt.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="defId != null">
+            AND smcdt.DEF_ID_ = #{defId}
+        </if>
+        <if test="fieldId != null">
+            AND smcdt.FIELD_ID_ = #{fieldId}
+        </if>
+        <if test="refDetailId != null">
+            AND smcdt.REF_DETAIL_ID_ = #{refDetailId}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND smcdt.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND smcdt.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND smcdt.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND smcdt.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND smcdt.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND smcdt.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND smcdt.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysMetaConstraintDetail">
+        select <include  refid="SQL_SYS_META_CONSTRAINT_DETAIL_COLUMN" />
+        from SYS_META_CONSTRAINT_DETAIL smcdt
+        <where>
+            smcdt.DETAIL_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysMetaConstraintDetail" resultType="SysMetaConstraintDetail">
+        select <include  refid="SQL_SYS_META_CONSTRAINT_DETAIL_COLUMN"/>
+        from SYS_META_CONSTRAINT_DETAIL smcdt
+        <where>
+            <include  refid="SQL_SYS_META_CONSTRAINT_DETAIL_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                smcdt.DETAIL_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysMetaConstraintDetail" resultType="int">
+        select count(
+            smcdt.DETAIL_ID_
+        ) as counts
+        from SYS_META_CONSTRAINT_DETAIL smcdt
+        <where>
+            <include  refid="SQL_SYS_META_CONSTRAINT_DETAIL_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count   -->
+    <select id="checkUniqueCount" parameterType="SysMetaConstraintDetail" resultType="int">
+        select count(
+            smcd.DETAIL_ID_
+        ) as counts
+        from SYS_META_CONSTRAINT_DETAIL smcd
+        <where>
+            <if test="detailId != null">
+                AND smcd.DETAIL_ID_ != #{detailId}
+            </if>
+            <if test="tenantId != null">
+                AND smcd.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="defId != null">
+                AND smcd.DEF_ID_ = #{defId}
+            </if>
+            <if test="fieldId != null">
+                AND smcd.FIELD_ID_ = #{fieldId}
+            </if>
+            <if test="refDetailId != null">
+                AND smcd.REF_DETAIL_ID_ = #{refDetailId}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND smcd.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND smcd.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND smcd.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND smcd.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND smcd.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND smcd.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND smcd.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

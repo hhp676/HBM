@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysAuthJoinMapper">
+
+    <!-- result map -->
+    <resultMap type="SysAuthJoin" id="sysAuthJoinMap">
+        <id property="authJoinId" column="authJoinId" />
+        <result property="mainAuthId" column="mainAuthId" />
+        <result property="attachAuthId" column="attachAuthId" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_AUTH_JOIN_COLUMN">
+        saj.AUTH_JOIN_ID_ authJoinId,
+        saj.MAIN_AUTH_ID_ mainAuthId,
+        saj.ATTACH_AUTH_ID_ attachAuthId,
+        saj.IS_FINAL_ isFinal,
+        saj.CRT_TIME_ crtTime,
+        saj.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_AUTH_JOIN_WHERE">
+        <if test="authJoinId != null">
+            AND saj.AUTH_JOIN_ID_ = #{authJoinId}
+        </if>
+        <if test="mainAuthId != null">
+            AND saj.MAIN_AUTH_ID_ = #{mainAuthId}
+        </if>
+        <if test="attachAuthId != null">
+            AND saj.ATTACH_AUTH_ID_ = #{attachAuthId}
+        </if>
+        <if test="isFinal != null">
+            AND saj.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND saj.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND saj.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysAuthJoin">
+        select <include  refid="SQL_SYS_AUTH_JOIN_COLUMN" />
+        from SYS_AUTH_JOIN saj
+        <where>
+            saj.AUTH_JOIN_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysAuthJoin" resultType="SysAuthJoin">
+        select <include  refid="SQL_SYS_AUTH_JOIN_COLUMN"/>
+        from SYS_AUTH_JOIN saj
+        <where>
+            <include  refid="SQL_SYS_AUTH_JOIN_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                saj.AUTH_JOIN_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysAuthJoin" resultType="int">
+        select count(
+            saj.AUTH_JOIN_ID_
+        ) as counts
+        from SYS_AUTH_JOIN saj
+        <where>
+            <include  refid="SQL_SYS_AUTH_JOIN_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysAuthJoin" resultType="int">
+        select count(
+            saj.AUTH_JOIN_ID_
+        ) as counts
+        from SYS_AUTH_JOIN saj
+        <where>
+            <if test="authJoinId != null">
+                AND saj.AUTH_JOIN_ID_ != #{authJoinId}
+            </if>
+            <if test="mainAuthId != null">
+                AND saj.MAIN_AUTH_ID_ = #{mainAuthId}
+            </if>
+            <if test="attachAuthId != null">
+                AND saj.ATTACH_AUTH_ID_ = #{attachAuthId}
+            </if>
+            <if test="isFinal != null">
+                AND saj.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND saj.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND saj.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getMainAttachList" parameterType="SysAuthJoin" resultType="SysAuthJoin">
+        select <include  refid="SQL_SYS_AUTH_JOIN_COLUMN"/>
+        from SYS_AUTH_JOIN saj
+        <!-- 表头过滤，主附权限不会同时查询，通过主权限ID查询附属权限，通过附属权限ID查询主权限 -->
+        <choose>
+            <when test="mainAuthId != null">
+                left join SYS_AUTH sa ON saj.ATTACH_AUTH_ID_ = sa.AUTH_ID_ 
+            </when>
+            <otherwise>
+                left join SYS_AUTH sa ON saj.MAIN_AUTH_ID_ = sa.AUTH_ID_ 
+            </otherwise>
+        </choose>
+        <where>
+            <include  refid="SQL_SYS_AUTH_JOIN_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                saj.AUTH_JOIN_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getMainAttachListCount" parameterType="SysAuthJoin" resultType="int">
+        select count(
+            saj.AUTH_JOIN_ID_
+        ) as counts
+        from SYS_AUTH_JOIN saj
+        <!-- 表头过滤，主附权限不会同时查询，通过主权限ID查询附属权限，通过附属权限ID查询主权限 -->
+        <choose>
+            <when test="mainAuthId != null">
+                left join SYS_AUTH sa ON saj.ATTACH_AUTH_ID_ = sa.AUTH_ID_ 
+            </when>
+            <otherwise>
+                left join SYS_AUTH sa ON saj.MAIN_AUTH_ID_ = sa.AUTH_ID_ 
+            </otherwise>
+        </choose>
+        <where>
+            <include  refid="SQL_SYS_AUTH_JOIN_WHERE"/>
+        </where>
+    </select>
+
+</mapper>

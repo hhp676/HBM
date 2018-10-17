@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysVariableMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_VARIABLE_COLUMN">
+        sv.VAR_ID_ varId,
+        sv.VAR_KEY_ varKey,
+        sv.VAR_VALUE_ varValue,
+        sv.IS_FINAL_ isFinal,
+        sv.CRT_USER_ID_ crtUserId,
+        sv.CRT_TIME_ crtTime
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_VARIABLE_WHERE">
+        <if test="varId != null">
+            AND sv.VAR_ID_ = #{varId}
+        </if>
+        <if test="varKey != null and varKey.length() != 0">
+            AND sv.VAR_KEY_ = #{varKey}
+        </if>
+        <if test="varValue != null and varValue.length() != 0">
+            AND sv.VAR_VALUE_ = #{varValue}
+        </if>
+        <if test="isFinal != null">
+            AND sv.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtUserId != null">
+            AND sv.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="crtTime != null">
+            AND sv.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysVariable">
+        select <include refid="SQL_SYS_VARIABLE_COLUMN"/>
+        from SYS_VARIABLE sv
+        <where>
+            sv.VAR_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysVariable" resultType="SysVariable">
+        select <include refid="SQL_SYS_VARIABLE_COLUMN"/>
+        from SYS_VARIABLE sv
+        <where>
+            <include refid="SQL_SYS_VARIABLE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            sv.VAR_ID_ desc
+        </if>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getListForUpdate" parameterType="SysVariable" resultType="SysVariable">
+        select <include refid="SQL_SYS_VARIABLE_COLUMN"/>
+        from SYS_VARIABLE sv
+        <where>
+            <include refid="SQL_SYS_VARIABLE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            sv.VAR_ID_ desc
+        </if>
+        FOR UPDATE
+    </select> 
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysVariable" resultType="int">
+        select count(
+        sv.VAR_ID_
+        ) as counts
+        from SYS_VARIABLE sv
+        <where>
+            <include refid="SQL_SYS_VARIABLE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysVariable" resultType="int">
+        select count(
+        sv.VAR_ID_
+        ) as counts
+        from SYS_VARIABLE sv
+        <where>
+            <if test="varId != null">
+                AND sv.VAR_ID_ != #{varId}
+            </if>
+            <if test="varKey != null and varKey.length() != 0">
+                AND sv.VAR_KEY_ = #{varKey}
+            </if>
+            <if test="varValue != null and varValue.length() != 0">
+                AND sv.VAR_VALUE_ = #{varValue}
+            </if>
+            <if test="isFinal != null">
+                AND sv.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtUserId != null">
+                AND sv.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="crtTime != null">
+                AND sv.CRT_TIME_ = #{crtTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

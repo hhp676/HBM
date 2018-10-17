@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysRoleMapper">
+
+    <sql id="SQL_SYS_ROLE_COLUMN">
+        sr.ROLE_ID_ roleId,
+        sr.TENANT_ID_ tenantId,
+        sr.ROLE_NAME_ roleName,
+        sr.ROLE_CODE_ roleCode,
+        sr.DESCR_ descr,
+        sr.IS_DELETE_ isDelete,
+        sr.IS_FINAL_ isFinal,
+        sr.CRT_TIME_ crtTime,
+        sr.UPD_TIME_ updTime,
+        sr.CRT_USER_ID_ crtUserId,
+        sr.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_ROLE_WHERE">
+        <if test="roleId != null">
+            AND sr.ROLE_ID_ = #{roleId}
+        </if>
+        <if test="tenantId !=null ">
+            AND sr.TENANT_ID_=#{tenantId}
+        </if>
+        <if test="roleName !=null and roleName.length()!=0 ">
+            AND sr.ROLE_NAME_=#{roleName}
+        </if>
+        <if test="roleCode !=null and roleCode.length()!=0 ">
+            AND sr.ROLE_CODE_=#{roleCode}
+        </if>
+        <if test="descr !=null and descr.length()!=0 ">
+            AND sr.DESCR_=#{descr}
+        </if>
+        <if test="isDelete !=null ">
+            AND sr.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND sr.IS_FINAL_=#{isFinal}
+        </if>
+        <if test="crtTime !=null ">
+            AND sr.CRT_TIME_=#{crtTime}
+        </if>
+        <if test="updTime !=null ">
+            AND sr.UPD_TIME_=#{updTime}
+        </if>
+        <if test="crtUserId !=null ">
+            AND sr.CRT_USER_ID_=#{crtUserId}
+        </if>
+        <if test="updUserId !=null ">
+            AND sr.UPD_USER_ID_=#{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysRole">
+        select <include  refid="SQL_SYS_ROLE_COLUMN"/>
+        from sys_role sr
+        <where>
+                sr.ROLE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysRole" resultType="SysRole">
+        select <include  refid="SQL_SYS_ROLE_COLUMN"/>
+        from sys_role sr
+        <where>
+            <include  refid="SQL_SYS_ROLE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sr.ROLE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysRole" resultType="int">
+        select count(sr.ROLE_ID_) as counts
+        from sys_role sr
+        <where>
+            <include  refid="SQL_SYS_ROLE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysRole" resultType="int">
+        select count(
+            sr.ROLE_ID_
+        ) as counts
+        from SYS_ROLE sr
+        <where>
+            <if test="roleId != null">
+                AND sr.ROLE_ID_ != #{roleId}
+            </if>
+            <if test="tenantId != null">
+                AND sr.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="roleName != null and roleName.length() != 0">
+                AND sr.ROLE_NAME_ = #{roleName}
+            </if>
+            <if test="roleCode != null and roleCode.length() != 0">
+                AND sr.ROLE_CODE_ = #{roleCode}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sr.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sr.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sr.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sr.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sr.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sr.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sr.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getRolesByAuth" parameterType="Long" resultType="sysRole">
+        select <include  refid="SQL_SYS_ROLE_COLUMN"/>
+        from sys_role sr right join sys_role_auth sra on sr.ROLE_ID_ = sra.ROLE_ID_
+        <where>
+            sra.AUTH_ID_ = #{authId}
+        </where>
+    </select>
+    
+    <select id="getRolesByUser" parameterType="Long" resultType="sysRole">
+        select <include  refid="SQL_SYS_ROLE_COLUMN"/>
+        from sys_role sr right join sys_user_role sur on sr.ROLE_ID_ = sur.ROLE_ID_
+        <where>
+            sur.USER_ID_ = #{userId}
+        </where>
+    </select>
+    
+    <!-- getPageListByAuthId -->
+    <select id="getPageListByAuthId" parameterType="SysRole" resultType="SysRole">
+        select <include  refid="SQL_SYS_ROLE_COLUMN"/>
+        from sys_role sr right join sys_role_auth sra on sr.ROLE_ID_ = sra.ROLE_ID_   
+        <where>
+            <include  refid="SQL_SYS_ROLE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sr.ROLE_ID_ desc
+        </if>
+    </select>
+
+    <select id="getPageListByAuthIdCount" parameterType="SysRole" resultType="int">
+        select count(sr.ROLE_ID_) as counts
+        from sys_role sr right join sys_role_auth sra on sr.ROLE_ID_ = sra.ROLE_ID_  
+        <where>
+            <include  refid="SQL_SYS_ROLE_WHERE"/>
+        </where>
+    </select>
+    
+    <!-- getPageListByAuthId -->
+    <select id="getPageListByUserId" parameterType="SysRole" resultType="SysRole">
+        select <include  refid="SQL_SYS_ROLE_COLUMN"/>
+        from sys_role sr right join sys_user_role sur on sr.ROLE_ID_ = sur.ROLE_ID_   
+        <where>
+            <include  refid="SQL_SYS_ROLE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sr.ROLE_ID_ desc
+        </if>
+    </select>
+
+    <select id="getPageListByUserIdCount" parameterType="SysRole" resultType="int">
+        select count(sr.ROLE_ID_) as counts
+        from sys_role sr right join sys_user_role sur on sr.ROLE_ID_ = sur.ROLE_ID_ 
+        <where>
+            <include  refid="SQL_SYS_ROLE_WHERE"/>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysUserLogMapper">
+
+    <!-- result map -->
+    <resultMap type="SysUserLog" id="sysUserLogMap">
+        <id property="userLogId" column="userLogId" />
+        <result property="userId" column="userId" />
+        <result property="operCode" column="operCode" />
+        <result property="operName" column="operName" />
+        <result property="engName" column="engName" />
+        <result property="reqUri" column="reqUri" />
+        <result property="operIp" column="operIp" />
+        <result property="key1" column="key1" />
+        <result property="key2" column="key2" />
+        <result property="key3" column="key3" />
+        <result property="content" column="content" />
+        <result property="crtTime" column="crtTime" />
+        <result property="operRes" column="operRes" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtUserId" column="crtUserId" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_LOG_COLUMN">
+        sul.USER_LOG_ID_ userLogId,
+        sul.USER_ID_ userId,
+        sul.OPER_CODE_ operCode,
+        sul.OPER_NAME_ operName,
+        sul.ENG_NAME_ engName,
+        sul.REQ_URI_ reqUri,
+        sul.OPER_IP_ operIp,
+        sul.KEY1_ key1,
+        sul.KEY2_ key2,
+        sul.KEY3_ key3,
+        sul.CONTENT_ content,
+        sul.CRT_TIME_ crtTime,
+        sul.OPER_RES_ operRes,
+        sul.IS_FINAL_ isFinal,
+        sul.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_LOG_WHERE">
+        <if test="userLogId != null">
+            AND sul.USER_LOG_ID_ = #{userLogId}
+        </if>
+        <if test="userId != null">
+            AND sul.USER_ID_ = #{userId}
+        </if>
+        <if test="operCode != null and operCode.length() != 0">
+            AND sul.OPER_CODE_ like '%${operCode}%'
+        </if>
+        <if test="operName != null and operName.length() != 0">
+            AND sul.OPER_NAME_ like '%${operName}%'
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sul.ENG_NAME_ like '%${engName}%'
+        </if>
+        <if test="reqUri != null and reqUri.length() != 0">
+            AND sul.REQ_URI_ like '%${reqUri}%'
+        </if>
+        <if test="operIp != null and operIp.length() != 0">
+            AND sul.OPER_IP_ like '%${operIp}%'
+        </if>
+        <if test="key1 != null and key1.length() != 0">
+            AND sul.KEY1_ = #{key1}
+        </if>
+        <if test="key2 != null and key2.length() != 0">
+            AND sul.KEY2_ = #{key2}
+        </if>
+        <if test="key3 != null and key3.length() != 0">
+            AND sul.KEY3_ = #{key3}
+        </if>
+        <if test="keyword != null and keyword.length() != 0">
+            AND (
+            sul.KEY1_ like '%${keyword}%'
+            or sul.KEY2_ like '%${keyword}%'
+            or sul.KEY3_ like '%${keyword}%'
+            )
+        </if>
+        <if test="content != null and content.length() != 0">
+            AND sul.CONTENT_ like '%${content}%'
+        </if>
+        <if test="crtTime != null">
+            AND sul.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="operRes != null and operRes.length() != 0">
+            AND sul.OPER_RES_ = #{operRes}
+        </if>
+        <if test="isFinal != null">
+            AND sul.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtUserId != null">
+            AND sul.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="startTimeStr != null and startTimeStr.length()!=0">
+            <if  test="_databaseId == 'oracle'">
+                AND to_char(sul.CRT_TIME_,'yyyy-mm-dd hh24:mi:ss') &gt;= #{startTimeStr}
+            </if>
+            <if  test="_databaseId == 'mysql'">
+                AND sul.CRT_TIME_ &gt;= #{startTimeStr}
+            </if>
+        </if>
+        <if test="endTimeStr != null and endTimeStr.length()!=0">
+            <if  test="_databaseId == 'oracle'">
+            	AND to_char(sul.CRT_TIME_,'yyyy-mm-dd hh24:mi:ss') &lt;= #{endTimeStr}
+            </if>    
+            <if  test="_databaseId == 'mysql'">
+            	AND sul.CRT_TIME_ &lt;= #{endTimeStr}
+            </if>
+        </if>
+        <if test="userName != null and userName.length() != 0">
+            AND su.user_name_ like '%${userName}%'
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysUserLogMap">
+        select <include  refid="SQL_SYS_USER_LOG_COLUMN" />
+        from SYS_USER_LOG sul
+        <where>
+            sul.USER_LOG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysUserLog" resultMap="sysUserLogMap">
+        select <include  refid="SQL_SYS_USER_LOG_COLUMN"/>
+        from SYS_USER_LOG sul
+        left join SYS_USER su ON sul.USER_ID_ = su.USER_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_LOG_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sul.USER_LOG_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysUserLog" resultType="int">
+        select count(
+            sul.USER_LOG_ID_
+        ) as counts
+        from SYS_USER_LOG sul
+        left join SYS_USER su ON sul.USER_ID_ = su.USER_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_LOG_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysUserLog" resultType="int">
+        select count(
+            sul.USER_LOG_ID_
+        ) as counts
+        from SYS_USER_LOG sul
+        <where>
+            <if test="userLogId != null">
+                AND sul.USER_LOG_ID_ != #{userLogId}
+            </if>
+            <if test="userId != null">
+                AND sul.USER_ID_ = #{userId}
+            </if>
+            <if test="operCode != null and operCode.length() != 0">
+                AND sul.OPER_CODE_ = #{operCode}
+            </if>
+            <if test="operName != null and operName.length() != 0">
+                AND sul.OPER_NAME_ = #{operName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sul.ENG_NAME_ = #{engName}
+            </if>
+            <if test="reqUri != null and reqUri.length() != 0">
+                AND sul.REQ_URI_ = #{reqUri}
+            </if>
+            <if test="operIp != null and operIp.length() != 0">
+                AND sul.OPER_IP_ = #{operIp}
+            </if>
+            <if test="key1 != null and key1.length() != 0">
+                AND sul.KEY1_ = #{key1}
+            </if>
+            <if test="key2 != null and key2.length() != 0">
+                AND sul.KEY2_ = #{key2}
+            </if>
+            <if test="key3 != null and key3.length() != 0">
+                AND sul.KEY3_ = #{key3}
+            </if>
+            <if test="content != null and content.length() != 0">
+                AND sul.CONTENT_ = #{content}
+            </if>
+            <if test="operRes != null and operRes.length() != 0">
+                AND sul.OPER_RES_ = #{operRes}
+            </if>
+            <if test="isFinal != null">
+                AND sul.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sul.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sul.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

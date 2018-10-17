@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDictItemMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDictItem" id="sysDictItemMap">
+        <id property="dictItemId" column="dictItemId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="dictGroupId" column="dictGroupId" />
+        <result property="itemValue" column="itemValue" />
+        <result property="itemName" column="itemName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="isVisible" column="isVisible" />
+        <result property="sortNo" column="sortNo" />
+        <result property="priorityNo" column="priorityNo" />
+        <result property="subGroupCode" column="subGroupCode" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysDictGroup" column="dictGroupId" select="com.hginfo.hbm.be.mapper.sys.SysDictGroupMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DICT_ITEM_COLUMN">
+        sdi.DICT_ITEM_ID_ dictItemId,
+        sdi.TENANT_ID_ tenantId,
+        sdi.DICT_GROUP_ID_ dictGroupId,
+        sdi.ITEM_VALUE_ itemValue,
+        sdi.ITEM_NAME_ itemName,
+        sdi.ENG_NAME_ engName,
+        sdi.I18N_CODE_ i18nCode,
+        sdi.IS_VISIBLE_ isVisible,
+        sdi.SORT_NO_ sortNo,
+        sdi.PRIORITY_NO_ priorityNo,
+        sdi.SUB_GROUP_CODE_ subGroupCode,
+        sdi.DESCR_ descr,
+        sdi.IS_DELETE_ isDelete,
+        sdi.IS_FINAL_ isFinal,
+        sdi.CRT_TIME_ crtTime,
+        sdi.UPD_TIME_ updTime,
+        sdi.CRT_USER_ID_ crtUserId,
+        sdi.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DICT_ITEM_WHERE">
+        <if test="dictItemId != null">
+            AND sdi.DICT_ITEM_ID_ = #{dictItemId}
+        </if>
+        <if test="tenantId != null">
+            AND sdi.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="dictGroupId != null">
+            AND sdi.DICT_GROUP_ID_ = #{dictGroupId}
+        </if>
+        <if test="itemValue != null and itemValue.length() != 0">
+            AND sdi.ITEM_VALUE_ = #{itemValue}
+        </if>
+        <if test="itemName != null and itemName.length() != 0">
+            AND sdi.ITEM_NAME_ = #{itemName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sdi.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sdi.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="isVisible != null">
+            AND sdi.IS_VISIBLE_ = #{isVisible}
+        </if>
+        <if test="sortNo != null">
+            AND sdi.SORT_NO_ = #{sortNo}
+        </if>
+        <if test="priorityNo != null">
+            AND sdi.PRIORITY_NO_ = #{priorityNo}
+        </if>
+        <if test="subGroupCode != null and subGroupCode.length() != 0">
+            AND sdi.SUB_GROUP_CODE_ = #{subGroupCode}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdi.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdi.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdi.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdi.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdi.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdi.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdi.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDictItemMap">
+        select <include  refid="SQL_SYS_DICT_ITEM_COLUMN" />
+        from SYS_DICT_ITEM sdi
+        <where>
+            sdi.DICT_ITEM_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDictItem" resultMap="sysDictItemMap">
+        select <include  refid="SQL_SYS_DICT_ITEM_COLUMN"/>
+        from SYS_DICT_ITEM sdi
+        <where>
+            <include  refid="SQL_SYS_DICT_ITEM_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdi.SORT_NO_ asc, sdi.DICT_ITEM_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDictItem" resultType="int">
+        select count(
+            sdi.DICT_ITEM_ID_
+        ) as counts
+        from SYS_DICT_ITEM sdi
+        <where>
+            <include  refid="SQL_SYS_DICT_ITEM_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDictItem" resultType="int">
+        select count(
+            sdi.DICT_ITEM_ID_
+        ) as counts
+        from SYS_DICT_ITEM sdi
+        <where>
+            <if test="dictItemId != null">
+                AND sdi.DICT_ITEM_ID_ != #{dictItemId}
+            </if>
+            <if test="tenantId != null">
+                AND sdi.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="dictGroupId != null">
+                AND sdi.DICT_GROUP_ID_ = #{dictGroupId}
+            </if>
+            <if test="itemValue != null and itemValue.length() != 0">
+                AND sdi.ITEM_VALUE_ = #{itemValue}
+            </if>
+            <if test="itemName != null and itemName.length() != 0">
+                AND sdi.ITEM_NAME_ = #{itemName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sdi.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sdi.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="isVisible != null">
+                AND sdi.IS_VISIBLE_ = #{isVisible}
+            </if>
+            <if test="sortNo != null">
+                AND sdi.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="priorityNo != null">
+                AND sdi.PRIORITY_NO_ = #{priorityNo}
+            </if>
+            <if test="subGroupCode != null and subGroupCode.length() != 0">
+                AND sdi.SUB_GROUP_CODE_ = #{subGroupCode}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdi.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdi.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdi.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdi.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdi.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdi.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdi.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

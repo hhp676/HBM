@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+    default-autowire="byName">
+
+    <!-- hibernate validator -->
+    <bean id="validator"
+        class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass"
+            value="org.hibernate.validator.HibernateValidator" />
+        <!-- 这里配置将使用国际化配置的messageSource -->
+        <property name="validationMessageSource" ref="messageSource" />
+    </bean>
+    
+    
+    <bean id="validateMethodInterceptor" class="com.hginfo.hvalidate.interceptor.ValidateMethodInterceptor"/>  
+    <!-- 方法拦截器（拦截Controller包中的所有被RequestMapping注解的方法 或 带有@HService注解的方法，不需要时，可修改） MethodInterceptor -->  
+    <aop:config proxy-target-class="true">  
+        <!-- springMVC web工程引用时使用如下切点 -->
+        <!-- <aop:pointcut id="validateMethodPointcut" 
+            expression="execution(* com.hginfo..*Controller.*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping)"/> -->
+        <!-- dubbo工程引用时使用如下切点 -->
+        <!-- <aop:pointcut id="validateMethodPointcut" 
+            expression="execution(* *..service..*Service*.*(..)) and @target(com.hginfo.hdubbo.annotation.HService)"/> -->
+        <!-- 也可同时用,使用or -->
+        <aop:pointcut id="validateMethodPointcut" 
+            expression="(execution(* com.hginfo..*Controller.*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping))
+             or (execution(* *..service..*Service*.*(..)) and @target(com.hginfo.hdubbo.annotation.HService))"/>
+        
+        <aop:advisor advice-ref="validateMethodInterceptor" pointcut-ref="validateMethodPointcut" />  
+    </aop:config> 
+</beans>

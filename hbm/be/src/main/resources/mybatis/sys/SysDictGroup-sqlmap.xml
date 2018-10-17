@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDictGroupMapper">
+
+    <sql id="SQL_SYS_DICT_GROUP_COLUMN">
+        sdg.DICT_GROUP_ID_ dictGroupId,
+        sdg.TENANT_ID_ tenantId,
+        sdg.DICT_GROUP_CODE_ dictGroupCode,
+        sdg.GROUP_TYPE_ groupType,
+        sdg.GROUP_NAME_ groupName,
+        sdg.ENG_NAME_ engName,
+        sdg.I18N_CODE_ i18nCode,
+        sdg.DESCR_ descr,
+        sdg.IS_DELETE_ isDelete,
+        sdg.IS_FINAL_ isFinal,
+        sdg.CRT_TIME_ crtTime,
+        sdg.UPD_TIME_ updTime,
+        sdg.CRT_USER_ID_ crtUserId,
+        sdg.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DICT_GROUP_WHERE">
+        <if test="dictGroupId != null">
+            AND sdg.DICT_GROUP_ID_ = #{dictGroupId}
+        </if>
+        <if test="tenantId !=null ">
+            AND sdg.TENANT_ID_=#{tenantId}
+        </if>
+        <if test="dictGroupCode !=null and dictGroupCode.length()!=0 ">
+            AND sdg.DICT_GROUP_CODE_=#{dictGroupCode}
+        </if>
+        <if test="groupType !=null and groupType.length()!=0 ">
+            AND sdg.GROUP_TYPE_=#{groupType}
+        </if>
+        <if test="groupName !=null and groupName.length()!=0 ">
+            AND sdg.GROUP_NAME_ like '%${groupName}%'
+        </if>
+        <if test="engName !=null and engName.length()!=0 ">
+            AND sdg.ENG_NAME_=#{engName}
+        </if>
+        <if test="i18nCode !=null and i18nCode.length()!=0 ">
+            AND sdg.I18N_CODE_=#{i18nCode}
+        </if>
+        <if test="descr !=null and descr.length()!=0 ">
+            AND sdg.DESCR_=#{descr}
+        </if>
+        <if test="isDelete !=null ">
+            AND sdg.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND sdg.IS_FINAL_=#{isFinal}
+        </if>
+        <if test="crtTime !=null ">
+            AND sdg.CRT_TIME_=#{crtTime}
+        </if>
+        <if test="updTime !=null ">
+            AND sdg.UPD_TIME_=#{updTime}
+        </if>
+        <if test="crtUserId !=null ">
+            AND sdg.CRT_USER_ID_=#{crtUserId}
+        </if>
+        <if test="updUserId !=null ">
+            AND sdg.UPD_USER_ID_=#{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysDictGroup">
+        select <include  refid="SQL_SYS_DICT_GROUP_COLUMN"/>
+        from sys_dict_group sdg
+        <where>
+                sdg.DICT_GROUP_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDictGroup" resultType="SysDictGroup">
+        select <include  refid="SQL_SYS_DICT_GROUP_COLUMN"/>
+        from sys_dict_group sdg
+        <where>
+            <include  refid="SQL_SYS_DICT_GROUP_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdg.DICT_GROUP_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDictGroup" resultType="int">
+        select count(sdg.DICT_GROUP_ID_) as counts
+        from sys_dict_group sdg
+        <where>
+            <include  refid="SQL_SYS_DICT_GROUP_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDictGroup" resultType="int">
+        select count(
+            sdg.DICT_GROUP_ID_
+        ) as counts
+        from SYS_DICT_GROUP sdg
+        <where>
+            <if test="dictGroupId != null">
+                AND sdg.DICT_GROUP_ID_ != #{dictGroupId}
+            </if>
+            <if test="tenantId != null">
+                AND sdg.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="dictGroupCode != null and dictGroupCode.length() != 0">
+                AND sdg.DICT_GROUP_CODE_ = #{dictGroupCode}
+            </if>
+            <if test="groupType != null and groupType.length() != 0">
+                AND sdg.GROUP_TYPE_ = #{groupType}
+            </if>
+            <if test="groupName != null and groupName.length() != 0">
+                AND sdg.GROUP_NAME_ = #{groupName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sdg.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sdg.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdg.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdg.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdg.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdg.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdg.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdg.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdg.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

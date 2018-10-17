@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysNoticeMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NOTICE_COLUMN">
+        sn.NOTICE_ID_ noticeId,
+        sn.SORT_NO_ sortNo,
+        sn.START_TIME_ startTime,
+        sn.END_TIME_ endTime,
+        sn.AUTO_PUB_ autoPub,
+        sn.NEWS_TYPE_ID_ newsTypeId,
+        sn.TIMER_LV_ timerLv,
+        sn.IMPORTANT_LV_ importantLv,
+        sn.TITLE_ title,
+        sn.CONTENT_ content,
+        sn.NOTICE_STATUS_ noticeStatus,
+        sn.IS_DELETE_ isDelete,
+        sn.IS_FINAL_ isFinal,
+        sn.CRT_TIME_ crtTime,
+        sn.UPD_TIME_ updTime,
+        sn.CRT_USER_ID_ crtUserId,
+        sn.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NOTICE_WHERE">
+        <if test="bo !=null">
+          <if test="bo.titleLike != null and bo.titleLike.length() != 0">
+               AND sn.TITLE_ like '%${bo.titleLike}%'
+          </if>
+          <if test="bo.contentLike != null and bo.contentLike.length() != 0">
+               AND sn.CONTENT_ like '%${bo.contentLike}%'
+          </if>
+          <if test="bo.queryStartTime != null">
+               AND sn.END_TIME_ > #{bo.queryStartTime}
+          </if>
+          <if test="bo.queryEndTime != null">
+               AND sn.START_TIME_  &lt; #{bo.queryEndTime}
+          </if>
+        </if>
+        <if test="noticeId != null">
+            AND sn.NOTICE_ID_ = #{noticeId}
+        </if>
+        <if test="sortNo != null">
+            AND sn.SORT_NO_ = #{sortNo}
+        </if>
+        <if test="startTime != null">
+            AND sn.START_TIME_ = #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND sn.END_TIME_ = #{endTime}
+        </if>
+        <if test="autoPub != null">
+            AND sn.AUTO_PUB_ = #{autoPub}
+        </if>
+        <if test="newsTypeId != null">
+            AND sn.NEWS_TYPE_ID_ = #{newsTypeId}
+        </if>
+        <if test="timerLv != null">
+            AND sn.TIMER_LV_ = #{timerLv}
+        </if>
+        <if test="importantLv != null">
+            AND sn.IMPORTANT_LV_ = #{importantLv}
+        </if>
+        <if test="title != null and title.length() != 0">
+            AND sn.TITLE_ = #{title}
+        </if>
+        <if test="content != null and content.length() != 0">
+            AND sn.CONTENT_ = #{content}
+        </if>
+        <if test="noticeStatus != null">
+            AND sn.NOTICE_STATUS_ = #{noticeStatus}
+        </if>
+        <if test="isDelete != null">
+            AND sn.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sn.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sn.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sn.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sn.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sn.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNotice">
+        select <include refid="SQL_SYS_NOTICE_COLUMN"/>
+        from SYS_NOTICE sn
+        <where>
+            sn.NOTICE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNotice" resultType="SysNotice">
+        select <include refid="SQL_SYS_NOTICE_COLUMN"/>
+        from SYS_NOTICE sn
+        <where>
+            <include refid="SQL_SYS_NOTICE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sn.NOTICE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNotice" resultType="int">
+        select count(
+            sn.NOTICE_ID_
+        ) as counts
+        from SYS_NOTICE sn
+        <where>
+            <include refid="SQL_SYS_NOTICE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNotice" resultType="int">
+        select count(
+            sn.NOTICE_ID_
+        ) as counts
+        from SYS_NOTICE sn
+        <where>
+            <if test="noticeId != null">
+                AND sn.NOTICE_ID_ != #{noticeId}
+            </if>
+            <if test="sortNo != null">
+                AND sn.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="startTime != null">
+                AND sn.START_TIME_ = #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND sn.END_TIME_ = #{endTime}
+            </if>
+            <if test="autoPub != null">
+                AND sn.AUTO_PUB_ = #{autoPub}
+            </if>
+            <if test="title != null and title.length() != 0">
+                AND sn.TITLE_ = #{title}
+            </if>
+            <if test="content != null and content.length() != 0">
+                AND sn.CONTENT_ = #{content}
+            </if>
+            <if test="isDelete != null">
+                AND sn.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sn.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sn.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sn.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sn.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sn.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

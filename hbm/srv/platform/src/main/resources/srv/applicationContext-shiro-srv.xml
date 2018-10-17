@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="restFormAuthenticationIniFilter" class="com.hginfo.hbm.fe.core.shiro.login.rest.RestFormAuthenticationIniFilter" />
+    <bean id="restUserFilter" class="com.hginfo.hbm.fe.core.shiro.login.rest.RestUserFilter" />
+    <bean id="restAdminFilter" class="com.hginfo.hbm.fe.core.shiro.login.rest.RestAdminFilter" />
+    <bean id="restLogoutFilter" class="com.hginfo.hbm.fe.core.shiro.login.rest.RestLogoutFilter" />
+    
+    <!-- Shiro Filter -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="filters">
+            <map>
+                <entry key="authc" value-ref="restFormAuthenticationIniFilter" />
+                <entry key="ssoAuthc" value-ref="ssoFormAuthenticationIniFilter" />
+                <entry key="restAdmin" value-ref="restAdminFilter" />
+                <entry key="restUser" value-ref="restUserFilter" />
+                <entry key="hgauth" value-ref="hgAuthFilter" />
+            </map>
+        </property>
+        <property name="securityManager" ref="securityManager" />
+        <property name="loginUrl" value="/login" />
+        <!-- <property name="loginUrl" value="http://127.0.0.1:9080/cas/login?service=http://127.0.0.1:8080/hbm-fe-easyui/ssoLogin" /> -->
+        <property name="successUrl" value="/admin/" />
+        <property name="unauthorizedUrl" value="/admin/login" />
+        <property name="filterChainDefinitions">
+            <value>
+                /login = authc
+                /ssoLogin = ssoAuthc
+                /logout = restLogoutFilter
+                /public/** = anon
+                /admin/public/** = anon
+                /admin/login = anon
+                /admin/** = restAdmin, hgauth
+                /sys/** = restUser, hgauth
+                /druid/** = restUser, hgauth
+                /chkSession = anon
+                / = restUser
+            </value>
+        </property>
+    </bean>
+
+</beans>

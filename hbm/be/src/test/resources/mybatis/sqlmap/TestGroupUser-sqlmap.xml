@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.test.TestGroupUserMapper">
+
+    <!-- result map -->
+    <resultMap type="TestGroupUser" id="testGroupUserMap">
+        <id property="userId" column="userId" />
+        <id property="groupId" column="groupId" />
+        <result property="isLeader" column="isLeader" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <association property="sysGroup" column="groupId" select="com.hginfo.hbm.be.mapper.test.SysGroupMapper.getById" />
+        <association property="sysUser" column="userId" select="com.hginfo.hbm.be.mapper.test.SysUserMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_TEST_GROUP_USER_COLUMN">
+        tgu.USER_ID_ userId,
+        tgu.GROUP_ID_ groupId,
+        tgu.IS_LEADER_ isLeader,
+        tgu.IS_FINAL_ isFinal,
+        tgu.CRT_TIME_ crtTime,
+        tgu.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_TEST_GROUP_USER_WHERE">
+        <if test="userId != null">
+            AND tgu.USER_ID_ = #{userId}
+        </if>
+        <if test="groupId != null">
+            AND tgu.GROUP_ID_ = #{groupId}
+        </if>
+        <if test="isLeader != null">
+            AND tgu.IS_LEADER_ = #{isLeader}
+        </if>
+        <if test="isFinal != null">
+            AND tgu.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND tgu.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND tgu.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="TestGroupUserPK" resultType="TestGroupUser">
+        select <include  refid="SQL_TEST_GROUP_USER_COLUMN" />
+        from TEST_GROUP_USER tgu
+        <where>
+            tgu.USER_ID_ = #{userId}
+            AND tgu.GROUP_ID_ = #{groupId}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="TestGroupUser" resultType="TestGroupUser">
+        select <include  refid="SQL_TEST_GROUP_USER_COLUMN"/>
+        from TEST_GROUP_USER tgu
+        <where>
+            <include  refid="SQL_TEST_GROUP_USER_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                tgu.USER_ID_ desc,
+                tgu.GROUP_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="TestGroupUser" resultType="int">
+        select count(
+            tgu.USER_ID_
+        ) as counts
+        from TEST_GROUP_USER tgu
+        <where>
+            <include  refid="SQL_TEST_GROUP_USER_WHERE"/>
+        </where>
+    </select>
+
+</mapper>

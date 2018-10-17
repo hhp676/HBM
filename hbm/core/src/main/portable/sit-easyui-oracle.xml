@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<portable-config>
+    <config-file path="env.properties">
+        <replace key="jdbc.driverUrl.hbm">jdbc:oracle:thin:@192.168.8.183:1521:orcl</replace>
+        <replace key="jdbc.username.hbm">hbm_dev</replace>
+        <replace key="jdbc.password.hbm">C9mTbhggnE6lFyb134qOi8cd/ClP8S+h10VSHy6TVHBUnvuGDbGm26M+IoUK0pijO9mqP4qMv9YfDdmeGqnoig==</replace>
+        <replace key="jdbc.publickey.hbm">MFwwDQYJKoZIhvc3AQEBBQADSwAwSAJBALDAEupjMNboKQk3IVsKxA6WpgOPHHgyStC5798tJVPlta1wc8C7mRG8hU2lc/KUc/TnnZLMtNAK+zVj5Hyj748CAwEAAQ==</replace>
+        <replace key="jdbc.driverUrl.test">jdbc:oracle:thin:@192.168.8.183:1521:orcl</replace>
+        <replace key="jdbc.username.test">hbm_dev</replace>
+        <replace key="jdbc.password.test">C9mTbhggnE6lFybr3412i8cd/ClP8S+h10VSHy6TVHBUnvuGDbGm26M+IoUK0pijO9mqP4qMv9YfDdmeGqnoig==</replace>
+        <replace key="jdbc.publickey.test">MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALDAEupjMNboK3k3IVsKxA6WpgOPHHgyStC5798tJVPlta1wc8C7mRG8hU2lc/KUc/TnnZLMtNAK+zVj5Hyj748CAwEAAQ==</replace>
+        <replace key="jdbc.schema">HBM_TEST</replace>
+        <replace key="jdbc.dataSourceType">oracle</replace>
+        <replace key="hdubbo.registry.address">zookeeper://192.168.2.183:2181</replace>
+        <replace key="file.uploadPath">/home/hbm/upload</replace>
+        <replace key="ueditor.imageUrlPrefix">http://192.168.2.187:7780/hbm</replace>
+        
+        <replace key="xxl.job.executor.port">19993</replace>
+        <replace key="xxl.job.executor.logpath">/var/log/hdp/hbm-job-executor-oracle/</replace>
+    </config-file>
+</portable-config>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.1//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 开启全局性设置懒加载，dubbo环境下需要改为false -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 开启按需加载 -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    <typeAliases>
+        <!-- 忽略大小写的Map类,由jdbctemplete借鉴而来 -->
+        <typeAlias type="org.springframework.util.LinkedCaseInsensitiveMap"
+            alias="CaseIgnoreMap" />
+        <typeAlias type="com.hginfo.hbm.base.BaseEntity"
+            alias="BaseEntity" />
+        <!-- 此处不需要添加其他实体entity别名，改在applicationContext-mybatis.xml里面扫描package -->
+    </typeAliases>
+    
+    <!-- 按照定义顺序的倒序执行plugin -->
+    <plugins>
+        <!-- 数据库分页Dialect -->
+        <plugin interceptor="com.hginfo.hbm.be.interceptor.OffsetLimitInterceptor"></plugin>
+        <!-- 数据权限处理 -->
+        <plugin interceptor="com.hginfo.hbm.be.dauth.interceptor.DauthSqlInterceptor"></plugin>
+        <!-- 数据库SQL防注入插件 -->
+        <plugin interceptor="com.hginfo.hbm.be.interceptor.SqlInjectInterceptor"></plugin>
+    </plugins>
+</configuration>

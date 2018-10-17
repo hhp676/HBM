@@ -1,0 +1,45 @@
+package com.hginfo.hbm.be.dubbo.common;
+
+import com.hginfo.hbm.be.dubbo.common.service.TestModeService;
+import com.hginfo.hbm.be.dubbo.dubbopackage.service.TestDubboPackageService;
+import com.hginfo.hbm.be.service.TOrderService;
+import com.hginfo.hdubbo.annotation.HReference;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * 测试hdubbo:mode mode的属性作用。
+ */
+@RunWith(SpringJUnit4ClassRunner.class)  
+@ContextConfiguration(locations = {"classpath:spring/applicationContext-base.xml",
+        "classpath:spring/applicationContext-identityid.xml",
+        "classpath:spring/applicationContext-db.xml",
+        "classpath:spring/applicationContext-hibernate.xml",
+        "classpath:spring/applicationContext-mybatis.xml",
+        "classpath:spring/applicationContext-tx.xml",
+        "classpath:spring/applicationContext-freemarker-be.xml",
+        "classpath:dubbo/applicationContext-hdubbo-dubbo.xml"})  
+public class DubboModeTest {
+    
+    
+    @HReference(forceDubbo = true)
+    private TestModeService testModeService;
+    
+    @HReference(qualifier = "tOrderService")
+    private TOrderService tOrderService;
+    
+    @HReference
+    private TestDubboPackageService testDubboPackageService;
+    
+    @Test
+    public void testMode(){
+        System.out.println("==============testMode==========================");
+        System.out.println("===tOrderService===" + tOrderService);
+        System.out.println("===testModeService===" + testModeService);
+        System.out.println("===testDubboPackageService===" + testDubboPackageService);
+        testModeService.test();
+        testModeService.testCallback(() -> System.out.println("callback ok!"));
+    }
+}

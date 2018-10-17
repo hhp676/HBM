@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysConfigMapper">
+
+    <sql id="SQL_SYS_CONFIG_COLUMN">
+        sc.CONFIG_ID_ configId,
+        sc.TENANT_ID_ tenantId,
+        sc.CONFIG_KEY_ configKey,
+        sc.CONFIG_VALUE_ configValue,
+        sc.CONFIG_DESC_ configDesc,
+        sc.CONFIG_TYPE_ configType,
+        sc.DEFAULT_VALUE_ defaultValue,
+        sc.SORT_NO_ sortNo,
+        sc.VERSION_ version,
+        sc.IS_CURRENT_ isCurrent,
+        sc.DESCR_ descr,
+        sc.IS_DELETE_ isDelete,
+        sc.IS_FINAL_ isFinal,
+        sc.CRT_TIME_ crtTime,
+        sc.UPD_TIME_ updTime,
+        sc.CRT_USER_ID_ crtUserId,
+        sc.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_CONFIG_WHERE">
+        <if test="configId != null">
+            AND sc.CONFIG_ID_ = #{configId}
+        </if>
+        <if test="tenantId !=null ">
+            AND sc.TENANT_ID_=#{tenantId}
+        </if>
+        <if test="configKey !=null and configKey.length()!=0 ">
+            AND sc.CONFIG_KEY_=#{configKey}
+        </if>
+        <if test="configValue !=null and configValue.length()!=0 ">
+            AND sc.CONFIG_VALUE_=#{configValue}
+        </if>
+        <if test="configDesc !=null and configDesc.length()!=0 ">
+            AND sc.CONFIG_DESC_=#{configDesc}
+        </if>
+        <if test="configType !=null and configType.length()!=0 ">
+            AND sc.CONFIG_TYPE_=#{configType}
+        </if>
+        <if test="defaultValue !=null and defaultValue.length()!=0 ">
+            AND sc.DEFAULT_VALUE_=#{defaultValue}
+        </if>
+        <if test="sortNo !=null ">
+            AND sc.SORT_NO_=#{sortNo}
+        </if>
+        <if test="version !=null ">
+            AND sc.VERSION_=#{version}
+        </if>
+        <if test="isCurrent !=null ">
+            AND sc.IS_CURRENT_=#{isCurrent}
+        </if>
+        <if test="descr !=null and descr.length()!=0 ">
+            AND sc.DESCR_=#{descr}
+        </if>
+        <if test="isDelete !=null ">
+            AND sc.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND sc.IS_FINAL_=#{isFinal}
+        </if>
+        <if test="crtTime !=null ">
+            AND sc.CRT_TIME_=#{crtTime}
+        </if>
+        <if test="updTime !=null ">
+            AND sc.UPD_TIME_=#{updTime}
+        </if>
+        <if test="crtUserId !=null ">
+            AND sc.CRT_USER_ID_=#{crtUserId}
+        </if>
+        <if test="updUserId !=null ">
+            AND sc.UPD_USER_ID_=#{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysConfig">
+        select <include  refid="SQL_SYS_CONFIG_COLUMN"/>
+        from sys_config sc
+        <where>
+                sc.CONFIG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysConfig" resultType="SysConfig">
+        select <include  refid="SQL_SYS_CONFIG_COLUMN"/>
+        from sys_config sc
+        <where>
+            <include  refid="SQL_SYS_CONFIG_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY sc.SORT_NO_ asc,
+                sc.CONFIG_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysConfig" resultType="int">
+        select count(sc.CONFIG_ID_) as counts
+        from sys_config sc
+        <where>
+            <include  refid="SQL_SYS_CONFIG_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysConfig" resultType="int">
+        select count(
+            sc.CONFIG_ID_
+        ) as counts
+        from SYS_CONFIG sc
+        <where>
+            <if test="configId != null">
+                AND sc.CONFIG_ID_ != #{configId}
+            </if>
+            <if test="tenantId != null">
+                AND sc.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="configKey != null and configKey.length() != 0">
+                AND sc.CONFIG_KEY_ = #{configKey}
+            </if>
+            <if test="configValue != null and configValue.length() != 0">
+                AND sc.CONFIG_VALUE_ = #{configValue}
+            </if>
+            <if test="configDesc != null and configDesc.length() != 0">
+                AND sc.CONFIG_DESC_ = #{configDesc}
+            </if>
+            <if test="configType != null and configType.length() != 0">
+                AND sc.CONFIG_TYPE_ = #{configType}
+            </if>
+            <if test="defaultValue != null and defaultValue.length() != 0">
+                AND sc.DEFAULT_VALUE_ = #{defaultValue}
+            </if>
+            <if test="sortNo != null">
+                AND sc.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="version != null">
+                AND sc.VERSION_ = #{version}
+            </if>
+            <if test="isCurrent != null">
+                AND sc.IS_CURRENT_ = #{isCurrent}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sc.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sc.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sc.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sc.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sc.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sc.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sc.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

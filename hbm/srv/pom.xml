@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hginfo.hdf</groupId>
+        <artifactId>hbm</artifactId>
+        <version>3.0.5-rc1</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>hbm-srv</artifactId>
+    <name>HBM :: SRV</name>
+    <packaging>pom</packaging>
+    <description>hbm-srv is a a Web Service Project,It contains Controller,Web Pages,Static Resources...</description>
+
+    <modules>
+        <module>platform</module>
+        <!--<module>demo</module>-->
+    </modules>
+
+</project>

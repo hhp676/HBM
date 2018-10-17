@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthFilterItemMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDauthFilterItem" id="sysDauthFilterItemMap">
+        <id property="filterItemId" column="filterItemId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="entityId" column="entityId" />
+        <result property="filterTypeId" column="filterTypeId" />
+        <result property="fieldId" column="fieldId" />
+        <result property="operatorId" column="operatorId" />
+        <result property="valueType" column="valueType" />
+        <result property="filterValue" column="filterValue" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysDauthFilterType" column="filterTypeId" select="com.hginfo.hbm.be.mapper.sys.SysDauthFilterTypeMapper.getById" />
+        <association property="sysDauthOperator" column="operatorId" select="com.hginfo.hbm.be.mapper.sys.SysDauthOperatorMapper.getById" />
+        <!-- <association property="sysMetadataEntity" column="entityId" select="com.hginfo.hbm.be.mapper.sys.SysMetadataEntityMapper.getById" /> -->
+        <association property="sysMetadataField" column="fieldId" select="com.hginfo.hbm.be.mapper.sys.SysMetadataFieldMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_FILTER_ITEM_COLUMN">
+        sdfi.FILTER_ITEM_ID_ filterItemId,
+        sdfi.TENANT_ID_ tenantId,
+        sdfi.ENTITY_ID_ entityId,
+        sdfi.FILTER_TYPE_ID_ filterTypeId,
+        sdfi.FIELD_ID_ fieldId,
+        sdfi.OPERATOR_ID_ operatorId,
+        sdfi.VALUE_TYPE_ valueType,
+        sdfi.FILTER_VALUE_ filterValue,
+        sdfi.DESCR_ descr,
+        sdfi.IS_DELETE_ isDelete,
+        sdfi.IS_FINAL_ isFinal,
+        sdfi.CRT_TIME_ crtTime,
+        sdfi.UPD_TIME_ updTime,
+        sdfi.CRT_USER_ID_ crtUserId,
+        sdfi.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_FILTER_ITEM_WHERE">
+        <if test="filterItemId != null">
+            AND sdfi.FILTER_ITEM_ID_ = #{filterItemId}
+        </if>
+        <if test="tenantId != null">
+            AND sdfi.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="entityId != null">
+            AND sdfi.ENTITY_ID_ = #{entityId}
+        </if>
+        <if test="filterTypeId != null">
+            AND sdfi.FILTER_TYPE_ID_ = #{filterTypeId}
+        </if>
+        <if test="fieldId != null">
+            AND sdfi.FIELD_ID_ = #{fieldId}
+        </if>
+        <if test="operatorId != null">
+            AND sdfi.OPERATOR_ID_ = #{operatorId}
+        </if>
+        <if test="valueType != null">
+            AND sdfi.VALUE_TYPE_ = #{valueType}
+        </if>
+        <if test="filterValue != null and filterValue.length() != 0">
+            AND sdfi.FILTER_VALUE_ = #{filterValue}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdfi.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdfi.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdfi.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdfi.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdfi.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdfi.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdfi.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDauthFilterItemMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_ITEM_COLUMN" />
+        from SYS_DAUTH_FILTER_ITEM sdfi
+        <where>
+            sdfi.FILTER_ITEM_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthFilterItem" resultMap="sysDauthFilterItemMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_ITEM_COLUMN"/>
+        from SYS_DAUTH_FILTER_ITEM sdfi
+        left join SYS_DAUTH_FILTER_TYPE sdft on sdft.FILTER_TYPE_ID_ = sdfi.FILTER_TYPE_ID_
+        left join SYS_DAUTH_OPERATOR sdo on sdo.OPERATOR_ID_ = sdfi.OPERATOR_ID_
+        left join SYS_METADATA_FIELD smf on smf.FIELD_ID_ = sdfi.FIELD_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_ITEM_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdfi.FILTER_ITEM_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthFilterItem" resultType="int">
+        select count(
+            sdfi.FILTER_ITEM_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_ITEM sdfi
+        left join SYS_DAUTH_FILTER_TYPE sdft on sdft.FILTER_TYPE_ID_ = sdfi.FILTER_TYPE_ID_
+        left join SYS_DAUTH_OPERATOR sdo on sdo.OPERATOR_ID_ = sdfi.OPERATOR_ID_
+        left join SYS_METADATA_FIELD smf on smf.FIELD_ID_ = sdfi.FIELD_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_ITEM_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthFilterItem" resultType="int">
+        select count(
+            sdfi.FILTER_ITEM_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_ITEM sdfi
+        <where>
+            <if test="filterItemId != null">
+                AND sdfi.FILTER_ITEM_ID_ != #{filterItemId}
+            </if>
+            <if test="tenantId != null">
+                AND sdfi.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="entityId != null">
+                AND sdfi.ENTITY_ID_ = #{entityId}
+            </if>
+            <if test="filterTypeId != null">
+                AND sdfi.FILTER_TYPE_ID_ = #{filterTypeId}
+            </if>
+            <if test="fieldId != null">
+                AND sdfi.FIELD_ID_ = #{fieldId}
+            </if>
+            <if test="operatorId != null">
+                AND sdfi.OPERATOR_ID_ = #{operatorId}
+            </if>
+            <if test="valueType != null">
+                AND sdfi.VALUE_TYPE_ = #{valueType}
+            </if>
+            <if test="filterValue != null and filterValue.length() != 0">
+                AND sdfi.FILTER_VALUE_ = #{filterValue}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdfi.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdfi.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdfi.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdfi.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdfi.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdfi.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdfi.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

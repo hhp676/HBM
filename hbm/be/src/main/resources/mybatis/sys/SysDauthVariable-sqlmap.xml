@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthVariableMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_VARIABLE_COLUMN">
+        sdv.VARIABLE_ID_ variableId,
+        sdv.TENANT_ID_ tenantId,
+        sdv.VARIABLE_CODE_ variableCode,
+        sdv.VARIABLE_NAME_ variableName,
+        sdv.ENG_NAME_ engName,
+        sdv.I18N_CODE_ i18nCode,
+        sdv.VARIABLE_VALUE_ variableValue,
+        sdv.DESCR_ descr,
+        sdv.IS_DELETE_ isDelete,
+        sdv.IS_FINAL_ isFinal,
+        sdv.CRT_TIME_ crtTime,
+        sdv.UPD_TIME_ updTime,
+        sdv.CRT_USER_ID_ crtUserId,
+        sdv.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_VARIABLE_WHERE">
+        <if test="variableId != null">
+            AND sdv.VARIABLE_ID_ = #{variableId}
+        </if>
+        <if test="tenantId != null">
+            AND sdv.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="variableCode != null and variableCode.length() != 0">
+            AND sdv.VARIABLE_CODE_ = #{variableCode}
+        </if>
+        <if test="variableName != null and variableName.length() != 0">
+            AND sdv.VARIABLE_NAME_ = #{variableName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sdv.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sdv.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="variableValue != null and variableValue.length() != 0">
+            AND sdv.VARIABLE_VALUE_ = #{variableValue}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdv.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdv.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdv.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdv.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdv.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdv.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdv.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysDauthVariable">
+        select <include  refid="SQL_SYS_DAUTH_VARIABLE_COLUMN" />
+        from SYS_DAUTH_VARIABLE sdv
+        <where>
+            sdv.VARIABLE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthVariable" resultType="SysDauthVariable">
+        select <include  refid="SQL_SYS_DAUTH_VARIABLE_COLUMN"/>
+        from SYS_DAUTH_VARIABLE sdv
+        <where>
+            <include  refid="SQL_SYS_DAUTH_VARIABLE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdv.VARIABLE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthVariable" resultType="int">
+        select count(
+            sdv.VARIABLE_ID_
+        ) as counts
+        from SYS_DAUTH_VARIABLE sdv
+        <where>
+            <include  refid="SQL_SYS_DAUTH_VARIABLE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthVariable" resultType="int">
+        select count(
+            sdv.VARIABLE_ID_
+        ) as counts
+        from SYS_DAUTH_VARIABLE sdv
+        <where>
+            <if test="variableId != null">
+                AND sdv.VARIABLE_ID_ != #{variableId}
+            </if>
+            <if test="tenantId != null">
+                AND sdv.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="variableCode != null and variableCode.length() != 0">
+                AND sdv.VARIABLE_CODE_ = #{variableCode}
+            </if>
+            <if test="variableName != null and variableName.length() != 0">
+                AND sdv.VARIABLE_NAME_ = #{variableName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sdv.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sdv.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="variableValue != null and variableValue.length() != 0">
+                AND sdv.VARIABLE_VALUE_ = #{variableValue}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdv.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdv.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdv.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdv.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdv.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdv.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdv.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

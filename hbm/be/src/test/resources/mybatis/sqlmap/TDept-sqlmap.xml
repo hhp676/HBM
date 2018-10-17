@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.TDeptMapper">
+
+    <sql id="SQL_DEPT_COLUMN">
+        d.ID_ deptId, d.DEPT_NAME_ deptName, d.DEPT_CODE_ deptCode,d.REMARK_ remark,
+        d.IS_DELETE_ isDelete, d.CRT_TIME_ crtTime, d.UPD_TIME_ updTime, d.CRT_USER_ID_ crtUserId,
+        d.UPD_USER_ID_ updUserId
+    </sql>
+    
+    <select id="getById" parameterType="long" resultType="TDept">
+		select
+		<include refid="SQL_DEPT_COLUMN" />
+		from t_dept d
+		<where>
+			d.id_ = #{idValue}
+		</where>
+	</select>
+    
+    <sql id="DEPT_DATA_PERMISSION_SQL">
+        <if test="deptCode != null">
+            and d.DEPT_CODE_ = #{deptCode}
+        </if>
+    </sql>
+    <select id="getDataPermissionList" resultType="TOrder" parameterType="java.util.Map">
+        select <include refid="SQL_DEPT_COLUMN" /> 
+        from t_dept d
+        <where>
+            and d.DEPT_NAME_ = #{deptName} and $${deptName:deptList}
+            <include refid="DEPT_DATA_PERMISSION_SQL"/>
+            <choose>
+                <when test="deptName == 'aa'">
+                    and d.DEPT_NAME_ = 'aa'
+                </when>
+                <when test="deptName == 'bb'">
+                    and d.DEPT_NAME_ = 'bb'
+                </when>
+                <otherwise>
+                    and d.DEPT_NAME_ = 'ot'
+                </otherwise>
+            </choose>
+            <foreach collection="childIds" item="cid">
+                and d.DEPT_CODE_ LIKE '%${cid}%'
+            </foreach>
+            <if test="deptName != null">
+                and d.DEPT_NAME_ = #{deptName}
+            </if>
+            <if test="remark != null">
+                and d.REMARK_ like '%${remark}%'
+            </if>
+        </where>
+    </select>
+    
+    <select id="test1Param" resultType="TOrder" >
+        select <include refid="SQL_DEPT_COLUMN" /> 
+        from t_dept d
+        where d.DEPT_CODE_ like '%${deptCode}%'
+    </select>
+    
+    <select id="test1ParamCount" resultType="java.lang.Integer" >
+        select count(d.ID_) num
+        from t_dept d
+        where d.DEPT_CODE_ like '%${deptCode}%'
+    </select>
+    
+    <select id="test3Param" resultType="TOrder" >
+        select <include refid="SQL_DEPT_COLUMN" /> 
+        from t_dept d
+        where d.DEPT_CODE_ = #{deptName}
+        and d.DEPT_CODE_ like '${num}'
+        and d.DEPT_CODE_ like '${size}'
+    </select>
+    
+    <select id="test2Dept" resultType="TOrder" >
+        select <include refid="SQL_DEPT_COLUMN" /> 
+        from t_dept d
+        where d.DEPT_CODE_ = #{dept1.deptName}
+        and d.DEPT_CODE_ like '${dept2.deptName}'
+    </select>
+    
+    <select id="test2Param" resultType="TOrder" >
+        select <include refid="SQL_DEPT_COLUMN" /> 
+        from t_dept d
+        where d.DEPT_CODE_ = #{dept.deptName}
+        and d.DEPT_CODE_ like '${map.deptName}'
+    </select>
+    
+    <update id="updateTest">
+        update t_dept t set t.DEPT_CODE_ = 'bbb' where t.id_ = 1
+    </update>
+    
+    <delete id="deleteTest">
+        delete t from t_dept t  where t.id_ = 100000
+    </delete>
+    <delete id="deleteTest" databaseId="oracle">
+        delete from t_dept t  where t.id_ = 100000
+    </delete>
+    
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthFilterJoinMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDauthFilterJoin" id="sysDauthFilterJoinMap">
+        <id property="joinId" column="joinId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="filterGroupId" column="filterGroupId" />
+        <result property="filterItemId" column="filterItemId" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysDauthFilterGroup" column="filterGroupId" select="com.hginfo.hbm.be.mapper.sys.SysDauthFilterGroupMapper.getById" />
+        <association property="sysDauthFilterItem" column="filterItemId" select="com.hginfo.hbm.be.mapper.sys.SysDauthFilterItemMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_FILTER_JOIN_COLUMN">
+        sdfj.JOIN_ID_ joinId,
+        sdfj.TENANT_ID_ tenantId,
+        sdfj.FILTER_GROUP_ID_ filterGroupId,
+        sdfj.FILTER_ITEM_ID_ filterItemId,
+        sdfj.DESCR_ descr,
+        sdfj.IS_DELETE_ isDelete,
+        sdfj.IS_FINAL_ isFinal,
+        sdfj.CRT_TIME_ crtTime,
+        sdfj.UPD_TIME_ updTime,
+        sdfj.CRT_USER_ID_ crtUserId,
+        sdfj.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_FILTER_JOIN_WHERE">
+        <if test="joinId != null">
+            AND sdfj.JOIN_ID_ = #{joinId}
+        </if>
+        <if test="tenantId != null">
+            AND sdfj.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="filterGroupId != null">
+            AND sdfj.FILTER_GROUP_ID_ = #{filterGroupId}
+        </if>
+        <if test="filterItemId != null">
+            AND sdfj.FILTER_ITEM_ID_ = #{filterItemId}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdfj.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdfj.IS_DELETE_ = #{isDelete}
+            AND sdfi.IS_DELETE_ = #{isDelete}
+            AND sdfg.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdfj.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdfj.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdfj.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdfj.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdfj.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDauthFilterJoinMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_COLUMN" />
+        from SYS_DAUTH_FILTER_JOIN sdfj
+        <where>
+            sdfj.JOIN_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthFilterJoin" resultMap="sysDauthFilterJoinMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_COLUMN"/>
+        from SYS_DAUTH_FILTER_JOIN sdfj
+        left join sys_dauth_filter_item sdfi on sdfj.FILTER_ITEM_ID_ = sdfi.FILTER_ITEM_ID_
+        left join sys_dauth_filter_group sdfg on sdfj.FILTER_GROUP_ID_ = sdfg.FILTER_GROUP_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdfj.JOIN_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthFilterJoin" resultType="int">
+        select count(
+            sdfj.JOIN_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_JOIN sdfj
+        left join sys_dauth_filter_item sdfi on sdfj.FILTER_ITEM_ID_ = sdfi.FILTER_ITEM_ID_
+        left join sys_dauth_filter_group sdfg on sdfj.FILTER_GROUP_ID_ = sdfg.FILTER_GROUP_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_WHERE"/>
+        </where>
+    </select>
+    
+    
+    <select id="getWinList" parameterType="SysDauthFilterJoin" resultMap="sysDauthFilterJoinMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_COLUMN"/>
+        from SYS_DAUTH_FILTER_JOIN sdfj
+        left join sys_dauth_filter_item sdfi on sdfj.FILTER_ITEM_ID_ = sdfi.FILTER_ITEM_ID_
+        left join sys_dauth_filter_group sdfg on sdfj.FILTER_GROUP_ID_ = sdfg.FILTER_GROUP_ID_
+        left join sys_dauth_filter_type sdft on sdft.FILTER_TYPE_ID_ = sdfi.FILTER_TYPE_ID_
+		left join sys_dauth_operator sdo on sdo.OPERATOR_ID_ = sdfi.OPERATOR_ID_
+		left join sys_metadata_field smf on smf.FIELD_ID_ = sdfi.FIELD_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdfj.JOIN_ID_ desc
+        </if>
+    </select>
+    
+    
+    <select id="getWinListCount" parameterType="SysDauthFilterJoin" resultType="int">
+        select count(
+            sdfj.JOIN_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_JOIN sdfj
+        left join sys_dauth_filter_item sdfi on sdfj.FILTER_ITEM_ID_ = sdfi.FILTER_ITEM_ID_
+        left join sys_dauth_filter_group sdfg on sdfj.FILTER_GROUP_ID_ = sdfg.FILTER_GROUP_ID_
+        left join sys_dauth_filter_type sdft on sdft.FILTER_TYPE_ID_ = sdfi.FILTER_TYPE_ID_
+		left join sys_dauth_operator sdo on sdo.OPERATOR_ID_ = sdfi.OPERATOR_ID_
+		left join sys_metadata_field smf on smf.FIELD_ID_ = sdfi.FIELD_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_JOIN_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthFilterJoin" resultType="int">
+        select count(
+            sdfj.JOIN_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_JOIN sdfj
+        <where>
+            <if test="joinId != null">
+                AND sdfj.JOIN_ID_ != #{joinId}
+            </if>
+            <if test="tenantId != null">
+                AND sdfj.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="filterGroupId != null">
+                AND sdfj.FILTER_GROUP_ID_ = #{filterGroupId}
+            </if>
+            <if test="filterItemId != null">
+                AND sdfj.FILTER_ITEM_ID_ = #{filterItemId}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdfj.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdfj.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdfj.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdfj.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdfj.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdfj.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdfj.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

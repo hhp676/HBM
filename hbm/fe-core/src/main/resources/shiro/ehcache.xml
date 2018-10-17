@@ -1,0 +1,7 @@
+<ehcache updateCheck="false" name="shiro-activeSessionCache">
+   <defaultCache
+            maxElementsInMemory="10000"
+            eternal="true"
+            overflowToDisk="false"
+            diskPersistent="false" />
+</ehcache>

@@ -1,0 +1,46 @@
+.hgform label.error {
+	color: Red;
+	padding-left: 0px;
+	font-weight: bold;
+	white-space: nowrap;
+	
+}
+
+.hgform input,
+.hgtextbox{
+  border: 1px solid #ddd;
+  font-size: 12px;
+  height: 20px;
+  line-height:20px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+.hgform textarea,
+.hgtextarea{
+  border: 1px solid #ddd;
+  vertical-align: middle;
+  display: inline-block;
+  vertical-align: top;
+  outline-style: none;
+  font-size: 12px;
+  padding: 4px;
+  margin: 0;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.hgform textarea[disabled],
+.hgtextarea[disabled]{
+	background-color:rgb(235, 235, 228);
+}
+.hgform textarea:focus,
+.hgtextarea:focus{
+	border: 2px solid #6fa8dc;
+}
+
+.hgform input[type="radio"]{border:none;}
+
+.window .window-body .messager-question + div{height: 35px;  display: table-cell;  vertical-align: middle;}
+

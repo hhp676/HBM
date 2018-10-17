@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthFilterGroupMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDauthFilterGroup" id="sysDauthFilterGroupMap">
+        <id property="filterGroupId" column="filterGroupId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="dauthId" column="dauthId" />
+        <result property="groupCode" column="groupCode" />
+        <result property="groupName" column="groupName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="configType" column="configType" />
+        <result property="bizId" column="bizId" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysDauth" column="dauthId" select="com.hginfo.hbm.be.mapper.sys.SysDauthMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_FILTER_GROUP_COLUMN">
+        sdfg.FILTER_GROUP_ID_ filterGroupId,
+        sdfg.TENANT_ID_ tenantId,
+        sdfg.DAUTH_ID_ dauthId,
+        sdfg.GROUP_CODE_ groupCode,
+        sdfg.GROUP_NAME_ groupName,
+        sdfg.ENG_NAME_ engName,
+        sdfg.I18N_CODE_ i18nCode,
+        sdfg.CONFIG_TYPE_ configType,
+        sdfg.BIZ_ID_ bizId,
+        sdfg.DESCR_ descr,
+        sdfg.IS_DELETE_ isDelete,
+        sdfg.IS_FINAL_ isFinal,
+        sdfg.CRT_TIME_ crtTime,
+        sdfg.UPD_TIME_ updTime,
+        sdfg.CRT_USER_ID_ crtUserId,
+        sdfg.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_FILTER_GROUP_WHERE">
+        <if test="filterGroupId != null">
+            AND sdfg.FILTER_GROUP_ID_ = #{filterGroupId}
+        </if>
+        <if test="tenantId != null">
+            AND sdfg.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="dauthId != null">
+            AND sdfg.DAUTH_ID_ = #{dauthId}
+        </if>
+        <if test="groupCode != null and groupCode.length() != 0">
+            AND sdfg.GROUP_CODE_ = #{groupCode}
+        </if>
+        <if test="groupName != null and groupName.length() != 0">
+            AND sdfg.GROUP_NAME_ = #{groupName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sdfg.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sdfg.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="configType != null">
+            AND sdfg.CONFIG_TYPE_ = #{configType}
+        </if>
+        <if test="bizId != null">
+            AND sdfg.BIZ_ID_ = #{bizId}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdfg.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdfg.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdfg.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdfg.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdfg.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdfg.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdfg.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDauthFilterGroupMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_GROUP_COLUMN" />
+        from SYS_DAUTH_FILTER_GROUP sdfg
+        <where>
+            sdfg.FILTER_GROUP_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthFilterGroup" resultMap="sysDauthFilterGroupMap">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_GROUP_COLUMN"/>
+        from SYS_DAUTH_FILTER_GROUP sdfg
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_GROUP_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdfg.FILTER_GROUP_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthFilterGroup" resultType="int">
+        select count(
+            sdfg.FILTER_GROUP_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_GROUP sdfg
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_GROUP_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthFilterGroup" resultType="int">
+        select count(
+            sdfg.FILTER_GROUP_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_GROUP sdfg
+        <where>
+            <if test="filterGroupId != null">
+                AND sdfg.FILTER_GROUP_ID_ != #{filterGroupId}
+            </if>
+            <if test="tenantId != null">
+                AND sdfg.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="dauthId != null">
+                AND sdfg.DAUTH_ID_ = #{dauthId}
+            </if>
+            <if test="groupCode != null and groupCode.length() != 0">
+                AND sdfg.GROUP_CODE_ = #{groupCode}
+            </if>
+            <if test="groupName != null and groupName.length() != 0">
+                AND sdfg.GROUP_NAME_ = #{groupName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sdfg.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sdfg.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="configType != null">
+                AND sdfg.CONFIG_TYPE_ = #{configType}
+            </if>
+            <if test="bizId != null">
+                AND sdfg.BIZ_ID_ = #{bizId}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdfg.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdfg.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdfg.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdfg.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdfg.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdfg.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdfg.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hginfo.hdf</groupId>
+        <artifactId>hbm</artifactId>
+        <version>3.0.5-rc1</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>hbm-fe-easyui</artifactId>
+    <name>HBM :: FE-EASYUI</name>
+    <packaging>war</packaging>
+    <description>hbm-fe-easyui is a Frontend Web Project based on EasyUI,It contains Controller,Web Pages,Static Resources...</description>
+
+    <dependencies>  
+        <!-- hbm-be -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-be</artifactId>
+        </dependency>
+
+        <!-- hbm-base -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-base</artifactId>
+        </dependency>
+        
+        <!-- hbm-core -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-core</artifactId>
+        </dependency>
+        
+        <!-- hbm-fe-core -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-fe-core</artifactId>
+        </dependency>
+        
+        <!-- hdubbo -->
+        <dependency>
+            <groupId>com.hginfo.hcore</groupId>
+            <artifactId>hdubbo</artifactId>
+        </dependency>
+        
+        <!-- hmonitor -->
+        <dependency>
+            <groupId>com.hginfo.hcore</groupId>
+            <artifactId>hmonitor</artifactId>
+        </dependency>
+        
+        <!-- zkclient -->
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+        </dependency>
+        
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+        <!-- AOP begin -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- AOP end -->
+        
+        <!-- json -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        
+        <!-- template engine -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        
+        <!-- WEB begin -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- WEB end -->
+        <!-- 压缩 -->
+        <dependency>
+            <groupId>com.googlecode.htmlcompressor</groupId>
+            <artifactId>htmlcompressor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.yahoo.platform.yui</groupId>
+            <artifactId>yuicompressor</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>rhino</groupId>
+                    <artifactId>js</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- TEST begin -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- TEST end -->
+         
+    </dependencies>
+    <build>
+        <!-- <finalName>${project.artifactId}</finalName> -->
+        <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        
+        <plugins>
+            <!-- war打包插件, 设定war包名称不带版本号 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>${project.build.finalName}</warName>
+                    <!-- 排除掉未压缩js、css -->
+                    <!-- <warSourceExcludes>**/*.js,**/*.css,**/*.jsp</warSourceExcludes> -->
+                    <archive>
+                        <!-- 不把maven的依赖加入 -->
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <!-- addClasspath>true</addClasspath -->
+                            <addDefaultImplementationEntries>true
+                            </addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true
+                            </addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <DisableIBMJAXWSEngine>true</DisableIBMJAXWSEngine>
+                            <Mode>development</Mode>
+                            <Url>${project.url}</Url>
+                            <Project-Version>${project.version}</Project-Version>
+                            <Project-name>${project.name}</Project-name>
+                            <Build-Timestamp>${build.timestamp}</Build-Timestamp>
+                            <Build-directory>${project.build.directory}</Build-directory>
+                            <Build-java-home>${java.home}</Build-java-home>
+                            <Build-basedir>${basedir}</Build-basedir>
+                            <Build-localRepository>${settings.localRepository}
+                            </Build-localRepository>
+                            <Build-M2_HOME>${env.M2_HOME}</Build-M2_HOME>
+
+                            <Build-os-arch>${os.arch}</Build-os-arch>
+                            <Build-os-name>${os.name}</Build-os-name>
+                            <Build-os-version>${os.version}</Build-os-version>
+
+                            <svn-Revision>${svn.revision}</svn-Revision>
+                            <svn-repository>${svn.repository}</svn-repository>
+                            <svn-mixedRevisions>${svn.mixedRevisions}
+                            </svn-mixedRevisions>
+                            <svn-committedRevision>${svn.committedRevision}
+                            </svn-committedRevision>
+                            <svn-committedDate>${svn.committedDate}</svn-committedDate>
+                            <svn-status>${svn.status}</svn-status>
+                            <svn-specialStatus>${svn.specialStatus}</svn-specialStatus>
+
+                            <SCM-Revision>${buildNumber}</SCM-Revision>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- 打包 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-config</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/test/resources</directory>
+                                    <includes>
+                                        <include>uglify/*</include>
+                                        <include>uglify/bin/*</include>
+                                        <include>uglify/lib/*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- clean -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/webapp/WEB-INF/classes</directory>
+                            <directory>src/main/webapp/WEB-INF/lib</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <!-- dependency -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 使用jetty时注释掉 -->
+                            <outputDirectory>src/main/webapp/WEB-INF/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- enforcer -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

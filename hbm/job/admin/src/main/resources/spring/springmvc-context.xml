@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+            </bean>
+            <!-- 使用FastJsonpHttpMessageConverter4 -->
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonpHttpMessageConverter4">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/json;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="fastJsonConfig">
+                    <bean class="com.xxl.job.admin.core.json.HbmFastJsonConfig" />
+                </property>
+            </bean>
+            <!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="prettyPrint" value="true" /> </bean> -->
+        </mvc:message-converters>
+    </mvc:annotation-driven> 
+	<context:component-scan base-package="com.xxl.job.admin.controller" />
+	
+	<mvc:resources mapping="/favicon.ico" location="/favicon.ico" />
+	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/**/*.html" location="/" />
+	
+	<bean id="viewResolver"	class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="requestContextAttribute" value="request" />
+		<property name="cache" value="true" />
+		<property name="order" value="0" />
+	</bean>
+	
+ 	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.xxl.job.admin.controller.interceptor.PermissionInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.xxl.job.admin.controller.interceptor.CookieInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<bean id="exceptionResolver" class="com.xxl.job.admin.controller.resolver.WebExceptionResolver" />
+	
+</beans>

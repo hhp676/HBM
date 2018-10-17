@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysJobMapper">
+
+    <sql id="SQL_SYS_JOB_COLUMN">
+        sj.JOB_ID_ jobId,
+        sj.TENANT_ID_ tenantId,
+        sj.JOB_CODE_ jobCode,
+        sj.JOB_NAME_ jobName,
+        sj.ENG_NAME_ engName,
+        sj.I18N_CODE_ i18nCode,
+        sj.DESCR_ descr,
+        sj.IS_DELETE_ isDelete,
+        sj.IS_FINAL_ isFinal,
+        sj.CRT_TIME_ crtTime,
+        sj.UPD_TIME_ updTime,
+        sj.CRT_USER_ID_ crtUserId,
+        sj.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_JOB_WHERE">
+        <if test="jobId != null">
+            AND sj.JOB_ID_ = #{jobId}
+        </if>
+        <if test="tenantId !=null ">
+            AND sj.TENANT_ID_=#{tenantId}
+        </if>
+        <if test="jobCode !=null and jobCode.length()!=0 ">
+            AND sj.JOB_CODE_=#{jobCode}
+        </if>
+        <if test="jobName !=null and jobName.length()!=0 ">
+            AND sj.JOB_NAME_=#{jobName}
+        </if>
+        <if test="engName !=null and engName.length()!=0 ">
+            AND sj.ENG_NAME_=#{engName}
+        </if>
+        <if test="i18nCode !=null and i18nCode.length()!=0 ">
+            AND sj.I18N_CODE_=#{i18nCode}
+        </if>
+        <if test="descr !=null and descr.length()!=0 ">
+            AND sj.DESCR_=#{descr}
+        </if>
+        <if test="isDelete !=null ">
+            AND sj.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND sj.IS_FINAL_=#{isFinal}
+        </if>
+        <if test="crtTime !=null ">
+            AND sj.CRT_TIME_=#{crtTime}
+        </if>
+        <if test="updTime !=null ">
+            AND sj.UPD_TIME_=#{updTime}
+        </if>
+        <if test="crtUserId !=null ">
+            AND sj.CRT_USER_ID_=#{crtUserId}
+        </if>
+        <if test="updUserId !=null ">
+            AND sj.UPD_USER_ID_=#{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysJob">
+        select <include  refid="SQL_SYS_JOB_COLUMN"/>
+        from sys_job sj
+        <where>
+                sj.JOB_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysJob" resultType="SysJob">
+        select <include  refid="SQL_SYS_JOB_COLUMN"/>
+        from sys_job sj
+        <where>
+            <include  refid="SQL_SYS_JOB_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sj.JOB_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysJob" resultType="int">
+        select count(sj.JOB_ID_) as counts
+        from sys_job sj
+        <where>
+            <include  refid="SQL_SYS_JOB_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysJob" resultType="int">
+        select count(
+            sj.JOB_ID_
+        ) as counts
+        from SYS_JOB sj
+        <where>
+            <if test="jobId != null">
+                AND sj.JOB_ID_ != #{jobId}
+            </if>
+            <if test="tenantId != null">
+                AND sj.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="jobCode != null and jobCode.length() != 0">
+                AND sj.JOB_CODE_ = #{jobCode}
+            </if>
+            <if test="jobName != null and jobName.length() != 0">
+                AND sj.JOB_NAME_ = #{jobName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sj.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sj.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sj.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sj.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sj.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sj.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sj.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sj.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sj.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

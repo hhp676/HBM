@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysExtendFieldMapper">
+
+    <!-- result map -->
+    <resultMap type="SysExtendField" id="sysExtendFieldMap">
+        <id property="extendId" column="extendId" />
+        <result property="extendDefId" column="extendDefId" />
+        <result property="bizId" column="bizId" />
+        <result property="value" column="value" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysExtendFieldDef" column="extendDefId" select="com.hginfo.hbm.be.mapper.sys.SysExtendFieldDefMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_EXTEND_FIELD_COLUMN">
+        sef.EXTEND_ID_ extendId,
+        sef.EXTEND_DEF_ID_ extendDefId,
+        sef.BIZ_ID_ bizId,
+        sef.VALUE_ value,
+        sef.DESCR_ descr,
+        sef.IS_DELETE_ isDelete,
+        sef.IS_FINAL_ isFinal,
+        sef.CRT_TIME_ crtTime,
+        sef.UPD_TIME_ updTime,
+        sef.CRT_USER_ID_ crtUserId,
+        sef.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_EXTEND_FIELD_WHERE">
+        <if test="extendId != null">
+            AND sef.EXTEND_ID_ = #{extendId}
+        </if>
+        <if test="extendDefId != null">
+            AND sef.EXTEND_DEF_ID_ = #{extendDefId}
+        </if>
+        <if test="bizId != null">
+            AND sef.BIZ_ID_ = #{bizId}
+        </if>
+        <if test="value != null and value.length() != 0">
+            AND sef.VALUE_ = #{value}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sef.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sef.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sef.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sef.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sef.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sef.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sef.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysExtendFieldMap">
+        select <include  refid="SQL_SYS_EXTEND_FIELD_COLUMN" />
+        from SYS_EXTEND_FIELD sef
+        <where>
+            sef.EXTEND_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysExtendField" resultMap="sysExtendFieldMap">
+        select <include  refid="SQL_SYS_EXTEND_FIELD_COLUMN"/>
+        from SYS_EXTEND_FIELD sef
+        <where>
+            <include  refid="SQL_SYS_EXTEND_FIELD_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sef.EXTEND_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysExtendField" resultType="int">
+        select count(
+            sef.EXTEND_ID_
+        ) as counts
+        from SYS_EXTEND_FIELD sef
+        <where>
+            <include  refid="SQL_SYS_EXTEND_FIELD_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysExtendField" resultType="int">
+        select count(
+            sef.EXTEND_ID_
+        ) as counts
+        from SYS_EXTEND_FIELD sef
+        <where>
+            <if test="extendId != null">
+                AND sef.EXTEND_ID_ != #{extendId}
+            </if>
+            <if test="extendDefId != null">
+                AND sef.EXTEND_DEF_ID_ = #{extendDefId}
+            </if>
+            <if test="bizId != null">
+                AND sef.BIZ_ID_ = #{bizId}
+            </if>
+            <if test="value != null and value.length() != 0">
+                AND sef.VALUE_ = #{value}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sef.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sef.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sef.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sef.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sef.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sef.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sef.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

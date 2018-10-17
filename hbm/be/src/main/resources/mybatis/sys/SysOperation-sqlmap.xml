@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysOperationMapper">
+
+    <!-- result map -->
+    <resultMap type="SysOperation" id="sysOperationMap">
+        <id property="operationId" column="operationId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="operationCode" column="operationCode" />
+        <result property="operationName" column="operationName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="style" column="style" />
+        <result property="uri" column="uri" />
+        <result property="sortNo" column="sortNo" />
+        <result property="isVisible" column="isVisible" />
+        <result property="tip" column="tip" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <result property="iconId" column="iconId" />
+        <association property="sysIcon" column="iconId" select="com.hginfo.hbm.be.mapper.sys.SysIconMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_OPERATION_COLUMN">
+        so.OPERATION_ID_ operationId,
+        so.TENANT_ID_ tenantId,
+        so.OPERATION_CODE_ operationCode,
+        so.OPERATION_NAME_ operationName,
+        so.ENG_NAME_ engName,
+        so.I18N_CODE_ i18nCode,
+        so.STYLE_ style,
+        so.URI_ uri,
+        so.SORT_NO_ sortNo,
+        so.IS_VISIBLE_ isVisible,
+        so.TIP_ tip,
+        so.DESCR_ descr,
+        so.IS_DELETE_ isDelete,
+        so.IS_FINAL_ isFinal,
+        so.CRT_TIME_ crtTime,
+        so.UPD_TIME_ updTime,
+        so.CRT_USER_ID_ crtUserId,
+        so.UPD_USER_ID_ updUserId,
+        so.ICON_ID_ iconId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_OPERATION_WHERE">
+        <if test="operationId != null">
+            AND so.OPERATION_ID_ = #{operationId}
+        </if>
+        <if test="tenantId != null">
+            AND so.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="operationCode != null and operationCode.length() != 0">
+            AND so.OPERATION_CODE_ = #{operationCode}
+        </if>
+        <if test="operationName != null and operationName.length() != 0">
+            AND so.OPERATION_NAME_ = #{operationName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND so.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND so.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="style != null and style.length() != 0">
+            AND so.STYLE_ = #{style}
+        </if>
+        <if test="uri != null and uri.length() != 0">
+            AND so.URI_ = #{uri}
+        </if>
+        <if test="sortNo != null">
+            AND so.SORT_NO_ = #{sortNo}
+        </if>
+        <if test="isVisible != null">
+            AND so.IS_VISIBLE_ = #{isVisible}
+        </if>
+        <if test="tip != null and tip.length() != 0">
+            AND so.TIP_ = #{tip}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND so.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND so.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND so.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND so.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND so.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND so.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND so.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="iconId != null">
+            AND so.ICON_ID_ = #{iconId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysOperationMap">
+        select <include  refid="SQL_SYS_OPERATION_COLUMN" />
+        from SYS_OPERATION so
+        <where>
+            so.OPERATION_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysOperation" resultMap="sysOperationMap">
+        select <include  refid="SQL_SYS_OPERATION_COLUMN"/>
+        from SYS_OPERATION so
+        <where>
+            <include  refid="SQL_SYS_OPERATION_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                so.OPERATION_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysOperation" resultType="int">
+        select count(
+            so.OPERATION_ID_
+        ) as counts
+        from SYS_OPERATION so
+        <where>
+            <include  refid="SQL_SYS_OPERATION_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysOperation" resultType="int">
+        select count(
+            so.OPERATION_ID_
+        ) as counts
+        from SYS_OPERATION so
+        <where>
+            <if test="operationId != null">
+                AND so.OPERATION_ID_ != #{operationId}
+            </if>
+            <if test="tenantId != null">
+                AND so.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="operationCode != null and operationCode.length() != 0">
+                AND so.OPERATION_CODE_ = #{operationCode}
+            </if>
+            <if test="operationName != null and operationName.length() != 0">
+                AND so.OPERATION_NAME_ = #{operationName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND so.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND so.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="style != null and style.length() != 0">
+                AND so.STYLE_ = #{style}
+            </if>
+            <if test="uri != null and uri.length() != 0">
+                AND so.URI_ = #{uri}
+            </if>
+            <if test="sortNo != null">
+                AND so.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="isVisible != null">
+                AND so.IS_VISIBLE_ = #{isVisible}
+            </if>
+            <if test="tip != null and tip.length() != 0">
+                AND so.TIP_ = #{tip}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND so.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND so.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND so.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND so.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND so.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND so.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND so.UPD_USER_ID_ = #{updUserId}
+            </if>
+            <if test="iconId != null">
+                AND so.ICON_ID_ = #{iconId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryOperationCountInAuth" parameterType="Long" resultType="int">
+        SELECT count(1) FROM sys_auth a WHERE a.OPERATION_ID_ = #{OPERATION_ID_}
+    </select>
+
+</mapper>

@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hginfo.hdf</groupId>
+        <artifactId>hbm</artifactId>
+        <version>3.0.5-rc1</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>hbm-be</artifactId>
+    <name>HBM :: BE</name>
+    <packaging>jar</packaging>
+    <description>hbm-be is a Backend Business Project,It contains Database,Persistence,ServiceImpl,Interceptor...</description>
+    
+    <properties>
+        <!-- 数据库语言oracle -->
+        <!-- <sql.type>oracle</sql.type>
+        <jdbc.driver.groupId>com.oracle</jdbc.driver.groupId>
+        <jdbc.driver.artifactId>ojdbc5</jdbc.driver.artifactId>
+        <jdbc.driver.version>11.2.0.2.0</jdbc.driver.version>
+        <jdbc.driver>oracle.jdbc.driver.OracleDriver</jdbc.driver> -->
+        <!-- 数据库语言mysql -->
+        <sql.type>mysql</sql.type>
+        <jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+        <jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
+        <jdbc.driver.version>5.1.21</jdbc.driver.version>
+        <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+        <jdbc.url>jdbc:mysql://localhost:3306/db_hbm_dev?useUnicode=true&amp;characterEncoding=utf-8</jdbc.url>
+        <jdbc.username>hbm_dev</jdbc.username>
+        <jdbc.password>hbm_dev</jdbc.password>
+        <!-- assembly hbm unpack jars -->
+        <hbm-core.groupId.artifactId>com.hginfo.hdf:hbm-core</hbm-core.groupId.artifactId>
+        <skipTests>true</skipTests>
+    </properties>
+
+    <dependencies>
+        
+        <!-- hbm-base -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-base</artifactId>
+        </dependency>
+        <!-- hbm-core -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-core</artifactId>
+        </dependency>
+        <!-- hbm-job-core -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-job-core</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.hginfo.htp</groupId>
+            <artifactId>hbpm-api</artifactId>
+        </dependency>
+        
+        <!-- 工作流分布式dubbo环境下不需要 start-->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-agent-hbpm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hginfo.htp</groupId>
+            <artifactId>hbpm-service-activiti</artifactId>
+        </dependency>
+        <!-- 工作流分布式dubbo环境下不需要 end-->
+        
+        <!-- hutils -->
+        <dependency>
+            <groupId>com.hginfo.hcore</groupId>
+            <artifactId>hutils</artifactId>
+        </dependency>
+        
+        <!-- hdubbo -->
+        <dependency>
+            <groupId>com.hginfo.hcore</groupId>
+            <artifactId>hdubbo</artifactId>
+        </dependency>
+        <!-- hmonitor -->
+        <dependency>
+            <groupId>com.hginfo.hcore</groupId>
+            <artifactId>hmonitor</artifactId>
+        </dependency>
+        <!-- log -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!-- zkclient -->
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+        </dependency>
+        
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        
+        <!-- AOP begin -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- AOP end -->
+
+        <!-- PERSISTENCE begin -->
+        <!-- hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+        <!-- 不建议使用 -->
+        <!-- <dependency>
+            <groupId>org.mybatis.caches</groupId>
+            <artifactId>mybatis-ehcache</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency> -->
+        
+        <!-- spring data access -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit-dep</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <!-- jdbc driver -->
+        <dependency>
+            <groupId>${jdbc.driver.groupId}</groupId>
+            <artifactId>${jdbc.driver.artifactId}</artifactId>
+            <version>${jdbc.driver.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
+        <!-- PERSISTENCE end -->
+        
+        <!-- json -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <!-- template engine -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        
+        <!-- TEST begin -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- selenium 2.0 -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-htmlunit-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-android-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-iphone-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-safari-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-remote-driver</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib-nodep</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- TEST end -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version> 
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.alibaba.dubbo.container.Main</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>. lib/javax.servlet-api-${javax.servlet-api.version}.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin> -->
+            
+            <!-- 跨环境配置替换插件 -->
+            <plugin>
+                <groupId>com.juvenxu.portable-config-maven-plugin</groupId>
+                <artifactId>portable-config-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>replace-package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <portableConfig>src/main/portable/${portable.config.type}.xml</portableConfig>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>distribution-package-bin</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}</finalName>
+                            <descriptors>
+                                <descriptor>src/main/assembly/hbm-be.xml</descriptor>
+                            </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <tarLongFileMode>gnu</tarLongFileMode>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- source attach plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- enforcer -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            
+            <!-- flyway 数据库版本控制 -->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <flyway.driver>${jdbc.driver}</flyway.driver>
+                <flyway.url>${jdbc.url}</flyway.url>
+                <flyway.user>${jdbc.username}</flyway.user>
+                <flyway.password>${jdbc.password}</flyway.password>
+                <flyway.locations>db/migration/${sql.type}</flyway.locations>
+                <!-- portable -->
+                <portable.config.type>dev</portable.config.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit-easyui-single</id>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>sit-easyui-single</portable.config.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit-easyui-dubbo</id>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>sit-easyui-dubbo</portable.config.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit-easyui-oracle</id>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>sit-easyui-oracle</portable.config.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit-bootstrap-single</id>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>sit-bootstrap-single</portable.config.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit-shmc-single</id>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>sit-shmc-single</portable.config.type>
+            </properties>
+        </profile>
+    </profiles>
+</project>

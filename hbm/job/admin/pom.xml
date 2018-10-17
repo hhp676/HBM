@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hginfo.hdf</groupId>
+        <artifactId>hbm-job</artifactId>
+        <version>3.0.5-rc1</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>hbm-job-admin</artifactId>
+    <name>JOB :: ADMIN</name>
+    <packaging>war</packaging>
+    <description>hbm-job-admin is a distributed task scheduler management center.</description>
+
+    <properties>
+        <!-- 数据库语言oracle -->
+        <!-- <jdbc.driver.groupId>com.oracle</jdbc.driver.groupId>
+        <jdbc.driver.artifactId>ojdbc5</jdbc.driver.artifactId>
+        <jdbc.driver.version>11.2.0.2.0</jdbc.driver.version> -->
+        <!-- 数据库语言mysql -->
+        <jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+        <jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
+        <jdbc.driver.version>5.1.21</jdbc.driver.version>
+        <skipTests>true</skipTests>
+    </properties>
+
+    <dependencies>
+        <!-- hbm-job-core -->
+        <dependency>
+            <groupId>com.hginfo.hdf</groupId>
+            <artifactId>hbm-job-core</artifactId>
+        </dependency>
+    
+        <!-- springframe start -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <!-- springframe end -->
+        
+        <!-- aspectjweaver (support spring aop) -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        
+        <!-- jackson (support spring json) -->
+        <!-- <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency> -->
+        <!-- json -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <!-- logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+
+        <!-- freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+        <!-- commons-beanutils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+        <!-- commons-lang -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
+        
+        <!-- mybatis-spring -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        
+        <!-- mysql-connector -->
+        <dependency>
+            <groupId>${jdbc.driver.groupId}</groupId>
+            <artifactId>${jdbc.driver.artifactId}</artifactId>
+            <version>${jdbc.driver.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
+        <!-- javax.mail -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+        </dependency>
+
+        <!-- quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        
+        <!-- junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+    
+    <build>
+        <!-- <finalName>${project.artifactId}</finalName> -->
+        <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        
+        <plugins>
+            <!-- war打包插件, 设定war包名称不带版本号 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>${project.build.finalName}</warName>
+                    <!-- 排除掉未压缩js、css -->
+                    <!-- <warSourceExcludes>**/*.js,**/*.css,**/*.jsp</warSourceExcludes> -->
+                    <archive>
+                        <!-- 不把maven的依赖加入 -->
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <!-- addClasspath>true</addClasspath -->
+                            <addDefaultImplementationEntries>true
+                            </addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true
+                            </addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <DisableIBMJAXWSEngine>true</DisableIBMJAXWSEngine>
+                            <Mode>development</Mode>
+                            <Url>${project.url}</Url>
+                            <Project-Version>${project.version}</Project-Version>
+                            <Project-name>${project.name}</Project-name>
+                            <Build-Timestamp>${build.timestamp}</Build-Timestamp>
+                            <Build-directory>${project.build.directory}</Build-directory>
+                            <Build-java-home>${java.home}</Build-java-home>
+                            <Build-basedir>${basedir}</Build-basedir>
+                            <Build-localRepository>${settings.localRepository}
+                            </Build-localRepository>
+                            <Build-M2_HOME>${env.M2_HOME}</Build-M2_HOME>
+
+                            <Build-os-arch>${os.arch}</Build-os-arch>
+                            <Build-os-name>${os.name}</Build-os-name>
+                            <Build-os-version>${os.version}</Build-os-version>
+
+                            <svn-Revision>${svn.revision}</svn-Revision>
+                            <svn-repository>${svn.repository}</svn-repository>
+                            <svn-mixedRevisions>${svn.mixedRevisions}
+                            </svn-mixedRevisions>
+                            <svn-committedRevision>${svn.committedRevision}
+                            </svn-committedRevision>
+                            <svn-committedDate>${svn.committedDate}</svn-committedDate>
+                            <svn-status>${svn.status}</svn-status>
+                            <svn-specialStatus>${svn.specialStatus}</svn-specialStatus>
+
+                            <SCM-Revision>${buildNumber}</SCM-Revision>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- 打包 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-config</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/test/resources</directory>
+                                    <includes>
+                                        <include>uglify/*</include>
+                                        <include>uglify/bin/*</include>
+                                        <include>uglify/lib/*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- clean -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/webapp/WEB-INF/classes</directory>
+                            <directory>src/main/webapp/WEB-INF/lib</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <!-- dependency -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 使用jetty时注释掉 -->
+                            <outputDirectory>src/main/webapp/WEB-INF/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- enforcer -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            
+            <!-- 跨环境配置替换插件 -->
+            <plugin>
+                <groupId>com.juvenxu.portable-config-maven-plugin</groupId>
+                <artifactId>portable-config-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>replace-package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <portableConfig>src/main/portable/${portable.config.type}.xml</portableConfig>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>dev</portable.config.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit-job-admin</id>
+            <properties>
+                <!-- portable -->
+                <portable.config.type>sit-job-admin</portable.config.type>
+            </properties>
+        </profile>
+    </profiles>
+</project>

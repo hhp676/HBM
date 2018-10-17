@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysLogMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_LOG_COLUMN">
+        sl.LOG_ID_ logId,
+        sl.TENANT_ID_ tenantId,
+        sl.LOG_TYPE_
+        logType,
+        sl.LOG_LEVEL_ logLevel,
+        sl.KEY1_ key1,
+        sl.KEY2_ key2,
+        sl.KEY3_ key3,
+        sl.KEY4_ key4,
+        sl.KEY5_ key5,
+        sl.CONTENT_ content,
+        sl.CRT_TIME_ crtTime,
+        sl.IS_FINAL_ isFinal,
+        sl.CRT_USER_ID_
+        crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_LOG_WHERE">
+        <if test="logId != null">
+            AND sl.LOG_ID_ = #{logId}
+        </if>
+        <if test="tenantId != null">
+            AND sl.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="logType != null">
+            AND sl.LOG_TYPE_ = #{logType}
+        </if>
+        <if test="logLevel != null">
+            AND sl.LOG_LEVEL_ = #{logLevel}
+        </if>
+        <if test="key1 != null and key1.length() != 0">
+            AND sl.KEY1_ = #{key1}
+        </if>
+        <if test="key2 != null and key2.length() != 0">
+            AND sl.KEY2_ = #{key2}
+        </if>
+        <if test="key3 != null and key3.length() != 0">
+            AND sl.KEY3_ = #{key3}
+        </if>
+        <if test="key4 != null and key4.length() != 0">
+            AND sl.KEY4_ = #{key4}
+        </if>
+        <if test="key5 != null and key5.length() != 0">
+            AND sl.KEY5_ = #{key5}
+        </if>
+        <if test="keyword != null and keyword.length() != 0">
+            AND (
+              sl.KEY1_ like '%${keyword}%'
+              or sl.KEY2_ like '%${keyword}%'
+              or sl.KEY3_ like '%${keyword}%'
+              or sl.KEY4_ like '%${keyword}%'
+              or sl.KEY5_ like '%${keyword}%'
+            )
+        </if>
+        <if test="content != null and content.length() != 0">
+            AND sl.CONTENT_ like '%${content}%'
+        </if>
+        <if test="crtTime != null">
+            AND sl.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="isFinal != null">
+            AND sl.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtUserId != null">
+            AND sl.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="startTimeStr != null and startTimeStr.length()!=0">
+            <if  test="_databaseId == 'oracle'">
+                AND to_char(sl.CRT_TIME_,'yyyy-mm-dd hh24:mi:ss') &gt;= #{startTimeStr}
+            </if>
+            <if  test="_databaseId == 'mysql'">
+                AND sl.CRT_TIME_ &gt;= #{startTimeStr}
+            </if>
+        </if>
+        <if test="endTimeStr != null and endTimeStr.length()!=0">
+            <if  test="_databaseId == 'oracle'">
+                AND to_char(sl.CRT_TIME_,'yyyy-mm-dd hh24:mi:ss') &lt;= #{endTimeStr}
+            </if>
+            <if  test="_databaseId == 'mysql'">
+                AND sl.CRT_TIME_ &lt;= #{endTimeStr}
+            </if>
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record -->
+    <select id="getById" parameterType="long" resultType="SysLog">
+        select
+        <include refid="SQL_SYS_LOG_COLUMN" />
+        from SYS_LOG sl
+        <where>
+            sl.LOG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All -->
+    <select id="getList" parameterType="SysLog" resultType="SysLog">
+        select
+        <include refid="SQL_SYS_LOG_COLUMN" />
+        from SYS_LOG sl
+        <where>
+            <include refid="SQL_SYS_LOG_WHERE" />
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            sl.LOG_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line -->
+    <select id="getListCount" parameterType="SysLog" resultType="int">
+        select count(
+        sl.LOG_ID_
+        ) as counts
+        from SYS_LOG sl
+        <where>
+            <include refid="SQL_SYS_LOG_WHERE" />
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysLog" resultType="int">
+        select count(
+            sl.LOG_ID_
+        ) as counts
+        from SYS_LOG sl
+        <where>
+            <if test="logId != null">
+                AND sl.LOG_ID_ != #{logId}
+            </if>
+            <if test="tenantId != null">
+                AND sl.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="logType != null">
+                AND sl.LOG_TYPE_ = #{logType}
+            </if>
+            <if test="logLevel != null">
+                AND sl.LOG_LEVEL_ = #{logLevel}
+            </if>
+            <if test="key1 != null and key1.length() != 0">
+                AND sl.KEY1_ = #{key1}
+            </if>
+            <if test="key2 != null and key2.length() != 0">
+                AND sl.KEY2_ = #{key2}
+            </if>
+            <if test="key3 != null and key3.length() != 0">
+                AND sl.KEY3_ = #{key3}
+            </if>
+            <if test="key4 != null and key4.length() != 0">
+                AND sl.KEY4_ = #{key4}
+            </if>
+            <if test="key5 != null and key5.length() != 0">
+                AND sl.KEY5_ = #{key5}
+            </if>
+            <if test="content != null and content.length() != 0">
+                AND sl.CONTENT_ = #{content}
+            </if>
+            <if test="crtTime != null">
+                AND sl.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="isFinal != null">
+                AND sl.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtUserId != null">
+                AND sl.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+    
+</mapper>

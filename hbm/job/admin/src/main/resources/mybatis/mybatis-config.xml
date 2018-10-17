@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.1//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 设置日志的前缀， -->
+        <setting name="logPrefix" value="com.xxl.job.dao."/>
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+    <typeAliases>
+        <!-- 忽略大小写的Map类,由jdbctemplete借鉴而来 -->
+        <typeAlias type="org.springframework.util.LinkedCaseInsensitiveMap"
+            alias="CaseIgnoreMap" />
+    </typeAliases>
+</configuration>

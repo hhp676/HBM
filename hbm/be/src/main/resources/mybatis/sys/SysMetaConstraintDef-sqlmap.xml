@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysMetaConstraintDefMapper">
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_META_CONSTRAINT_DEF_COLUMN">
+        smcdf.DEF_ID_ defId,
+        smcdf.TENANT_ID_ tenantId,
+        smcdf.ENTITY_ID_ entityId,
+        smcdf.DEF_CODE_ defCode,
+        smcdf.DEF_NAME_ defName,
+        smcdf.DEF_TYPE_ defType,
+        smcdf.REF_ID_ refId,
+        smcdf.ERROR_MSG_ errorMsg,
+        smcdf.DESCR_ descr,
+        smcdf.IS_DELETE_ isDelete,
+        smcdf.IS_FINAL_ isFinal,
+        smcdf.CRT_TIME_ crtTime,
+        smcdf.UPD_TIME_ updTime,
+        smcdf.CRT_USER_ID_ crtUserId,
+        smcdf.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_META_CONSTRAINT_DEF_WHERE">
+        <if test="defId != null">
+            AND smcdf.DEF_ID_ = #{defId}
+        </if>
+        <if test="tenantId != null">
+            AND smcdf.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="entityId != null">
+            AND smcdf.ENTITY_ID_ = #{entityId}
+        </if>
+        <if test="defCode != null and defCode.length() != 0">
+            AND smcdf.DEF_CODE_ = #{defCode}
+        </if>
+        <if test="defName != null and defName.length() != 0">
+            AND smcdf.DEF_NAME_ = #{defName}
+        </if>
+        <if test="defType != null">
+            AND smcdf.DEF_TYPE_ = #{defType}
+        </if>
+        <if test="refId != null">
+            AND smcdf.REF_ID_ = #{refId}
+        </if>
+        <if test="errorMsg != null and errorMsg.length() != 0">
+            AND smcdf.ERROR_MSG_ = #{errorMsg}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND smcdf.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND smcdf.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND smcdf.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND smcdf.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND smcdf.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND smcdf.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND smcdf.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysMetaConstraintDef">
+        select <include  refid="SQL_SYS_META_CONSTRAINT_DEF_COLUMN" />
+        from SYS_META_CONSTRAINT_DEF smcdf
+        <where>
+            smcdf.DEF_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysMetaConstraintDef" resultType="SysMetaConstraintDef">
+        select <include  refid="SQL_SYS_META_CONSTRAINT_DEF_COLUMN"/>
+        from SYS_META_CONSTRAINT_DEF smcdf
+        LEFT JOIN SYS_METADATA_ENTITY sme on smcdf.ENTITY_ID_ = sme.ENTITY_ID_
+        <where>
+            <include  refid="SQL_SYS_META_CONSTRAINT_DEF_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                smcdf.DEF_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysMetaConstraintDef" resultType="int">
+        select count(
+            smcdf.DEF_ID_
+        ) as counts
+        from SYS_META_CONSTRAINT_DEF smcdf
+        LEFT JOIN SYS_METADATA_ENTITY sme on smcdf.ENTITY_ID_ = sme.ENTITY_ID_
+        <where>
+            <include  refid="SQL_SYS_META_CONSTRAINT_DEF_WHERE"/>
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getListByTableName" parameterType="String" resultType="SysMetaConstraintDef">
+        select <include  refid="SQL_SYS_META_CONSTRAINT_DEF_COLUMN"/>
+        from SYS_META_CONSTRAINT_DEF smcdf
+        INNER JOIN
+        sys_metadata_entity sme ON smcdf.ENTITY_ID_ = sme.ENTITY_ID_
+        AND smcdf.IS_DELETE_ = 0
+        AND sme.IS_DELETE_ = 0
+        <where>
+            smcdf.DEF_TYPE_ = 3
+            AND LOWER(sme.TABLE_NAME_) = #{tableName}
+        </where>
+    </select>
+
+    <!-- check unique count   -->
+    <select id="checkUniqueCount" parameterType="SysMetaConstraintDef" resultType="int">
+        select count(
+            smcd.DEF_ID_
+        ) as counts
+        from SYS_META_CONSTRAINT_DEF smcd
+        <where>
+            <if test="defId != null">
+                AND smcd.DEF_ID_ != #{defId}
+            </if>
+            <if test="tenantId != null">
+                AND smcd.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="entityId != null">
+                AND smcd.ENTITY_ID_ = #{entityId}
+            </if>
+            <if test="defCode != null and defCode.length() != 0">
+                AND smcd.DEF_CODE_ = #{defCode}
+            </if>
+            <if test="defName != null and defName.length() != 0">
+                AND smcd.DEF_NAME_ = #{defName}
+            </if>
+            <if test="defType != null">
+                AND smcd.DEF_TYPE_ = #{defType}
+            </if>
+            <if test="refId != null">
+                AND smcd.REF_ID_ = #{refId}
+            </if>
+            <if test="errorMsg != null and errorMsg.length() != 0">
+                AND smcd.ERROR_MSG_ = #{errorMsg}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND smcd.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND smcd.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND smcd.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND smcd.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND smcd.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND smcd.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND smcd.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

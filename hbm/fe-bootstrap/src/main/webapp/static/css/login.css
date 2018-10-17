@@ -1,0 +1,224 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{
+	padding:0px;
+	margin:0px;
+	}
+bttton,input{
+	border:none;
+	outline:none;
+	}
+html,body{
+	width:100%;
+	height:100%;
+	}
+body{
+	background:url(../images/login_bg.jpg) no-repeat;
+	background-size:100% 100%;
+	}
+.loginLogo{
+	width:200px;
+	height:64px;
+	position:absolute;
+	top:30px;
+	left:40px;
+	z-index:66;
+	}
+.loginLogo img{
+	width:200px;
+	height:64px;
+	}
+.loginCenter{
+	width:400px;
+	background:#fff;
+	position:fixed;
+	top:50%;
+	left:50%;
+	padding:25px 20px;
+	opacity:0;
+	margin-left:-200px;
+	margin-top:-150px;
+	box-shadow:0 0 10px #80b9f0;
+	border-radius:6px;
+	height:400px;
+	}
+.slideIn{
+  animation: slideInDown 1s 0.2s  ease-in forwards;
+  -webkit-animation:slideInDown 1s 0.2s ease-in forwards;
+  }
+  
+  @-webkit-keyframes slideInDown{
+  0% {
+	  opacity:0;
+	  margin-top:-260px;
+  }
+
+  100% {
+     opacity:1;
+	 margin-top:-210px;
+  }
+}
+
+@keyframes slideInDown {
+   0% {
+	  opacity:0;
+	  margin-top:-260px;
+  }
+
+  100% {
+     opacity:1;
+	 margin-top:-210px;
+  }
+}
+
+  
+.loginCenter h2{
+	line-height:40px;
+	font-size:26px;
+	color:#2196fd;
+	text-align:center;
+	font-weight:normal;
+	margin-top:0px;
+	}
+ .loginList{
+	 padding-left:20px;
+	 padding-top:10px;
+	 display:block;
+	 }
+ .loginList li{
+	 height:42px;
+	 width:100%;
+	 display:block;
+	 margin-bottom:20px;
+	 }
+.loginList li:last-child{
+	margin-bottom:0px;
+	}
+.leftIcon{
+	height:40px;
+	width:45px;
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;
+	display:block;
+	border:1px solid #e9e9e9;
+	background:#e9e9e9;
+	border-right:none;
+	float:left;
+	}
+.leftIcon i{
+	width:20px;
+	height:22px;
+	margin-left:12px;
+	margin-top:9px;
+	overflow:hidden;
+	display:block;
+	}
+.leftIcon i img{
+	width:20px;
+	height:22px;
+	}
+.userIpt{
+	width:260px;
+	outline:none;
+	background:#ffffff ;
+	-webkit-box-shadow: 0 0 0px 1000px white inset !important;
+	padding-left:5px;
+	font-size:15px;
+	float:left;
+	color:#666;
+	border:1px solid #e9e9e9;
+	border-bottom-right-radius:5px;
+	border-top-right-radius:5px;
+	box-sizing:content-box;
+	height:38px;
+	line-height:38px;
+	padding-right:5px;
+	}
+.userIpt:focus {
+	outline: none;
+	} 
+	
+	
+.qrCode{
+	width:159px;
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;
+	}
+.qrBox{
+	width:111px;
+	height:42px;
+	cursor:pointer;
+	margin-right:21px;
+	float:right;
+	}
+.Gopsd{
+	height:25px;
+	line-height:25px;
+	float:right;
+	display:block;
+	font-size:13px;
+	color:#444;
+	margin-right:21px;
+	}
+.forCheck{
+	height:24px;
+	overflow:hidden;
+	float:left;
+	display:block;
+	}
+.checkPsd{
+	display:none;
+	}
+.moniCheck{
+	width:18px;
+	height:17px;
+	cursor:pointer;
+	margin-top:2px;
+	display:block;
+	float:left;
+	border:1px solid #ddd;
+	border-radius:2px;
+	}
+.labelTxt{
+	height:25px;
+	line-height:25px;
+	display:block;
+	float:left;
+	color:#444;
+	margin-left:5px;
+	font-size:13px;
+	}
+.checkPsd:checked +.moniCheck{
+	width:20px;
+	height:21px;
+	border:none;
+	background:url(../images/checkpsd.png) no-repeat;
+	}
+.formSubmit{
+	width:319px;
+	height:40px;
+	margin-left:21px;
+	border-radius:6px;
+	background:#00a3f0;
+	font-size:16px;
+	cursor:pointer;
+	margin-top:0px;
+	color:#fff;
+	}
+.errorShow{
+	width:319px;
+	box-sizing:border-box;
+	border:1px dashed #e9ccc0;
+	height:30px;
+	line-height:30px;
+	display:none;
+	margin-left:21px;
+	margin-top:-6px;
+	padding-left:10px;
+	padding-right:30px;
+	font-size:12px;
+	overflow:hidden;
+	background:#ffefe8 url(../images/ic04.png) no-repeat 298px 7px;
+	color:#ff5501;
+	}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobRegistryMapper">
+	
+	<resultMap id="XxlJobRegistry" type="com.xxl.job.admin.core.model.XxlJobRegistry" >
+		<result column="id_" property="id" />
+	    <result column="registry_group_" property="registryGroup" />
+	    <result column="registry_key_" property="registryKey" />
+	    <result column="registry_value_" property="registryValue" />
+		<result column="update_time_" property="updateTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id_,
+		t.registry_group_,
+		t.registry_key_,
+		t.registry_value_,
+		t.update_time_
+	</sql>
+	
+	<delete id="removeDead" parameterType="java.lang.Integer" >
+		DELETE FROM JOB_TRIGGER_REGISTRY
+		WHERE 
+            <choose>  
+                <when test="_databaseId == 'oracle'">
+                    update_time_ <![CDATA[ < ]]> sysdate - #{timeout}/(24*60*60)
+                </when>
+                <otherwise>
+                    update_time_ <![CDATA[ < ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+                </otherwise>
+            </choose>
+	</delete>
+
+	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobRegistry">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_TRIGGER_REGISTRY  t
+		WHERE 
+            <choose>  
+                <when test="_databaseId == 'oracle'">
+                    t.update_time_ <![CDATA[ > ]]> sysdate - #{timeout}/(24*60*60)
+                </when>
+                <otherwise>
+                    t.update_time_ <![CDATA[ > ]]> DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)
+                </otherwise>
+            </choose>
+	</select>
+
+    <update id="registryUpdate" parameterType="java.util.Map" >
+        UPDATE JOB_TRIGGER_REGISTRY
+        SET 
+            <choose>  
+                <when test="_databaseId == 'oracle'">
+                    update_time_ = sysdate
+                </when>
+                <otherwise>
+                    update_time_ = NOW()
+                </otherwise>
+            </choose>
+        WHERE registry_group_ = #{registryGroup}
+          AND registry_key_ = #{registryKey}
+          AND registry_value_ = #{registryValue}
+    </update>
+
+    <insert id="registrySave" parameterType="java.util.Map" >
+        INSERT INTO JOB_TRIGGER_REGISTRY( 
+            <if test="_databaseId == 'oracle'">
+                id_, 
+            </if>
+            registry_group_ , 
+            registry_key_ , 
+            registry_value_, 
+            update_time_
+        )
+        VALUES( 
+            <if test="_databaseId == 'oracle'">
+                seq_job_trigger_registry_id.nextval, 
+            </if>
+            #{registryGroup} , 
+            #{registryKey} , 
+            #{registryValue}, 
+            <choose>  
+                <when test="_databaseId == 'oracle'">
+                    sysdate
+                </when>
+                <otherwise>
+                    NOW()
+                </otherwise>
+            </choose>
+        )
+    </insert>
+
+</mapper>

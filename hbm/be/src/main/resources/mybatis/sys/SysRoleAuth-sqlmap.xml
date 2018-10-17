@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysRoleAuthMapper">
+
+    <!-- result map -->
+    <resultMap type="SysRoleAuth" id="sysRoleAuthMap">
+        <id property="roleAuthId" column="roleAuthId" />
+        <result property="roleId" column="roleId" />
+        <result property="authId" column="authId" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <association property="sysAuth" column="authId" select="com.hginfo.hbm.be.mapper.sys.SysAuthMapper.getById" />
+        <association property="sysRole" column="roleId" select="com.hginfo.hbm.be.mapper.sys.SysRoleMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_ROLE_AUTH_COLUMN">
+        sra.ROLE_AUTH_ID_ roleAuthId,
+        sra.ROLE_ID_ roleId,
+        sra.AUTH_ID_ authId,
+        sra.IS_FINAL_ isFinal,
+        sra.CRT_TIME_ crtTime,
+        sra.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_ROLE_AUTH_WHERE">
+        <if test="roleAuthId != null">
+            AND sra.ROLE_AUTH_ID_ = #{roleAuthId}
+        </if>
+        <if test="roleId != null">
+            AND sra.ROLE_ID_ = #{roleId}
+        </if>
+        <if test="authId != null">
+            AND sra.AUTH_ID_ = #{authId}
+        </if>
+        <if test="isFinal != null">
+            AND sra.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sra.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sra.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysRoleAuthMap">
+        select <include  refid="SQL_SYS_ROLE_AUTH_COLUMN" />
+        from SYS_ROLE_AUTH sra
+        <where>
+            sra.ROLE_AUTH_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysRoleAuth" resultMap="sysRoleAuthMap">
+        select <include  refid="SQL_SYS_ROLE_AUTH_COLUMN"/>
+        from SYS_ROLE_AUTH sra
+        <where>
+            <include  refid="SQL_SYS_ROLE_AUTH_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sra.ROLE_AUTH_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysRoleAuth" resultType="int">
+        select count(
+            sra.ROLE_AUTH_ID_
+        ) as counts
+        from SYS_ROLE_AUTH sra
+        <where>
+            <include  refid="SQL_SYS_ROLE_AUTH_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysRoleAuth" resultType="int">
+        select count(
+            sra.ROLE_AUTH_ID_
+        ) as counts
+        from SYS_ROLE_AUTH sra
+        <where>
+            <if test="roleAuthId != null">
+                AND sra.ROLE_AUTH_ID_ != #{roleAuthId}
+            </if>
+            <if test="roleId != null">
+                AND sra.ROLE_ID_ = #{roleId}
+            </if>
+            <if test="authId != null">
+                AND sra.AUTH_ID_ = #{authId}
+            </if>
+            <if test="isFinal != null">
+                AND sra.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sra.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sra.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="mybatisDelete" parameterType="SysRoleAuth">
+        delete sra from SYS_ROLE_AUTH sra
+        <where>
+            <include  refid="SQL_SYS_ROLE_AUTH_WHERE"/>
+        </where>
+    </delete>
+
+</mapper>

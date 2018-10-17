@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.news.SysNewsTypeMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NEWS_TYPE_COLUMN">
+        snt.NEWS_TYPE_ID_ newsTypeId,
+        snt.NEWS_TYPE_CODE_ newsTypeCode,
+        snt.NEWS_TYPE_NAME_ newsTypeName,
+        snt.IS_IN_ isIn,
+        snt.DESCR_ descr,
+        snt.IS_DELETE_ isDelete,
+        snt.IS_FINAL_ isFinal,
+        snt.CRT_TIME_ crtTime,
+        snt.UPD_TIME_ updTime,
+        snt.CRT_USER_ID_ crtUserId,
+        snt.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NEWS_TYPE_WHERE">
+        <if test="newsTypeId != null">
+            AND snt.NEWS_TYPE_ID_ = #{newsTypeId}
+        </if>
+        <if test="newsTypeCode != null and newsTypeCode.length() != 0">
+            AND snt.NEWS_TYPE_CODE_ = #{newsTypeCode}
+        </if>
+        <if test="newsTypeName != null and newsTypeName.length() != 0">
+            AND snt.NEWS_TYPE_NAME_ = #{newsTypeName}
+        </if>
+        <if test="isIn != null">
+            AND snt.IS_IN_ = #{isIn}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND snt.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND snt.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND snt.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND snt.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND snt.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND snt.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND snt.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNewsType">
+        select <include refid="SQL_SYS_NEWS_TYPE_COLUMN"/>
+        from SYS_NEWS_TYPE snt
+        <where>
+            snt.NEWS_TYPE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNewsType" resultType="SysNewsType">
+        select <include refid="SQL_SYS_NEWS_TYPE_COLUMN"/>
+        from SYS_NEWS_TYPE snt
+        <where>
+            <include refid="SQL_SYS_NEWS_TYPE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                snt.NEWS_TYPE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNewsType" resultType="int">
+        select count(
+            snt.NEWS_TYPE_ID_
+        ) as counts
+        from SYS_NEWS_TYPE snt
+        <where>
+            <include refid="SQL_SYS_NEWS_TYPE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNewsType" resultType="int">
+        select count(
+            snt.NEWS_TYPE_ID_
+        ) as counts
+        from SYS_NEWS_TYPE snt
+        <where>
+            <if test="newsTypeId != null">
+                AND snt.NEWS_TYPE_ID_ != #{newsTypeId}
+            </if>
+            <if test="newsTypeCode != null and newsTypeCode.length() != 0">
+                AND snt.NEWS_TYPE_CODE_ = #{newsTypeCode}
+            </if>
+            <if test="newsTypeName != null and newsTypeName.length() != 0">
+                AND snt.NEWS_TYPE_NAME_ = #{newsTypeName}
+            </if>
+            <if test="isIn != null">
+                AND snt.IS_IN_ = #{isIn}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND snt.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND snt.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND snt.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND snt.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND snt.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND snt.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND snt.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

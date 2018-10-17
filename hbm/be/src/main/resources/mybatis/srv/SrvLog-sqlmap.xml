@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.srv.SrvLogMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SRV_LOG_COLUMN">
+        sl.LOG_ID_ logId,
+        sl.TENANT_ID_ tenantId,
+        sl.IF_ID_ ifId,
+        sl.REQ_TYPE_ reqType,
+        sl.REQ_URI_ reqUri,
+        sl.REQ_USERID_ reqUserid,
+        sl.BEGIN_TIME_ beginTime,
+        sl.END_TIME_ endTime,
+        sl.PROCESS_TIME_ processTime,
+        sl.CONSUMER_IP_ consumerIp,
+        sl.PROVIDER_IP_ providerIp,
+        sl.IP_ ip,
+        sl.RESULT_ result
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SRV_LOG_WHERE">
+        <if test="logId != null">
+            AND sl.LOG_ID_ = #{logId}
+        </if>
+        <if test="ifId != null">
+            AND sl.IF_ID_ = #{ifId}
+        </if>
+        <if test="tenantId != null">
+            AND sl.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="reqType != null and reqType.length() != 0">
+            AND sl.REQ_TYPE_ = #{reqType}
+        </if>
+        <if test="reqUri != null and reqUri.length() != 0">
+            AND sl.REQ_URI_ = #{reqUri}
+        </if>
+        <if test="reqUserid != null">
+            AND sl.REQ_USERID_ = #{reqUserid}
+        </if>
+        <if test="beginTime != null">
+            AND sl.BEGIN_TIME_ = #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND sl.END_TIME_ = #{endTime}
+        </if>
+        <if test="processTime != null">
+            AND sl.PROCESS_TIME_ = #{processTime}
+        </if>
+        <if test="consumerIp != null and consumerIp.length() != 0">
+            AND sl.CONSUMER_IP_ = #{consumerIp}
+        </if>
+        <if test="providerIp != null and providerIp.length() != 0">
+            AND sl.PROVIDER_IP_ = #{providerIp}
+        </if>
+        <if test="ip != null and ip.length() != 0">
+            AND sl.IP_ = #{ip}
+        </if>
+        <if test="result != null">
+            AND sl.RESULT_ = #{result}
+        </if>
+
+        <!--- add  -->
+        <if test="bo.ip != null and bo.ip.length() != 0">
+            AND sl.IP_ like '%${bo.ip}%'
+        </if>
+        <if test="startTimeStr != null and startTimeStr.length() != 0">
+        	<if test="_databaseId == 'oracle'">
+            	AND sl.BEGIN_TIME_ &gt;= to_date(#{startTimeStr},'yyyy-mm-dd hh24:mi:ss')
+	        </if>
+	        <if test="_databaseId == 'mysql'">
+	            AND sl.BEGIN_TIME_ &gt;= #{startTimeStr}
+	        </if>
+        </if>
+        <if test="endTimeStr != null and endTimeStr.length() != 0">
+            <if test="_databaseId == 'oracle'">
+            	AND sl.BEGIN_TIME_ &lt;= to_date(#{endTimeStr},'yyyy-mm-dd hh24:mi:ss')
+	        </if>
+	        <if test="_databaseId == 'mysql'">
+	            AND sl.BEGIN_TIME_ &lt;= #{endTimeStr}
+	        </if>
+        </if>
+        <if test="bo.processTimeBegin != null">
+            AND sl.PROCESS_TIME_ &gt;= #{bo.processTimeBegin}
+        </if>
+        <if test="bo.processTimeEnd != null">
+            AND sl.PROCESS_TIME_ &lt;= #{bo.processTimeEnd}
+        </if>
+
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SrvLog">
+        select <include refid="SQL_SRV_LOG_COLUMN"/>
+        from SRV_LOG sl
+        <where>
+            sl.LOG_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SrvLog" resultType="SrvLog">
+        select <include refid="SQL_SRV_LOG_COLUMN"/>
+        from SRV_LOG sl
+        <where>
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sl.LOG_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SrvLog" resultType="int">
+        select count(
+            sl.LOG_ID_
+        ) as counts
+        from SRV_LOG sl
+        <where>
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SrvLog" resultType="int">
+        select count(
+            sl.LOG_ID_
+        ) as counts
+        from SRV_LOG sl
+        <where>
+            <if test="logId != null">
+                AND sl.LOG_ID_ != #{logId}
+            </if>
+            <if test="tenantId != null">
+                AND sl.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="ifId != null">
+                AND sl.IF_ID_ = #{ifId}
+            </if>
+            <if test="reqType != null and reqType.length() != 0">
+                AND sl.REQ_TYPE_ = #{reqType}
+            </if>
+            <if test="reqUri != null and reqUri.length() != 0">
+                AND sl.REQ_URI_ = #{reqUri}
+            </if>
+            <if test="reqUserid != null">
+                AND sl.REQ_USERID_ = #{reqUserid}
+            </if>
+            <if test="beginTime != null">
+                AND sl.BEGIN_TIME_ = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                AND sl.END_TIME_ = #{endTime}
+            </if>
+            <if test="processTime != null">
+                AND sl.PROCESS_TIME_ = #{processTime}
+            </if>
+            <if test="ip != null and ip.length() != 0">
+                AND sl.IP_ = #{ip}
+            </if>
+            <if test="result != null">
+                AND sl.RESULT_ = #{result}
+            </if>
+        </where>
+    </select>
+
+    <!-- 统计分析 -->
+    <select id="getMaxProcessTime" parameterType="SrvLog" resultType="int">
+        select MAX(
+        sl.PROCESS_TIME_
+        ) as processTime
+        from SRV_LOG sl
+        <where>
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+    </select>
+
+
+    <!-- 平时调用时间 -->
+    <select id="getAvgProcessTime" parameterType="SrvLog" resultType="int">
+        select avg(
+          sl.PROCESS_TIME_
+        ) as processTime
+        from SRV_LOG sl
+        <where>
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+    </select>
+
+    <!-- 每日调用次数 -->
+    <select id="getCallCountGroupByDay" parameterType="SrvLog" resultType="Map">
+        <if test="_databaseId == 'oracle'">
+        	select to_char(BEGIN_TIME_,'yyyy-mm-dd') as "beginTimeStr",count(
+	        	sl.LOG_ID_
+	        ) as "counts"
+	        from SRV_LOG sl
+	        <where>
+	            <include refid="SQL_SRV_LOG_WHERE"/>
+	        </where>
+	        group by to_char(BEGIN_TIME_,'yyyy-mm-dd')
+	    </if>
+	    <if test="_databaseId == 'mysql'">
+			select DATE(BEGIN_TIME_) as beginTimeStr,count(
+	        	sl.LOG_ID_
+	        ) as counts
+	        from SRV_LOG sl
+	        <where>
+	            <include refid="SQL_SRV_LOG_WHERE"/>
+	        </where>
+	        group by DATE(BEGIN_TIME_)
+	    </if>
+    </select>
+
+    <!-- 每日调用平均耗时 -->
+    <select id="getAvgProcessTimeGroupByDay" parameterType="SrvLog" resultType="Map">
+        <if test="_databaseId == 'oracle'">
+        	select to_char(BEGIN_TIME_,'yyyy-mm-dd') as "beginTimeStr",round(AVG(
+	          sl.PROCESS_TIME_
+	        )) as "avgProcessTime"
+	        from SRV_LOG sl
+	        <where>
+	            <include refid="SQL_SRV_LOG_WHERE"/>
+	        </where>
+	        group by to_char(BEGIN_TIME_,'yyyy-mm-dd')
+	    </if>
+	    <if test="_databaseId == 'mysql'">
+			select DATE(BEGIN_TIME_) as beginTimeStr,round(AVG(
+	          sl.PROCESS_TIME_
+	        )) as avgProcessTime
+	        from SRV_LOG sl
+	        <where>
+	            <include refid="SQL_SRV_LOG_WHERE"/>
+	        </where>
+	        group by DATE(BEGIN_TIME_)
+	    </if>
+    </select>
+
+    <!-- 每日调用成功是失败 -->
+    <select id="getResultGroupByDay" parameterType="SrvLog" resultType="Map">
+    	<if test="_databaseId == 'oracle'">
+        	select to_char(BEGIN_TIME_,'yyyy-mm-dd') as "beginTimeStr",
+          		COUNT( CASE WHEN RESULT_ =1 THEN 1 ELSE NULL END ) AS "sucessCounts",
+          		COUNT( CASE WHEN RESULT_ =0 THEN 1 ELSE NULL END ) AS "failCounts"
+          	from SRV_LOG sl
+	        <where>
+	            <include refid="SQL_SRV_LOG_WHERE"/>
+	        </where>
+	        group by to_char(BEGIN_TIME_,'yyyy-mm-dd')
+	    </if>
+	    <if test="_databaseId == 'mysql'">
+			select DATE(BEGIN_TIME_) as beginTimeStr,
+          		COUNT( CASE WHEN `RESULT_` =1 THEN 1 ELSE NULL END ) AS sucessCounts,
+          		COUNT( CASE WHEN `RESULT_` =0 THEN 1 ELSE NULL END ) AS failCounts
+          	from SRV_LOG sl
+	        <where>
+	            <include refid="SQL_SRV_LOG_WHERE"/>
+	        </where>
+	        group by DATE(BEGIN_TIME_)
+	    </if>
+    </select>
+
+
+    <!-- 每个接口调用次数 -->
+    <select id="getCallCountGroupByInterface" parameterType="SrvLog" resultType="Map">
+        select sl.IF_ID_ as "ifId",count(
+          sl.LOG_ID_
+        ) as "counts"
+        from SRV_LOG sl
+        <where>
+            sl.IF_ID_>0
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+        group by sl.IF_ID_
+    </select>
+
+    <!-- 每个接口调用平均耗时 -->
+    <select id="getAvgProcessTimeGroupByInterface" parameterType="SrvLog" resultType="Map">
+        select sl.IF_ID_ as "ifId",round(AVG(
+          sl.PROCESS_TIME_
+        )) as "avgProcessTime"
+        from SRV_LOG sl
+        <where>
+            sl.IF_ID_>0
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+        group by sl.IF_ID_
+    </select>
+
+    <!-- 每个接口调用成功失败次数 -->
+    <select id="getResultGroupByInterface" parameterType="SrvLog" resultType="Map">
+        <if test="_databaseId == 'oracle'">
+        	select sl.IF_ID_  as "ifId",  
+        		COUNT( CASE WHEN RESULT_ =1 THEN 1 ELSE NULL END ) AS "sucessCounts",
+        		COUNT( CASE WHEN RESULT_ =0 THEN 1 ELSE NULL END ) AS "failCounts"
+	    </if>
+	    <if test="_databaseId == 'mysql'">
+	    	select sl.IF_ID_  as ifId,  
+				COUNT( CASE WHEN `RESULT_` =1 THEN 1 ELSE NULL END ) AS sucessCounts,
+        		COUNT( CASE WHEN `RESULT_` =0 THEN 1 ELSE NULL END ) AS failCounts
+	    </if>
+        from SRV_LOG sl
+        <where>
+            sl.IF_ID_>0
+            <include refid="SQL_SRV_LOG_WHERE"/>
+        </where>
+        group by sl.IF_ID_
+    </select>
+
+
+</mapper>

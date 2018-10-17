@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.news.SysNewsOuterMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NEWS_OUTER_COLUMN">
+        sno.NEWS_OUTER_ID_ newsOuterId,
+        sno.NEWS_ID_ newsId,
+        sno.USER_ID_ userId,
+        sno.USER_EMAIL_ userEmail,
+        sno.USER_MOBILE_ userMobile,
+        sno.TIMER_LV_ timerLv,
+        sno.IMPORTANT_LV_ importantLv,
+        sno.NEWS_TITLE_ newsTitle,
+        sno.NEWS_CONTENT_ newsContent,
+        sno.SEND_COUNT_ sendCount,
+        sno.SEND_STATUS_ sendStatus,
+        sno.IS_DELETE_ isDelete,
+        sno.IS_FINAL_ isFinal,
+        sno.CRT_TIME_ crtTime,
+        sno.UPD_TIME_ updTime,
+        sno.CRT_USER_ID_ crtUserId,
+        sno.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NEWS_OUTER_WHERE">
+        <if test="newsOuterId != null">
+            AND sno.NEWS_OUTER_ID_ = #{newsOuterId}
+        </if>
+        <if test="newsId != null">
+            AND sno.NEWS_ID_ = #{newsId}
+        </if>
+        <if test="userId != null">
+            AND sno.USER_ID_ = #{userId}
+        </if>
+        <if test="userEmail != null">
+            AND sno.USER_EMAIL_ = #{userEmail}
+        </if>
+        <if test="userMobile != null">
+            AND sno.USER_MOBILE_ = #{userMobile}
+        </if>
+        <if test="timerLv != null">
+            AND sno.TIMER_LV_ = #{timerLv}
+        </if>
+        <if test="importantLv != null">
+            AND sno.IMPORTANT_LV_ = #{importantLv}
+        </if>
+        <if test="newsTitle != null and newsTitle.length() != 0">
+            AND sno.NEWS_TITLE_ = #{newsTitle}
+        </if>
+        <if test="newsContent != null and newsContent.length() != 0">
+            AND sno.NEWS_CONTENT_ = #{newsContent}
+        </if>
+        <if test="sendCount != null">
+            AND sno.SEND_COUNT_ = #{sendCount}
+        </if>
+        <if test="sendStatus != null">
+            AND sno.SEND_STATUS_ = #{sendStatus}
+        </if>
+        <if test="isDelete != null">
+            AND sno.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sno.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sno.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sno.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sno.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sno.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNewsOuter">
+        select <include refid="SQL_SYS_NEWS_OUTER_COLUMN"/>
+        from SYS_NEWS_OUTER sno
+        <where>
+            sno.NEWS_OUTER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNewsOuter" resultType="SysNewsOuter">
+        select <include refid="SQL_SYS_NEWS_OUTER_COLUMN"/>
+        from SYS_NEWS_OUTER sno
+        <where>
+            <include refid="SQL_SYS_NEWS_OUTER_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sno.NEWS_OUTER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNewsOuter" resultType="int">
+        select count(
+            sno.NEWS_OUTER_ID_
+        ) as counts
+        from SYS_NEWS_OUTER sno
+        <where>
+            <include refid="SQL_SYS_NEWS_OUTER_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNewsOuter" resultType="int">
+        select count(
+            sno.NEWS_OUTER_ID_
+        ) as counts
+        from SYS_NEWS_OUTER sno
+        <where>
+            <if test="newsOuterId != null">
+                AND sno.NEWS_OUTER_ID_ != #{newsOuterId}
+            </if>
+            <if test="newsId != null">
+                AND sno.NEWS_ID_ = #{newsId}
+            </if>
+            <if test="userId != null">
+                AND sno.USER_ID_ = #{userId}
+            </if>
+            <if test="userEmail != null">
+                AND sno.USER_EMAIL_ = #{userEmail}
+            </if>
+            <if test="userMobile != null">
+                AND sno.USER_MOBILE_ = #{userMobile}
+            </if>
+            <if test="timerLv != null">
+                AND sno.TIMER_LV_ = #{timerLv}
+            </if>
+            <if test="importantLv != null">
+                AND sno.IMPORTANT_LV_ = #{importantLv}
+            </if>
+            <if test="newsTitle != null and newsTitle.length() != 0">
+                AND sno.NEWS_TITLE_ = #{newsTitle}
+            </if>
+            <if test="newsContent != null and newsContent.length() != 0">
+                AND sno.NEWS_CONTENT_ = #{newsContent}
+            </if>
+            <if test="sendCount != null">
+                AND sno.SEND_COUNT_ = #{sendCount}
+            </if>
+            <if test="sendStatus != null">
+                AND sno.SEND_STATUS_ = #{sendStatus}
+            </if>
+            <if test="isDelete != null">
+                AND sno.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sno.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sno.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sno.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sno.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sno.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

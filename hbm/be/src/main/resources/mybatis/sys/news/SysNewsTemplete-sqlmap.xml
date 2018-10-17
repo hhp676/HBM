@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.news.SysNewsTempleteMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NEWS_TEMPLETE_COLUMN">
+        snt.NEWS_TEMPLETE_ID_ newsTempleteId,
+        snt.NEWS_TYPE_ID_ newsTypeId,
+        snt.TEMPLETE_NAME_ templeteName,
+        snt.FREEMAKER_PATH_ freemakerPath,
+        snt.TIMER_LV_ timerLv,
+        snt.IMPORTANT_LV_ importantLv,
+        snt.DESCR_ descr,
+        snt.IS_DELETE_ isDelete,
+        snt.IS_FINAL_ isFinal,
+        snt.CRT_TIME_ crtTime,
+        snt.UPD_TIME_ updTime,
+        snt.CRT_USER_ID_ crtUserId,
+        snt.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NEWS_TEMPLETE_WHERE">
+        <if test="newsTempleteId != null">
+            AND snt.NEWS_TEMPLETE_ID_ = #{newsTempleteId}
+        </if>
+        <if test="newsTypeId != null">
+            AND snt.NEWS_TYPE_ID_ = #{newsTypeId}
+        </if>
+        <if test="templeteName != null and templeteName.length() != 0">
+            AND snt.TEMPLETE_NAME_ = #{templeteName}
+        </if>
+        <if test="freemakerPath != null and freemakerPath.length() != 0">
+            AND snt.FREEMAKER_PATH_ = #{freemakerPath}
+        </if>
+        <if test="timerLv != null">
+            AND snt.TIMER_LV_ = #{timerLv}
+        </if>
+        <if test="importantLv != null">
+            AND snt.IMPORTANT_LV_ = #{importantLv}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND snt.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND snt.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND snt.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND snt.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND snt.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND snt.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND snt.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNewsTemplete">
+        select <include refid="SQL_SYS_NEWS_TEMPLETE_COLUMN"/>
+        from SYS_NEWS_TEMPLETE snt
+        <where>
+            snt.NEWS_TEMPLETE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNewsTemplete" resultType="SysNewsTemplete">
+        select <include refid="SQL_SYS_NEWS_TEMPLETE_COLUMN"/>
+        from SYS_NEWS_TEMPLETE snt
+        <where>
+            <include refid="SQL_SYS_NEWS_TEMPLETE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                snt.NEWS_TEMPLETE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNewsTemplete" resultType="int">
+        select count(
+            snt.NEWS_TEMPLETE_ID_
+        ) as counts
+        from SYS_NEWS_TEMPLETE snt
+        <where>
+            <include refid="SQL_SYS_NEWS_TEMPLETE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNewsTemplete" resultType="int">
+        select count(
+            snt.NEWS_TEMPLETE_ID_
+        ) as counts
+        from SYS_NEWS_TEMPLETE snt
+        <where>
+            <if test="newsTempleteId != null">
+                AND snt.NEWS_TEMPLETE_ID_ != #{newsTempleteId}
+            </if>
+            <if test="newsTypeId != null">
+                AND snt.NEWS_TYPE_ID_ = #{newsTypeId}
+            </if>
+            <if test="templeteName != null and templeteName.length() != 0">
+                AND snt.TEMPLETE_NAME_ = #{templeteName}
+            </if>
+            <if test="freemakerPath != null and freemakerPath.length() != 0">
+                AND snt.FREEMAKER_PATH_ = #{freemakerPath}
+            </if>
+            <if test="timerLv != null">
+                AND snt.TIMER_LV_ = #{timerLv}
+            </if>
+            <if test="importantLv != null">
+                AND snt.IMPORTANT_LV_ = #{importantLv}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND snt.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND snt.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND snt.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND snt.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND snt.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND snt.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND snt.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

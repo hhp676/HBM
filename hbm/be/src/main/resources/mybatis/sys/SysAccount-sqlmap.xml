@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysAccountMapper">
+
+    <!-- result map -->
+    <resultMap type="SysAccount" id="sysAccountMap">
+        <id property="accountId" column="accountId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="userId" column="userId" />
+        <result property="loginName" column="loginName" />
+        <result property="loginPwd" column="loginPwd" />
+        <result property="descr" column="descr" />
+        <result property="isValid" column="isValid" />
+        <result property="isLock" column="isLock" />
+        <result property="lastLoginIp" column="lastLoginIp" />
+        <result property="lastLoginTime" column="lastLoginTime" />
+        <result property="lastPwdChange" column="lastPwdChange" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_ACCOUNT_COLUMN">
+        sa.ACCOUNT_ID_ accountId,
+        sa.TENANT_ID_ tenantId,
+        sa.USER_ID_ userId,
+        sa.LOGIN_NAME_ loginName,
+        sa.LOGIN_PWD_ loginPwd,
+        sa.DESCR_ descr,
+        sa.IS_VALID_ isValid,
+        sa.IS_LOCK_ isLock,
+        sa.LAST_LOGIN_IP_ lastLoginIp,
+        sa.LAST_LOGIN_TIME_ lastLoginTime,
+        sa.LAST_PWD_CHANGE_ lastPwdChange,
+        sa.IS_DELETE_ isDelete,
+        sa.IS_FINAL_ isFinal,
+        sa.CRT_TIME_ crtTime,
+        sa.UPD_TIME_ updTime,
+        sa.CRT_USER_ID_ crtUserId,
+        sa.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_ACCOUNT_WHERE">
+        <if test="accountId != null">
+            AND sa.ACCOUNT_ID_ = #{accountId}
+        </if>
+        <if test="tenantId != null">
+            AND sa.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="userId != null">
+            AND sa.USER_ID_ = #{userId}
+        </if>
+        <if test="loginName != null and loginName.length() != 0">
+            AND sa.LOGIN_NAME_ = #{loginName}
+        </if>
+        <if test="loginPwd != null and loginPwd.length() != 0">
+            AND sa.LOGIN_PWD_ = #{loginPwd}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sa.DESCR_ = #{descr}
+        </if>
+        <if test="isValid != null">
+            AND sa.IS_VALID_ = #{isValid}
+        </if>
+        <if test="isLock != null">
+            AND sa.IS_LOCK_ = #{isLock}
+        </if>
+        <if test="lastLoginIp != null and lastLoginIp.length() != 0">
+            AND sa.LAST_LOGIN_IP_ = #{lastLoginIp}
+        </if>
+        <if test="lastLoginTime != null">
+            AND sa.LAST_LOGIN_TIME_ = #{lastLoginTime}
+        </if>
+        <if test="lastPwdChange != null">
+            AND sa.LAST_PWD_CHANGE_ = #{lastPwdChange}
+        </if>
+        <if test="isDelete != null">
+            AND sa.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sa.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sa.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sa.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sa.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sa.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysAccountMap">
+        select <include  refid="SQL_SYS_ACCOUNT_COLUMN" />
+        from SYS_ACCOUNT sa
+        <where>
+            sa.ACCOUNT_ID_ = #{idValue}
+        </where>
+    </select>
+
+ 	<select id="getByUserId" parameterType="long" resultMap="sysAccountMap">
+        select <include  refid="SQL_SYS_ACCOUNT_COLUMN" />
+        from SYS_ACCOUNT sa
+        <where>
+            sa.USER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysAccount" resultMap="sysAccountMap">
+        select <include  refid="SQL_SYS_ACCOUNT_COLUMN"/>
+        from SYS_ACCOUNT sa
+        <where>
+            <include  refid="SQL_SYS_ACCOUNT_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sa.ACCOUNT_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysAccount" resultType="int">
+        select count(
+            sa.ACCOUNT_ID_
+        ) as counts
+        from SYS_ACCOUNT sa
+        <where>
+            <include  refid="SQL_SYS_ACCOUNT_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysAccount" resultType="int">
+        select count(
+            sa.ACCOUNT_ID_
+        ) as counts
+        from SYS_ACCOUNT sa
+        <where>
+            <if test="accountId != null">
+                AND sa.ACCOUNT_ID_ != #{accountId}
+            </if>
+            <if test="tenantId != null">
+                AND sa.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="userId != null">
+                AND sa.USER_ID_ = #{userId}
+            </if>
+            <if test="loginName != null and loginName.length() != 0">
+                AND sa.LOGIN_NAME_ = #{loginName}
+            </if>
+            <if test="loginPwd != null and loginPwd.length() != 0">
+                AND sa.LOGIN_PWD_ = #{loginPwd}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sa.DESCR_ = #{descr}
+            </if>
+            <if test="isValid != null">
+                AND sa.IS_VALID_ = #{isValid}
+            </if>
+            <if test="isLock != null">
+                AND sa.IS_LOCK_ = #{isLock}
+            </if>
+            <if test="lastLoginIp != null and lastLoginIp.length() != 0">
+                AND sa.LAST_LOGIN_IP_ = #{lastLoginIp}
+            </if>
+            <if test="lastLoginTime != null">
+                AND sa.LAST_LOGIN_TIME_ = #{lastLoginTime}
+            </if>
+            <if test="lastPwdChange != null">
+                AND sa.LAST_PWD_CHANGE_ = #{lastPwdChange}
+            </if>
+            <if test="isDelete != null">
+                AND sa.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sa.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sa.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sa.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sa.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sa.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

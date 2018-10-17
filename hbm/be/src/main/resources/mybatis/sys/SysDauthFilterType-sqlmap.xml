@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthFilterTypeMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_FILTER_TYPE_COLUMN">
+        sdft.FILTER_TYPE_ID_ filterTypeId,
+        sdft.TENANT_ID_ tenantId,
+        sdft.FILTER_TYPE_CODE_ filterTypeCode,
+        sdft.FILTER_TYPE_NAME_ filterTypeName,
+        sdft.ENG_NAME_ engName,
+        sdft.I18N_CODE_ i18nCode,
+        sdft.TYPE_ type,
+        sdft.DESCR_ descr,
+        sdft.IS_DELETE_ isDelete,
+        sdft.IS_FINAL_ isFinal,
+        sdft.CRT_TIME_ crtTime,
+        sdft.UPD_TIME_ updTime,
+        sdft.CRT_USER_ID_ crtUserId,
+        sdft.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_FILTER_TYPE_WHERE">
+        <if test="filterTypeId != null">
+            AND sdft.FILTER_TYPE_ID_ = #{filterTypeId}
+        </if>
+        <if test="tenantId != null">
+            AND sdft.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="filterTypeCode != null and filterTypeCode.length() != 0">
+            AND sdft.FILTER_TYPE_CODE_ = #{filterTypeCode}
+        </if>
+        <if test="filterTypeName != null and filterTypeName.length() != 0">
+            AND sdft.FILTER_TYPE_NAME_ = #{filterTypeName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sdft.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sdft.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="type != null">
+            AND sdft.TYPE_ = #{type}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdft.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdft.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdft.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdft.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdft.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdft.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdft.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysDauthFilterType">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_TYPE_COLUMN" />
+        from SYS_DAUTH_FILTER_TYPE sdft
+        <where>
+            sdft.FILTER_TYPE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthFilterType" resultType="SysDauthFilterType">
+        select <include  refid="SQL_SYS_DAUTH_FILTER_TYPE_COLUMN"/>
+        from SYS_DAUTH_FILTER_TYPE sdft
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_TYPE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdft.FILTER_TYPE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthFilterType" resultType="int">
+        select count(
+            sdft.FILTER_TYPE_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_TYPE sdft
+        <where>
+            <include  refid="SQL_SYS_DAUTH_FILTER_TYPE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthFilterType" resultType="int">
+        select count(
+            sdft.FILTER_TYPE_ID_
+        ) as counts
+        from SYS_DAUTH_FILTER_TYPE sdft
+        <where>
+            <if test="filterTypeId != null">
+                AND sdft.FILTER_TYPE_ID_ != #{filterTypeId}
+            </if>
+            <if test="tenantId != null">
+                AND sdft.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="filterTypeCode != null and filterTypeCode.length() != 0">
+                AND sdft.FILTER_TYPE_CODE_ = #{filterTypeCode}
+            </if>
+            <if test="filterTypeName != null and filterTypeName.length() != 0">
+                AND sdft.FILTER_TYPE_NAME_ = #{filterTypeName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sdft.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sdft.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="type != null">
+                AND sdft.TYPE_ = #{type}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdft.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdft.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdft.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdft.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdft.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdft.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdft.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

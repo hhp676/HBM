@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysModelMapper">
+
+    <!-- result map -->
+    <resultMap type="SysModel" id="sysModelMap">
+        <id property="modelId" column="modelId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="modelCode" column="modelCode" />
+        <result property="modelName" column="modelName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="fid" column="fid" />
+        <result property="style" column="style" />
+        <result property="bsStyle" column="bsStyle" />
+        <result property="uri" column="uri" />
+        <result property="sortNo" column="sortNo" />
+        <result property="isVisible" column="isVisible" />
+        <result property="tip" column="tip" />
+        <result property="modelType" column="modelType" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <result property="iconId" column="iconId" />
+        <result property="isTopMenu" column="isTopMenu" />
+        <result property="isSubMenu" column="isSubMenu" />
+        <result property="isBsTopMenu" column="isBsTopMenu" />
+        <result property="isBsSubMenu" column="isBsSubMenu" />
+        <association property="sysIcon" column="iconId" select="com.hginfo.hbm.be.mapper.sys.SysIconMapper.getById" />
+        <association property="parent" column="fid" select="com.hginfo.hbm.be.mapper.sys.SysModelMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_MODEL_COLUMN">
+        sm.MODEL_ID_ modelId,
+        sm.TENANT_ID_ tenantId,
+        sm.MODEL_CODE_ modelCode,
+        sm.MODEL_NAME_ modelName,
+        sm.ENG_NAME_ engName,
+        sm.I18N_CODE_ i18nCode,
+        sm.FID_ fid,
+        sm.STYLE_ style,
+        sm.BS_STYLE_ bsStyle,
+        sm.URI_ uri,
+        sm.SORT_NO_ sortNo,
+        sm.IS_VISIBLE_ isVisible,
+        sm.TIP_ tip,
+        sm.MODEL_TYPE_ modelType,
+        sm.DESCR_ descr,
+        sm.IS_DELETE_ isDelete,
+        sm.IS_FINAL_ isFinal,
+        sm.CRT_TIME_ crtTime,
+        sm.UPD_TIME_ updTime,
+        sm.CRT_USER_ID_ crtUserId,
+        sm.UPD_USER_ID_ updUserId,
+        sm.ICON_ID_ iconId,
+        sm.IS_TOP_MENU_ isTopMenu,
+        sm.IS_SUB_MENU_ isSubMenu,
+        sm.IS_BS_TOP_MENU_ isBsTopMenu,
+        sm.IS_BS_SUB_MENU_ isBsSubMenu
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_MODEL_WHERE">
+        <if test="modelId != null">
+            AND sm.MODEL_ID_ = #{modelId}
+        </if>
+        <if test="tenantId != null">
+            AND sm.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="modelCode != null and modelCode.length() != 0">
+            AND sm.MODEL_CODE_ = #{modelCode}
+        </if>
+        <if test="modelCodeLike != null and modelCodeLike.length() != 0">
+            AND sm.MODEL_CODE_ like '%${modelCodeLike}%'
+        </if>
+        <if test="modelName != null and modelName.length() != 0">
+            AND sm.MODEL_NAME_ like '%${modelName}%'
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sm.ENG_NAME_ like '%${engName}%'
+        </if>
+        <if test="uriLike != null and uriLike.length() != 0">
+            AND sm.URI_ LIKE  '%${uriLike}%'
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sm.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="fid ==0">
+            AND sm.FID_ is null
+        </if>
+        <if test="fid != null and fid != 0">
+            AND sm.FID_ = #{fid}
+        </if>
+        <if test="style != null and style.length() != 0">
+            AND sm.STYLE_ = #{style}
+        </if>
+        <if test="bsStyle != null and bsStyle.length() != 0">
+            AND sm.BS_STYLE_ = #{bsStyle}
+        </if>
+        <if test="uri != null and uri.length() != 0">
+            AND sm.URI_ = #{uri}
+        </if>
+        <if test="sortNo != null">
+            AND sm.SORT_NO_ = #{sortNo}
+        </if>
+        <if test="isVisible != null">
+            AND sm.IS_VISIBLE_ = #{isVisible}
+        </if>
+        <if test="tip != null and tip.length() != 0">
+            AND sm.TIP_ LIKE '%${tip}%'
+        </if>
+        <if test="modelType != null">
+            AND sm.MODEL_TYPE_ = #{modelType}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sm.DESCR_ LIKE '%${descr}%'
+        </if>
+        <if test="isDelete != null">
+            AND sm.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sm.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sm.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sm.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sm.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sm.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="iconId != null">
+            AND sm.ICON_ID_ = #{iconId}
+        </if>
+        <if test="isTopMenu != null">
+            AND sm.IS_TOP_MENU_ = #{isTopMenu}
+        </if>
+        <if test="isSubMenu != null">
+            AND sm.IS_SUB_MENU_ = #{isSubMenu}
+        </if>
+        <if test="isBsTopMenu != null">
+            AND sm.IS_BS_TOP_MENU_ = #{isBsTopMenu}
+        </if>
+        <if test="isBsSubMenu != null">
+            AND sm.IS_BS_SUB_MENU_ = #{isBsSubMenu}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysModelMap">
+        select <include  refid="SQL_SYS_MODEL_COLUMN" />
+        from SYS_MODEL sm
+        <where>
+            sm.MODEL_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysModel" resultType="sysModel">
+        select <include  refid="SQL_SYS_MODEL_COLUMN"/>
+        from SYS_MODEL sm
+        <where>
+            <include  refid="SQL_SYS_MODEL_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sm.MODEL_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysModel" resultType="int">
+        select count(
+            sm.MODEL_ID_
+        ) as counts
+        from SYS_MODEL sm
+        <where>
+            <include  refid="SQL_SYS_MODEL_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysModel" resultType="int">
+        select count(
+            sm.MODEL_ID_
+        ) as counts
+        from SYS_MODEL sm
+        <where>
+            <if test="modelId != null">
+                AND sm.MODEL_ID_ != #{modelId}
+            </if>
+            <if test="tenantId != null">
+                AND sm.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="modelCode != null and modelCode.length() != 0">
+                AND sm.MODEL_CODE_ = #{modelCode}
+            </if>
+            <if test="modelName != null and modelName.length() != 0">
+                AND sm.MODEL_NAME_ = #{modelName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sm.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sm.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="fid != null">
+                AND sm.FID_ = #{fid}
+            </if>
+            <if test="style != null and style.length() != 0">
+                AND sm.STYLE_ = #{style}
+            </if>
+            <if test="bsStyle != null and bsStyle.length() != 0">
+                AND sm.BS_STYLE_ = #{bsStyle}
+            </if>
+            <if test="isTopMenu != null">
+                AND sm.IS_TOP_MENU_ = #{isTopMenu}
+            </if>
+            <if test="isSubMenu != null">
+                AND sm.IS_SUB_MENU_ = #{isSubMenu}
+            </if>
+            <if test="isBsTopMenu != null">
+                AND sm.IS_BS_TOP_MENU_ = #{isBsTopMenu}
+            </if>
+            <if test="isBsSubMenu != null">
+                AND sm.IS_BS_SUB_MENU_ = #{isBsSubMenu}
+            </if>
+            <if test="uri != null and uri.length() != 0">
+                AND sm.URI_ = #{uri}
+            </if>
+            <if test="sortNo != null">
+                AND sm.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="isVisible != null">
+                AND sm.IS_VISIBLE_ = #{isVisible}
+            </if>
+            <if test="tip != null and tip.length() != 0">
+                AND sm.TIP_ = #{tip}
+            </if>
+            <if test="modelType != null">
+                AND sm.MODEL_TYPE_ = #{modelType}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sm.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sm.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sm.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sm.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sm.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sm.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sm.UPD_USER_ID_ = #{updUserId}
+            </if>
+            <if test="iconId != null">
+                AND sm.ICON_ID_ = #{iconId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getTopModel" parameterType="sysModel" resultType="sysModel">
+        select <include  refid="SQL_SYS_MODEL_COLUMN" />
+        from SYS_MODEL sm
+        where sm.FID_ IS NULL
+        and sm.IS_DELETE_ = 0
+        <if test="modelName != null and modelName.length() != 0">
+            AND sm.MODEL_NAME_  like '%${modelName}%'
+        </if>
+    </select>
+    <select id="getSubMenu" parameterType="sysModel" resultType="sysModel">
+        select <include  refid="SQL_SYS_MODEL_COLUMN" />
+        from SYS_MODEL sm
+        where sm.IS_DELETE_ = 0
+        <if test="fids != null and fids.length() != 0">
+            AND sm.FID_ in (${fids})
+        </if>
+        <if test="modelName != null and modelName.length() != 0">
+            AND sm.MODEL_NAME_ like '%${modelName}%'
+        </if>
+    </select>
+    <select id="getEqAndContainCode" parameterType="SysModel" resultType="Integer" >  
+    SELECT
+        count(1)
+    FROM
+        SYS_MODEL sml
+    WHERE sml.IS_DELETE_ = 0
+    <if test="modelCode != null and modelCode.length() != 0">
+         AND sml.MODEL_CODE_ = #{modelCode} 
+     </if>
+     <if test="modelId != null">
+         AND sml.MODEL_ID_ != #{modelId}
+     </if>
+    </select>
+    <select id="getEqAndContainURI" parameterType="SysModel" resultType="Integer" >   
+    SELECT
+        count(1)
+    FROM
+        SYS_MODEL sml
+    WHERE sml.IS_DELETE_ = 0
+    <if test="uri != null and uri.length() != 0">
+         AND REPLACE(REPLACE(sml.URI_, '%d', 'wildcard'),'%s', 'wildcard') = #{uri}
+     </if>
+     <if test="modelId != null">
+         AND sml.MODEL_ID_ != #{modelId}
+     </if>
+    </select>
+    <select id="getPreUriList" parameterType="SysModel" resultType="SysAuth" >  
+    SELECT
+        sml.URI_ uri
+    FROM
+        SYS_MODEL sml
+    WHERE sml.IS_DELETE_ = 0
+     <if test="modelId != null">
+         AND sml.MODEL_ID_ != #{modelId}
+     </if>
+    </select>
+</mapper>

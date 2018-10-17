@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hdubbo="http://hdp.hongguaninfo.com/schema/hdubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://hdp.hongguaninfo.com/schema/hdubbo http://hdp.hongguaninfo.com/schema/hdubbo/hdubbo.xsd"
+    default-autowire="byName">
+    
+    <!-- controller中通过@HReferance注入service -->
+    
+    <!-- 不加package参数，从而不扫描@HService -->
+    <!-- dubbopackage强制使用dubbo处理的包路径，多个包用逗号分隔 -->
+    <hdubbo:annotation />
+    
+</beans>

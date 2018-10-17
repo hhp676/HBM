@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.FeGroupMapper">
+    
+    <sql id="SQL_FEGROUP_COLUMN">
+        fg.GROUP_ID_ groupId,
+        fg.GROUP_NAME_ groupName,
+        fg.IS_DELETE_ isDelete,
+        fg.IS_FINAL_ isFinal,
+        fg.CRT_TIME_ crtTime,
+        fg.UPD_TIME_ updTime,
+        fg.CRT_USER_ID_ crtUserId,
+        fg.UPD_USER_ID_ updUserId
+    </sql>
+
+    <sql id="SQL_FE_GROUP_WHERE">
+        <if test="isDelete !=null ">
+            AND fg.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND fg.IS_FINAL_=#{isFinal}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="FeGroup">
+        select <include  refid="SQL_FEGROUP_COLUMN"/>
+        from fe_group fg
+        <where>
+                fg.GROUP_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="FeGroup" resultType="FeGroup">
+        select <include  refid="SQL_FEGROUP_COLUMN"/>
+        from fe_group fg
+        <where>
+            <include  refid="SQL_FE_GROUP_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                fg.GROUP_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="FeGroup" resultType="int">
+        select count(fg.GROUP_ID_) as counts
+        from fe_group fg
+        <where>
+            <include  refid="SQL_FE_GROUP_WHERE"/>
+        </where>
+    </select>
+
+</mapper>

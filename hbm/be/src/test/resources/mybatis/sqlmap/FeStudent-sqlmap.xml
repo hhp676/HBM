@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.FeStudentMapper">
+
+    <sql id="SQL_FESTUDENT_COLUMN">
+        fs.STUDENT_ID_ studentId,
+        fs.STUDENT_NAME_ studentName,
+        fs.SEX_ sex,
+        fs.REMARK_ remark,
+        fs.IS_DELETE_ isDelete,
+        fs.IS_FINAL_ isFinal,
+        fs.CRT_TIME_ crtTime,
+        fs.UPD_TIME_ updTime,
+        fs.CRT_USER_ID_ crtUserId,
+        fs.UPD_USER_ID_ updUserId
+    </sql>
+
+    <sql id="SQL_FE_STUDENT_WHERE">
+        <if test="isDelete !=null ">
+            AND fs.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND fs.IS_FINAL_=#{isFinal}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="FeStudent">
+        select <include  refid="SQL_FESTUDENT_COLUMN"/>
+        from fe_student fs
+        <where>
+                fs.STUDENT_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="FeStudent" resultType="FeStudent">
+        select <include  refid="SQL_FESTUDENT_COLUMN"/>
+        from fe_student fs
+        <where>
+            <include  refid="SQL_FE_STUDENT_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                fs.STUDENT_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="FeStudent" resultType="int">
+        select count(fs.STUDENT_ID_) as counts
+        from fe_student fs
+        <where>
+            <include  refid="SQL_FE_STUDENT_WHERE"/>
+        </where>
+    </select>
+
+</mapper>

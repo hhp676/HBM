@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysUserPositionMapper">
+
+    <!-- result map -->
+    <resultMap type="SysUserPosition" id="sysUserPositionMap">
+        <id property="userPositionId" column="userPositionId" />
+        <result property="userId" column="userId" />
+        <result property="positionId" column="positionId" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="isMajor" column="isMajor" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_POSITION_COLUMN">
+        sup.USER_POSITION_ID_ userPositionId,
+        sup.USER_ID_ userId,
+        sup.POSITION_ID_ positionId,
+        sup.IS_FINAL_ isFinal,
+        sup.CRT_TIME_ crtTime,
+        sup.CRT_USER_ID_ crtUserId,
+        sup.IS_MAJOR_ isMajor
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_POSITION_WHERE">
+        <if test="userPositionId != null">
+            AND sup.USER_POSITION_ID_ = #{userPositionId}
+        </if>
+        <if test="userId != null">
+            AND sup.USER_ID_ = #{userId}
+        </if>
+        <if test="positionId != null">
+            AND sup.POSITION_ID_ = #{positionId}
+        </if>
+        <if test="isFinal != null">
+            AND sup.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sup.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sup.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="isMajor != null">
+            AND sup.IS_MAJOR_ = #{isMajor}
+        </if>
+        <if test="sysPosition != null and sysPosition.orgId != null">
+            <!-- oracle递归查询树,替代mysql函数 -->
+            <if  test="_databaseId == 'oracle'">
+                AND EXISTS(
+                    SELECT ORG_ID_
+                      FROM SYS_ORGANIZATION
+                    WHERE IS_DELETE_ = 0
+                     START WITH ORG_ID_ = #{sysPosition.orgId}
+                    CONNECT BY PRIOR ORG_ID_ = FID_
+                )
+            </if>
+            <if  test="_databaseId == 'mysql'">
+                AND FIND_IN_SET(sp.ORG_ID_, get_org_children(#{sysPosition.orgId}))
+            </if>
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysUserPositionMap">
+        select <include  refid="SQL_SYS_USER_POSITION_COLUMN" />
+        from SYS_USER_POSITION sup
+        <where>
+            sup.USER_POSITION_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysUserPosition" resultMap="sysUserPositionMap">
+        select <include  refid="SQL_SYS_USER_POSITION_COLUMN"/>
+        from SYS_USER_POSITION sup
+        LEFT JOIN SYS_POSITION sp ON sup.POSITION_ID_ = sp.POSITION_ID_
+        LEFT JOIN SYS_USER su ON su.USER_ID_ = sup.USER_ID_
+        LEFT JOIN SYS_ORGANIZATION SO ON SO.ORG_ID_ = SP.ORG_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_POSITION_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sup.USER_POSITION_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysUserPosition" resultType="int">
+        select count(
+            sup.USER_POSITION_ID_
+        ) as counts
+        from SYS_USER_POSITION sup
+        LEFT JOIN SYS_POSITION sp ON sup.POSITION_ID_ = sp.POSITION_ID_
+        LEFT JOIN SYS_USER su ON su.USER_ID_ = sup.USER_ID_
+        LEFT JOIN SYS_ORGANIZATION SO ON SO.ORG_ID_ = SP.ORG_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_POSITION_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysUserPosition" resultType="int">
+        select count(
+            sup.USER_POSITION_ID_
+        ) as counts
+        from SYS_USER_POSITION sup
+        <where>
+            <if test="userPositionId != null">
+                AND sup.USER_POSITION_ID_ != #{userPositionId}
+            </if>
+            <if test="userId != null">
+                AND sup.USER_ID_ = #{userId}
+            </if>
+            <if test="positionId != null">
+                AND sup.POSITION_ID_ = #{positionId}
+            </if>
+            <if test="isFinal != null">
+                AND sup.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sup.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sup.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="isMajor != null">
+                AND sup.IS_MAJOR_ = #{isMajor}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getJobIdListByUserId" resultType="long">
+        SELECT 
+            DISTINCT sj.JOB_ID_ 
+        FROM sys_user_position sup
+        LEFT JOIN sys_position sp ON sup.POSITION_ID_ = sp.POSITION_ID_
+        LEFT JOIN sys_job sj ON sp.JOB_ID_ = sj.JOB_ID_
+        WHERE 
+            sup.USER_ID_ = #{userId}
+           AND sp.IS_DELETE_ = 0 
+           AND sj.IS_DELETE_ = 0
+    </select>
+
+</mapper>

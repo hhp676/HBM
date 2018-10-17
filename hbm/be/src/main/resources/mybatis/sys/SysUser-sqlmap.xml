@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysUserMapper">
+
+    <!-- result map -->
+    <resultMap type="SysUser" id="sysUserMap">
+        <id property="userId" column="userId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="userName" column="userName" />
+        <result property="engName" column="engName" />
+        <result property="gender" column="gender" />
+        <result property="birthday" column="birthday" />
+        <result property="mobile" column="mobile" />
+        <result property="email" column="email" />
+        <result property="address" column="address" />
+        <result property="telephone" column="telephone" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="isVisible" column="isVisible" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <result property="headPhoto" column="headPhoto" />
+        <result property="positionId" column="positionId" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_COLUMN">
+        su.USER_ID_ userId,
+        su.TENANT_ID_ tenantId,
+        su.USER_NAME_ userName,
+        su.ENG_NAME_ engName,
+        su.GENDER_ gender,
+        su.BIRTHDAY_ birthday,
+        su.MOBILE_ mobile,
+        su.EMAIL_ email,
+        su.ADDRESS_ address,
+        su.TELEPHONE_ telephone,
+        su.DESCR_ descr,
+        su.IS_DELETE_ isDelete,
+        su.IS_FINAL_ isFinal,
+        su.IS_VISIBLE_ isVisible,
+        su.CRT_TIME_ crtTime,
+        su.UPD_TIME_ updTime,
+        su.CRT_USER_ID_ crtUserId,
+        su.UPD_USER_ID_ updUserId,
+        su.HEAD_PHOTO_ headPhoto,
+        sp.POSITION_ID_ positionId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_WHERE">
+        <if test="userId != null">
+            AND su.USER_ID_ = #{userId}
+        </if>
+        <if test="tenantId != null">
+            AND su.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="userName != null and userName.length() != 0">
+            AND su.USER_NAME_ = #{userName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND su.ENG_NAME_ = #{engName}
+        </if>
+        <if test="gender != null">
+            AND su.GENDER_ = #{gender}
+        </if>
+        <if test="birthday != null and birthday.length() != 0">
+            AND su.BIRTHDAY_ = #{birthday}
+        </if>
+        <if test="mobile != null and mobile.length() != 0">
+            AND su.MOBILE_ = #{mobile}
+        </if>
+        <if test="email != null and email.length() != 0">
+            AND su.EMAIL_ = #{email}
+        </if>
+        <if test="address != null and address.length() != 0">
+            AND su.ADDRESS_ = #{address}
+        </if>
+        <if test="telephone != null and telephone.length() != 0">
+            AND su.TELEPHONE_ = #{telephone}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND su.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND su.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND su.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="isVisible != null">
+            AND su.IS_VISIBLE_ = #{isVisible}
+        </if>
+        <if test="crtTime != null">
+            AND su.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND su.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND su.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND su.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="headPhoto != null">
+            AND su.HEAD_PHOTO_ = #{headPhoto}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+        <if test="userNameForQuery != null and userNameForQuery.length() != 0">
+            AND su.USER_NAME_ like '%${userNameForQuery}%'
+        </if>
+        <if test="emailForQuery != null and emailForQuery.length() != 0">
+            AND su.EMAIL_ like '%${emailForQuery}%'
+        </if>
+        <if test="userAccount != null and userAccount.loginName != null and userAccount.loginName.length() != 0">
+            AND sa.LOGIN_NAME_ like '%${userAccount.loginName}%'
+        </if>
+        <if test="userPosition != null and userPosition.positionName != null and userPosition.positionName.length() != 0">
+            AND sp.POSITION_NAME_ like
+            '%${userPosition.positionName}%'
+        </if>
+        <if test="userPosition != null and userPosition.sysOrganization != null
+                and userPosition.sysOrganization.orgName!=null and userPosition.sysOrganization.orgName.length() != 0">
+            AND so.ORG_NAME_ like
+            '%${userPosition.sysOrganization.orgName}%'
+        </if>
+        <if test="userPosition != null and userPosition.sysJob != null
+                and userPosition.sysJob.jobName!=null and userPosition.sysJob.jobName.length() != 0">
+            AND sj.JOB_NAME_ like
+            '%${userPosition.sysJob.jobName}%'
+        </if>
+        <if test="staffInfo != null">
+            <if test="staffInfo.staffCode != null and staffInfo.staffCode.length() != 0">
+                AND ssi.STAFF_CODE_ like '%${staffInfo.staffCode}%'
+            </if>
+            <if test="staffInfo.staffStatus != null">
+                AND ssi.STAFF_STATUS_ = #{staffInfo.staffStatus}
+            </if>
+            <if test="staffInfo.bo.entryStartTime != null">
+                AND ssi.ENTRY_TIME_ &gt;= #{staffInfo.bo.entryStartTime}
+            </if>
+            <if test="staffInfo.bo.entryEndTime != null">
+                AND ssi.ENTRY_TIME_ &lt;= #{staffInfo.bo.entryEndTime}
+            </if>
+        </if>
+    </sql>
+
+    <!-- According to the id check record -->
+    <select id="getById" parameterType="long" resultMap="sysUserMap">
+        select
+        <include refid="SQL_SYS_USER_COLUMN" />
+        from SYS_USER su
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        left join sys_account sa on su.USER_ID_ = sa.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        left join sys_job sj on sp.JOB_ID_ = sj.JOB_ID_
+        <where>
+            su.USER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All -->
+    <select id="getList" parameterType="SysUser" resultMap="sysUserMap">
+        select
+        <include refid="SQL_SYS_USER_COLUMN" />
+        from SYS_USER su
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        left join sys_account sa on su.USER_ID_ = sa.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        left join sys_job sj on sp.JOB_ID_ = sj.JOB_ID_
+        <where>
+            <include refid="SQL_SYS_USER_WHERE" />
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            su.USER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line -->
+    <select id="getListCount" parameterType="SysUser" resultType="int">
+        select count(
+          su.USER_ID_
+        ) as counts
+        from SYS_USER su
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        left join sys_account sa on su.USER_ID_ = sa.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        left join sys_job sj on sp.JOB_ID_ = sj.JOB_ID_
+        <where>
+            <include refid="SQL_SYS_USER_WHERE" />
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysUser" resultType="int">
+        select count(
+            su.USER_ID_
+        ) as counts
+        from SYS_USER su
+        <where>
+            <if test="userId != null">
+                AND su.USER_ID_ != #{userId}
+            </if>
+            <if test="tenantId != null">
+                AND su.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="userName != null and userName.length() != 0">
+                AND su.USER_NAME_ = #{userName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND su.ENG_NAME_ = #{engName}
+            </if>
+            <if test="gender != null">
+                AND su.GENDER_ = #{gender}
+            </if>
+            <if test="birthday != null and birthday.length() != 0">
+                AND su.BIRTHDAY_ = #{birthday}
+            </if>
+            <if test="mobile != null and mobile.length() != 0">
+                AND su.MOBILE_ = #{mobile}
+            </if>
+            <if test="email != null and email.length() != 0">
+                AND su.EMAIL_ = #{email}
+            </if>
+            <if test="address != null and address.length() != 0">
+                AND su.ADDRESS_ = #{address}
+            </if>
+            <if test="telephone != null and telephone.length() != 0">
+                AND su.TELEPHONE_ = #{telephone}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND su.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND su.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND su.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="isVisible != null">
+                AND su.IS_VISIBLE_ = #{isVisible}
+            </if>
+            <if test="crtTime != null">
+                AND su.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND su.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND su.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND su.UPD_USER_ID_ = #{updUserId}
+            </if>
+            <if test="headPhoto != null">
+                AND su.HEAD_PHOTO_ = #{headPhoto}
+            </if>
+        </where>
+    </select>
+
+    <!-- getPageListByAuthId -->
+    <select id="getPageListByAuthId" parameterType="SysUser"
+        resultMap="sysUserMap">
+        select
+        <include refid="SQL_SYS_USER_COLUMN" />
+        from SYS_USER su
+        right join sys_user_auth sua on su.USER_ID_ = sua.USER_ID_
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        left join sys_account sa on su.USER_ID_ = sa.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        left join sys_job sj on sp.JOB_ID_ = sj.JOB_ID_
+        <where>
+            <include refid="SQL_SYS_USER_WHERE" />
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            su.USER_ID_ desc
+        </if>
+    </select>
+
+    <select id="getPageListByAuthIdCount" parameterType="SysUser" resultType="int">
+        select count(su.USER_ID_) as counts
+        from SYS_USER su
+        right join sys_user_auth sua on su.USER_ID_ = sua.USER_ID_
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        left join sys_account sa on su.USER_ID_ = sa.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        left join sys_job sj on sp.JOB_ID_ = sj.JOB_ID_
+        <where>
+            <include refid="SQL_SYS_USER_WHERE" />
+        </where>
+    </select>
+
+    <sql id="SQL_WIN_LIST_WHERE">
+        AND su.USER_ID_ != 1
+        AND ssi.STAFF_STATUS_ = 1
+        <if test="isDelete != null">
+            AND su.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="userName != null and userName.length() != 0">
+            AND su.USER_NAME_ like '%${userName}%'
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND su.ENG_NAME_ like '%${engName}%'
+        </if>
+        <if test="gender != null">
+            AND su.GENDER_ = #{gender}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+        <if test="userPosition != null and userPosition.positionId != null">
+            AND EXISTS(SELECT
+                  sp.POSITION_ID_
+                FROM
+                  sys_position sp
+                  INNER JOIN sys_user_position sup ON sp.POSITION_ID_ = sup.POSITION_ID_
+                WHERE
+                  sp.POSITION_ID_ = #{userPosition.positionId}
+                  AND sup.USER_ID_ = su.USER_ID_
+            )
+        </if>
+        <if test="userPosition != null and userPosition.orgId != null">
+            <if  test="_databaseId == 'oracle'">
+                AND EXISTS(
+                    SELECT ORG_ID_
+                    FROM (
+                        SELECT ORG_ID_
+                        FROM SYS_ORGANIZATION
+                        WHERE IS_DELETE_ = 0
+                        START WITH ORG_ID_ = #{userPosition.orgId}
+                        CONNECT BY PRIOR ORG_ID_ = FID_)
+                    WHERE ORG_ID_ = sp.ORG_ID_)
+            </if>
+            <if  test="_databaseId == 'mysql'">
+                AND EXISTS(SELECT
+                      sp.POSITION_ID_
+                    FROM
+                      sys_position sp
+                      INNER JOIN sys_user_position sup ON sp.POSITION_ID_ = sup.POSITION_ID_
+                    WHERE
+                      FIND_IN_SET(sp.ORG_ID_, get_org_children(#{userPosition.orgId}))
+                      AND sup.USER_ID_ = su.USER_ID_
+                )
+            </if>
+        </if>
+    </sql>
+
+    <select id="getWinList" parameterType="SysUser" resultMap="sysUserMap">
+        select <include refid="SQL_SYS_USER_COLUMN" />
+        from SYS_USER su
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        <where>
+            <include refid="SQL_WIN_LIST_WHERE" />
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            su.USER_ID_ desc
+        </if>
+    </select>
+
+    <select id="getWinListCount" parameterType="SysUser" resultType="int">
+        select count(su.USER_ID_) as counts
+        from SYS_USER su
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        <where>
+            <include refid="SQL_WIN_LIST_WHERE" />
+        </where>
+    </select>
+    
+    <select id="getUserByLoginName" parameterType="String" resultMap="sysUserMap">
+        select
+        <include refid="SQL_SYS_USER_COLUMN" />
+        from SYS_USER su
+        left join sys_staff_info ssi on su.USER_ID_ = ssi.USER_ID_
+        left join
+        sys_account sa on su.USER_ID_ = sa.USER_ID_
+        left join
+        sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and
+        sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ =
+        sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ =
+        so.ORG_ID_
+        left join sys_job sj on sp.JOB_ID_ = sj.JOB_ID_
+        <where>
+            sa.LOGIN_NAME_ = #{idValue}
+        </where>
+    </select>
+    
+    <!-- 聚合查询离职时间 mysql-->
+    <select id="getUserQuitGroup" parameterType="HashMap" resultType="CaseIgnoreMap" databaseId="mysql">
+        select  DATE_FORMAT(a.QUIT_TIME_,'%m') total_month,count(1) total
+         from sys_staff_info a 
+        where a.QUIT_TIME_>0
+            and DATE_FORMAT(a.QUIT_TIME_,'%Y')=#{year}
+        group by DATE_FORMAT(a.QUIT_TIME_,'%m')
+    </select>
+    
+    <!-- 聚合查询离职时间 oracle-->
+    <select id="getUserQuitGroup" parameterType="HashMap" resultType="CaseIgnoreMap" databaseId="oracle">
+        select  to_char(a.QUIT_TIME_,'MM') total_month,count(1) total
+         from sys_staff_info a 
+        where A.QUIT_TIME_ IS NOT NULL
+            and to_char(a.QUIT_TIME_,'yyyy')=#{year}
+        group by to_char(a.QUIT_TIME_,'MM')
+    </select>
+    
+    <!-- 聚合查询入职时间 mysql-->
+    <select id="getUserEntryGroup" parameterType="HashMap" resultType="CaseIgnoreMap" databaseId="mysql">
+        select  DATE_FORMAT(a.ENTRY_TIME_,'%m') total_month,count(1) total
+         from sys_staff_info a 
+        where  DATE_FORMAT(a.ENTRY_TIME_,'%Y')=#{year}
+        group by DATE_FORMAT(a.ENTRY_TIME_,'%m')
+    </select>
+    
+    <!-- 聚合查询入职时间 oracle-->
+    <select id="getUserEntryGroup" parameterType="HashMap" resultType="CaseIgnoreMap" databaseId="oracle">
+        select  to_char(a.ENTRY_TIME_,'MM') TOTAL_MONTH,count(1) TOTAL
+         from sys_staff_info a 
+        where  to_char(a.ENTRY_TIME_,'yyyy')=#{year}
+        group by to_char(a.ENTRY_TIME_,'MM')
+    </select>
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 国际化配置 -->
+    <bean id="messageSource"
+        class="com.hginfo.hbm.core.i18n.HgReloadableResourceBundleMessageSource">
+        <!-- 已扩展：同时支持basename语言目录下的所有properties和xm资源文件 -->
+        <property name="basename" value="classpath:message/messages" />
+        <property name="fileEncodings" value="utf-8" />
+        <property name="cacheSeconds" value="120" />
+    </bean>
+
+</beans>

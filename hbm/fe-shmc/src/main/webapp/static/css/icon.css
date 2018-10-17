@@ -1,0 +1,167 @@
+.icon_user_man {
+	background: url('../images/icons/user_man_24px.png') no-repeat center
+		center;
+}
+.icon_user_center {
+	background: url('../images/icons/user_center.png') no-repeat center
+		center;
+}
+
+.icon_system_16 {
+	background: url('../images/icons/system_16px.png') no-repeat center
+		center;
+}
+.icon_dot {
+	background: url('../images/icons/dot.png') no-repeat center
+		center;
+}
+.icon_tasktodo {
+	background: url('../images/icons/tasktodo.png') no-repeat center
+		center;
+}
+.icon_receive {
+	background: url('../images/icons/receive.png') no-repeat center
+		center;
+}
+.icon_email {
+	background: url('../images/icons/email.png') no-repeat center
+		center;
+}
+.icon_warning {
+	background: url('../images/icons/warning.png') no-repeat center
+		center;
+}
+.icon_zuzhi_16 {
+	background: url('../images/icons/zuzhi_16.png') no-repeat center
+		center;
+}
+.icon_doc_16 {
+	background: url('../images/icons/doc_16px.png') no-repeat center
+		center;
+}
+.icon_browser_16 {
+	background: url('../images/icons/browser_16px.png') no-repeat center
+		center;
+}
+.icon_cart_16 {
+	background: url('../images/icons/cart_16px.png') no-repeat center
+		center;
+}
+.icon_other_16 {
+	background: url('../images/icons/other_16px.png') no-repeat center
+		center;
+}
+
+.icon_signals_16 {
+	background: url('../images/icons/signals_16px.png') no-repeat center
+		center;
+}
+.icon_settings_16 {
+	background: url('../images/icons/settings_16px.png') no-repeat center
+		center;
+}
+.icon_center_16 {
+	background: url('../images/icons/center_16px.png') no-repeat center
+		center;
+}
+
+.icon_report_16 {
+	background: url('../images/icons/report_16px.png') no-repeat center
+		center;
+}
+.icon-add1{
+	background:url('../images/icons/add.gif') no-repeat center center;
+}
+.icon-edit1{
+	background:url('../images/icons/edit.gif') no-repeat center center;
+}
+.icon-del1{
+	background:url('../images/icons/delete.gif') no-repeat center center;
+}
+
+
+.m-icon-export{
+	background:url('../images/icons/export.png') no-repeat center center;
+}
+
+
+
+
+.icon_user_center {
+	background: url('../images/icons/user_center.png') no-repeat center
+		center;
+}
+.icon_add1 {
+	background: url('../images/icons/add_16px.png') no-repeat center
+		center;
+}
+.icon_save1 {
+	background: url('../images/icons/save_16px.png') no-repeat center
+		center;
+}
+.icon_delete {
+	background: url('../images/icons/delete_16px.png') no-repeat center
+		center;
+}
+.icon_undo {
+	background: url('../images/icons/undo_16px.png') no-repeat center
+		center;
+}
+.icon_search {
+	background: url('../images/icons/search_2.png') no-repeat center
+		center;
+}
+.icon_clear {
+	background: url('../images/icons/clear_16px.png') no-repeat center
+		center;
+}
+.icon_refresh_2 {
+	background: url('../images/icons/refresh_2.png') no-repeat center
+		center;
+}
+.icon_remove_all {
+	background: url('../images/icons/remove_all_16px.png') no-repeat center
+		center;
+}
+.icon_info {
+	background: url('../images/icons/info_16px.png') no-repeat center
+		center;
+}
+.icon_blue_refresh {
+	background: url('../images/icons/blue_refresh.png') no-repeat center
+		center;
+}
+.icon_blue_trash {
+	background: url('../images/icons/blue_trash.png') no-repeat center
+		center;
+}
+.icon_blue_remove {
+	background: url('../images/icons/blue_remove.png') no-repeat center
+		center;
+}
+/*过滤类型配置*/
+.icon_dauth_filtertype {
+	background: url('../images/icons/doc_16px.png') no-repeat center
+		center;
+}
+/*运算符配置*/
+.icon_dauth_operator{
+	background: url('../images/icons/other_16px.png') no-repeat center
+		center;
+}
+
+.icon_organization {
+	background: url('../images/icons/chart_organisation.png') no-repeat center center;
+}
+
+.icon_position {
+	background: url('../images/icons/position.png') no-repeat center center;
+}
+
+.icon_group {
+	background: url('../images/icons/group.png') no-repeat center center;
+}
+
+.icon_edit {
+    background: url('../images/icons/cog_edit.png') no-repeat center center;
+}

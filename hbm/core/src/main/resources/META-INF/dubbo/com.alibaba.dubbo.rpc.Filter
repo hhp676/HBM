@@ -1,0 +1,2 @@
+consumercurruser=com.hginfo.hbm.core.filter.ConsumerCurrUserFilter
+providercurruser=com.hginfo.hbm.core.filter.ProviderCurrUserFilter

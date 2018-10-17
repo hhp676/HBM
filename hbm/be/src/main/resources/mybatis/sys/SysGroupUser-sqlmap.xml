@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysGroupUserMapper">
+
+    <!-- result map -->
+    <resultMap type="SysGroupUser" id="sysGroupUserMap">
+        <id property="groupUserId" column="groupUserId" />
+        <result property="userId" column="userId" />
+        <result property="groupId" column="groupId" />
+        <result property="isLeader" column="isLeader" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <association property="sysGroup" column="groupId" select="com.hginfo.hbm.be.mapper.sys.SysGroupMapper.getById" />
+        <association property="sysUser" column="userId" select="com.hginfo.hbm.be.mapper.sys.SysUserMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_GROUP_USER_COLUMN">
+        sgu.GROUP_USER_ID_ groupUserId,
+        sgu.USER_ID_ userId,
+        sgu.GROUP_ID_ groupId,
+        sgu.IS_LEADER_ isLeader,
+        sgu.IS_FINAL_ isFinal,
+        sgu.CRT_TIME_ crtTime,
+        sgu.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_GROUP_USER_WHERE">
+        <if test="groupUserId != null">
+            AND sgu.GROUP_USER_ID_ = #{groupUserId}
+        </if>
+        <if test="userId != null">
+            AND sgu.USER_ID_ = #{userId}
+        </if>
+        <if test="groupId != null">
+            AND sgu.GROUP_ID_ = #{groupId}
+        </if>
+        <if test="isLeader != null">
+            AND sgu.IS_LEADER_ = #{isLeader}
+        </if>
+        <if test="isFinal != null">
+            AND sgu.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sgu.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sgu.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysGroupUserMap">
+        select <include  refid="SQL_SYS_GROUP_USER_COLUMN" />
+        from SYS_GROUP_USER sgu
+        <where>
+            sgu.GROUP_USER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysGroupUser" resultMap="sysGroupUserMap">
+        select <include  refid="SQL_SYS_GROUP_USER_COLUMN"/>
+        from SYS_GROUP_USER sgu
+        LEFT JOIN SYS_USER su ON su.USER_ID_ = sgu.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        <where>
+            <include  refid="SQL_SYS_GROUP_USER_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sgu.GROUP_USER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysGroupUser" resultType="int">
+        select count(
+            sgu.GROUP_USER_ID_
+        ) as counts
+        from SYS_GROUP_USER sgu
+        LEFT JOIN SYS_USER su ON su.USER_ID_ = sgu.USER_ID_
+        left join sys_user_position sup on su.USER_ID_ = sup.USER_ID_ and sup.IS_MAJOR_ = 1
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        left join sys_organization so on sp.ORG_ID_ = so.ORG_ID_
+        <where>
+            <include  refid="SQL_SYS_GROUP_USER_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysGroupUser" resultType="int">
+        select count(
+            sgu.GROUP_USER_ID_
+        ) as counts
+        from SYS_GROUP_USER sgu
+        <where>
+            <if test="groupUserId != null">
+                AND sgu.GROUP_USER_ID_ != #{groupUserId}
+            </if>
+            <if test="userId != null">
+                AND sgu.USER_ID_ = #{userId}
+            </if>
+            <if test="groupId != null">
+                AND sgu.GROUP_ID_ = #{groupId}
+            </if>
+            <if test="isLeader != null">
+                AND sgu.IS_LEADER_ = #{isLeader}
+            </if>
+            <if test="isFinal != null">
+                AND sgu.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sgu.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sgu.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

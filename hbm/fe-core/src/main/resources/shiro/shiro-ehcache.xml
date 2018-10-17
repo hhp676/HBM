@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <description>Shiro ehcache 安全配置</description>
+
+    <!-- Shiro Cache, 采用EhCache, 对应sessionManager需要处理session过期防止溢出 -->
+    <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:shiro/ehcache.xml" />
+    </bean>
+
+    <bean id="sessionManager"
+        class="com.hginfo.hbm.fe.core.shiro.HgWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000" />
+        <property name="deleteInvalidSessions" value="true" />
+        <property name="sessionValidationSchedulerEnabled" value="true" />
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
+        <property name="sessionDAO" ref="sessionDAO" />
+        <property name="sessionIdCookieEnabled" value="true" />
+        <property name="sessionIdCookie" ref="sessionIdCookie" />
+        <property name="sessionIdUrlRewritingEnabled" value="false" />
+    </bean>
+
+    <bean id="sessionValidationScheduler"
+        class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+        <property name="interval" value="1800000" />
+        <property name="sessionManager" ref="sessionManager" />
+    </bean>
+    <!-- 采用EhCache 的 shiro cache 配置完成 -->
+
+</beans>

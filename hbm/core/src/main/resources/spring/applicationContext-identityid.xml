@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <description>生成唯一ID</description>
+    <!-- 单机环境 -->
+    <bean id="identityidSingle" class="com.hginfo.hbm.core.identityid.IdentityidSingle" />
+    <!-- 集群环境 -->
+    <bean id="identityidCluster" class="com.hginfo.hbm.core.identityid.IdentityidCluster" />
+    <bean id="identityidFactory" class="com.hginfo.hbm.core.identityid.IdentityidFactory">
+        <property name="identityidinstance" ref="identityidCluster" />
+    </bean>
+
+</beans>

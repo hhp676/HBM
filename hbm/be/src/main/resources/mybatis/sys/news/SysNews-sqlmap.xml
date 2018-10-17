@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.news.SysNewsMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NEWS_COLUMN">
+        sn.NEWS_ID_ newsId,
+        sn.NEWS_TYPE_ID_ newsTypeId,
+        sn.NEWS_TEMPLETE_ID_ newsTempleteId,
+        sn.NEWS_FROM_ newsFrom,
+        sn.NEWS_DO_NODE_ newsDoNode,
+        sn.BIZ_ID_ bizId,
+        sn.IS_INIT_ isInit,
+        sn.IS_TOALL_ isToall,
+        sn.DESCR_ descr,
+        sn.IS_DELETE_ isDelete,
+        sn.IS_FINAL_ isFinal,
+        sn.CRT_TIME_ crtTime,
+        sn.UPD_TIME_ updTime,
+        sn.CRT_USER_ID_ crtUserId,
+        sn.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NEWS_WHERE">
+        <if test="newsId != null">
+            AND sn.NEWS_ID_ = #{newsId}
+        </if>
+        <if test="newsTypeId != null">
+            AND sn.NEWS_TYPE_ID_ = #{newsTypeId}
+        </if>
+        <if test="newsFrom != null and newsFrom.length() != 0">
+            AND sn.NEWS_FROM_ = #{newsFrom}
+        </if>
+        <if test="newsDoNode != null">
+            AND sn.NEWS_DO_NODE_ = #{newsDoNode}
+        </if>
+        <if test="bizId != null">
+            AND sn.BIZ_ID_ = #{bizId}
+        </if>
+        <if test="isInit != null">
+            AND sn.IS_INIT_ = #{isInit}
+        </if>
+        <if test="isToall != null">
+            AND sn.IS_TOALL_ = #{isToall}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sn.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sn.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sn.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sn.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sn.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sn.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sn.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNews">
+        select <include refid="SQL_SYS_NEWS_COLUMN"/>
+        from SYS_NEWS sn
+        <where>
+            sn.NEWS_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNews" resultType="SysNews">
+        select <include refid="SQL_SYS_NEWS_COLUMN"/>
+        from SYS_NEWS sn
+        <where>
+            <include refid="SQL_SYS_NEWS_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sn.NEWS_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNews" resultType="int">
+        select count(
+            sn.NEWS_ID_
+        ) as counts
+        from SYS_NEWS sn
+        <where>
+            <include refid="SQL_SYS_NEWS_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNews" resultType="int">
+        select count(
+            sn.NEWS_ID_
+        ) as counts
+        from SYS_NEWS sn
+        <where>
+            <if test="newsId != null">
+                AND sn.NEWS_ID_ != #{newsId}
+            </if>
+            <if test="newsTypeId != null">
+                AND sn.NEWS_TYPE_ID_ = #{newsTypeId}
+            </if>
+            <if test="newsFrom != null and newsFrom.length() != 0">
+                AND sn.NEWS_FROM_ = #{newsFrom}
+            </if>
+            <if test="bizId != null">
+                AND sn.BIZ_ID_ = #{bizId}
+            </if>
+            <if test="isInit != null">
+                AND sn.IS_INIT_ = #{isInit}
+            </if>
+            <if test="isToall != null">
+                AND sn.IS_TOALL_ = #{isToall}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sn.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sn.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sn.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sn.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sn.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sn.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sn.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

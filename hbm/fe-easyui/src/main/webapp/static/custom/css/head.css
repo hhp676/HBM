@@ -1,0 +1,132 @@
+@charset "utf-8";
+/* CSS Document */
+
+.head_top{
+	height:45px;
+	background: url(../img/head_bg.jpg) no-repeat center #102948 ;
+	}
+ .mainLogo{
+	 width:44px;
+	 height:44px;
+	 margin-top:3px;
+	 float:left;
+	 margin-left:20px;
+	 }
+.headInfo{
+	height:50px;
+	float:right;
+	overflow:visible;
+	margin-right:30px;
+	}
+.headInfo li{
+	width:30px;
+	height:40px;
+	padding-bottom:10px;
+	position:relative;
+	z-index:1;
+	box-sizing:border-box;
+	margin-left:20px;
+	float:right;
+	margin-top:7px;
+	display:block;
+	}
+.headInfo li a{
+	width:30px;
+	height:30px;
+	display:block;
+	overflow:hidden;
+	}
+.headInfo li a img:last-child{
+	display:none;
+	}
+.Welcome{
+	height:50px;
+	line-height:50px;
+	float:right;
+	margin-right:15px;
+	color:#ddd;
+	font-size:14px;
+	}
+.Welcome a{
+	color:#ddd;
+	}
+.Welcome a:hover{
+	color:#fff;
+	}
+.homeCenter{
+	width:100%;
+	}
+.homeCenter img{
+	width:100%;
+	}
+.man_footer{
+	width:100%;
+	height:20px;
+	line-height:18px;
+	text-align:center;
+	color:#fff;
+	font-size:10px;
+	background: url(../img/foot_bg.png) no-repeat center #7b94b4;
+	}
+.logo-txt{
+	height:50px;
+	line-height:50px;
+	float:left;
+	padding-left:11px;
+	display:block;
+	color:#ffffff;
+	font-size:18px;
+	font-family:"微软雅黑";
+	}
+.bgSet{
+	width:115px;
+	padding:10px;
+	box-sizing:border-box;
+	position:absolute;
+	z-index:999;
+	display:none;
+	right:30px;
+	top:45px;
+	background:#fff;
+	box-shadow: 0 2px 10px rgba(0,0,0,.3);
+	border-top:none;
+	border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+	min-height:50px;
+	}
+.colorList{
+	overflow:hidden;
+	padding-top:6px;
+	padding-left:6px;
+	}
+.colorList dd{
+	width:26px;
+	padding:1px;
+	box-sizing:border-box;
+	height:26px;
+	display:block;
+	float:left;
+	border-radius:2px;
+	cursor:pointer;
+	margin-right:3px;
+	border:1px solid #fff;
+	margin-bottom:8px;
+	}
+.colorList dd span{
+	width:20px;
+	border:1px solid #fff;
+	height:20px;
+	display:block;
+	border-radius:2px;
+	}
+.colorList .activeColor{
+	border:1px  solid #bbb;
+	}
+
+/* easyui datagrid */
+.datagrid-cell{text-overflow: ellipsis;}
+
+/* 分页 */
+.pagination .pagination-num {
+	width: 3em;
+}

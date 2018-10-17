@@ -1,0 +1,87 @@
+@charset "utf-8";
+/*CSS Document
+* @date  2016-12-8
+*/
+/*2017-03-18 兼容IE8的input disable样式*/
+input[disabled] {
+	background-color: rgb(235, 235, 228);
+}
+
+.tbtxt {
+    color:#000;
+    margin-top:0px;
+    margin-bottom:0px;
+    margin-left:0px;
+    outline-width:medium;
+    outline-style:none;
+    outline-color:invert;
+    border-top-left-radius:3px;
+    border-top-right-radius:3px;
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+    text-shadow:0px 1px 2px #fff;
+    background-attachment:scroll;
+    background-repeat:repeat-x;
+    background-position-x:left;
+    background-position-y:top;
+    background-size:auto;
+    background-origin:padding-box;
+    background-clip:border-box;
+    background-color:rgb(255,255,255);
+    margin-right:8px;
+    border-top-color:#ccc;
+    border-right-color:#ccc;
+    border-bottom-color:#ccc;
+    border-left-color:#ccc;
+    border-top-width:2px;
+    border-right-width:2px;
+    border-bottom-width:1px;
+    border-left-width:1px;
+    border-top-style:solid;
+    border-right-style:solid;
+    border-bottom-style:solid;
+    border-left-style:solid;
+    height: 20px;
+}
+
+.tbtxt:focus {
+     border: 1px solid #fafafa;
+    -webkit-box-shadow: 0px 0px 6px #007eff;
+     -moz-box-shadow: 0px 0px 5px #007eff;
+     box-shadow: 0px 0px 5px #007eff;   
+    
+}
+
+.hgtable th font{
+	color: red;
+	
+}
+.hgtable td font{
+	color: red;
+	
+}
+
+.hgGridSearchBar {
+	padding-top:5px;
+	padding-bottom:5px;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	/* background-color: #FaFaFa; */
+}
+
+.hgGridSearchBar input{
+	border: 1px solid #ccc;
+	height: 20px;
+	line-height:20px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	
+}
+
+.combo-panel.panel-body.panel-body-noheader {
+	border:2px solid #3281c2;
+}
+ 

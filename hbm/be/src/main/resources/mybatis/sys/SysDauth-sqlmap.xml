@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDauth" id="sysDauthMap">
+        <id property="dauthId" column="dauthId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="entityId" column="entityId" />
+        <result property="dauthCode" column="dauthCode" />
+        <result property="dauthName" column="dauthName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="tableAlias" column="tableAlias" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysMetadataEntity" column="entityId" select="com.hginfo.hbm.be.mapper.sys.SysMetadataEntityMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_COLUMN">
+        sd.DAUTH_ID_ dauthId,
+        sd.TENANT_ID_ tenantId,
+        sd.ENTITY_ID_ entityId,
+        sd.DAUTH_CODE_ dauthCode,
+        sd.DAUTH_NAME_ dauthName,
+        sd.ENG_NAME_ engName,
+        sd.I18N_CODE_ i18nCode,
+        sd.TABLE_ALIAS_ tableAlias,
+        sd.DESCR_ descr,
+        sd.IS_DELETE_ isDelete,
+        sd.IS_FINAL_ isFinal,
+        sd.CRT_TIME_ crtTime,
+        sd.UPD_TIME_ updTime,
+        sd.CRT_USER_ID_ crtUserId,
+        sd.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_WHERE">
+        <if test="dauthId != null">
+            AND sd.DAUTH_ID_ = #{dauthId}
+        </if>
+        <if test="tenantId != null">
+            AND sd.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="entityId != null">
+            AND sd.ENTITY_ID_ = #{entityId}
+        </if>
+        <if test="dauthCode != null and dauthCode.length() != 0">
+            AND sd.DAUTH_CODE_ = #{dauthCode}
+        </if>
+        <if test="dauthName != null and dauthName.length() != 0">
+            AND sd.DAUTH_NAME_ = #{dauthName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sd.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sd.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="tableAlias != null and tableAlias.length() != 0">
+            AND sd.TABLE_ALIAS_ = #{tableAlias}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sd.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sd.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sd.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sd.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sd.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sd.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sd.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDauthMap">
+        select <include  refid="SQL_SYS_DAUTH_COLUMN" />
+        from SYS_DAUTH sd
+        <where>
+            sd.DAUTH_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauth" resultMap="sysDauthMap">
+        select <include  refid="SQL_SYS_DAUTH_COLUMN"/>
+        from SYS_DAUTH sd
+        left join sys_metadata_entity sme on sd.ENTITY_ID_ = sme.ENTITY_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sd.DAUTH_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauth" resultType="int">
+        select count(
+            sd.DAUTH_ID_
+        ) as counts
+        from SYS_DAUTH sd
+        left join sys_metadata_entity sme on sd.ENTITY_ID_ = sme.ENTITY_ID_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauth" resultType="int">
+        select count(
+            sd.DAUTH_ID_
+        ) as counts
+        from SYS_DAUTH sd
+        <where>
+            <if test="dauthId != null">
+                AND sd.DAUTH_ID_ != #{dauthId}
+            </if>
+            <if test="tenantId != null">
+                AND sd.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="entityId != null">
+                AND sd.ENTITY_ID_ = #{entityId}
+            </if>
+            <if test="dauthCode != null and dauthCode.length() != 0">
+                AND sd.DAUTH_CODE_ = #{dauthCode}
+            </if>
+            <if test="dauthName != null and dauthName.length() != 0">
+                AND sd.DAUTH_NAME_ = #{dauthName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sd.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sd.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="tableAlias != null and tableAlias.length() != 0">
+                AND sd.TABLE_ALIAS_ = #{tableAlias}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sd.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sd.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sd.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sd.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sd.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sd.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sd.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getDauthFilterItemList" resultType="com.hginfo.hbm.be.dauth.bean.DauthFilterItemBean">
+        SELECT
+            sdfi.FILTER_ITEM_ID_ filterItemId,
+            sdfg.FILTER_GROUP_ID_ filterGroupId,
+            sdfg.GROUP_NAME_ filterGroupName,
+            sdfi.ENTITY_ID_ entityId,
+            sme.TABLE_NAME_ tableName,
+            sme.TABLE_ALIAS_ tableAlias,
+            sdfi.FILTER_TYPE_ID_ filterTypeId,
+            sdft.FILTER_TYPE_CODE_ filterTypeCode,
+            sdft.FILTER_TYPE_NAME_ filterTypeName,
+            sdft.TYPE_ filterTypeType,
+            sdfi.FIELD_ID_ fieldId,
+            smf.FIELD_NAME_ fieldName,
+            smf.COLUMN_NAME_ fieldColumnName,
+            sdfi.OPERATOR_ID_ operatorId,
+            sdo.OPERATOR_NAME_ operatorName,
+            sdo.OPERATOR_VALUE_ operatorValue,
+            sdfi.VALUE_TYPE_ valueType,
+            sdfi.FILTER_VALUE_ filterValue
+        FROM
+            sys_dauth_filter_join sdfj
+        LEFT JOIN sys_dauth_filter_item sdfi ON sdfj.FILTER_ITEM_ID_ = sdfi.FILTER_ITEM_ID_
+        LEFT JOIN sys_dauth_filter_group sdfg ON sdfg.FILTER_GROUP_ID_ = sdfj.FILTER_GROUP_ID_
+        LEFT JOIN sys_metadata_entity sme ON sdfi.ENTITY_ID_ = sme.ENTITY_ID_
+        LEFT JOIN sys_dauth_filter_type sdft ON sdfi.FILTER_TYPE_ID_ = sdft.FILTER_TYPE_ID_
+        LEFT JOIN sys_metadata_field smf ON smf.FIELD_ID_ = sdfi.FIELD_ID_
+        LEFT JOIN sys_dauth_operator sdo ON sdfi.OPERATOR_ID_ = sdo.OPERATOR_ID_
+        WHERE
+            sdfg.FILTER_GROUP_ID_ = #{filterGroupId}
+            AND sdfj.IS_DELETE_ = 0
+            AND sdfi.IS_DELETE_ = 0
+        ORDER BY sdfi.FILTER_ITEM_ID_
+    </select>
+    
+    <select id="getDauthFilterGroupList" resultType="com.hginfo.hbm.be.dauth.bean.DauthFilterGroupBean">
+        SELECT 
+            sdfg.FILTER_GROUP_ID_ filterGroupId,
+            sdfg.DAUTH_ID_ dauthId,
+            sdfg.GROUP_CODE_ groupCode,
+            sdfg.GROUP_NAME_ groupName
+        FROM sys_dauth_filter_group sdfg 
+        LEFT JOIN sys_dauth sd ON sdfg.DAUTH_ID_ = sd.DAUTH_ID_
+        WHERE sd.DAUTH_CODE_ = #{dauthCode}
+            AND sdfg.IS_DELETE_ = 0
+        ORDER BY sdfg.FILTER_GROUP_ID_ desc
+    </select>
+
+</mapper>

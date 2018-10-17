@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysPositionMapper">
+
+    <!-- result map -->
+    <resultMap type="SysPosition" id="sysPositionMap">
+        <id property="positionId" column="positionId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="orgId" column="orgId" />
+        <result property="jobId" column="jobId" />
+        <result property="positionCode" column="positionCode" />
+        <result property="positionName" column="positionName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="fid" column="fid" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysJob" column="jobId" select="com.hginfo.hbm.be.mapper.sys.SysJobMapper.getById" />
+        <association property="sysOrganization" column="orgId" select="com.hginfo.hbm.be.mapper.sys.SysOrganizationMapper.getById" />
+        <association property="parent" column="fid" select="com.hginfo.hbm.be.mapper.sys.SysPositionMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_POSITION_COLUMN">
+        sp.POSITION_ID_ positionId,
+        sp.TENANT_ID_ tenantId,
+        sp.ORG_ID_ orgId,
+        sp.JOB_ID_ jobId,
+        sp.POSITION_CODE_ positionCode,
+        sp.POSITION_NAME_ positionName,
+        sp.ENG_NAME_ engName,
+        sp.I18N_CODE_ i18nCode,
+        sp.FID_ fid,
+        sp.DESCR_ descr,
+        sp.IS_DELETE_ isDelete,
+        sp.IS_FINAL_ isFinal,
+        sp.CRT_TIME_ crtTime,
+        sp.UPD_TIME_ updTime,
+        sp.CRT_USER_ID_ crtUserId,
+        sp.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_POSITION_WHERE">
+        <if test="positionId != null">
+            AND sp.POSITION_ID_ = #{positionId}
+        </if>
+        <if test="tenantId != null">
+            AND sp.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="orgId != null">
+            AND sp.ORG_ID_ = #{orgId}
+        </if>
+        <if test="jobId != null">
+            AND sp.JOB_ID_ = #{jobId}
+        </if>
+        <if test="positionCode != null and positionCode.length() != 0">
+            AND sp.POSITION_CODE_ like '%${positionCode}%'
+        </if>
+        <if test="positionName != null and positionName.length() != 0">
+            AND sp.POSITION_NAME_ like '%${positionName}%'
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sp.ENG_NAME_ like '%${engName}%'
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sp.I18N_CODE_ like '%${i18nCode}%'
+        </if>
+        <if test="fid == 0">
+            AND sp.FID_ is NULL
+        </if>
+        <if test="fid != null and fid != 0">
+            AND sp.FID_ = #{fid}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sp.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sp.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sp.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sp.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sp.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sp.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sp.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysPositionMap">
+        select <include  refid="SQL_SYS_POSITION_COLUMN" />
+        from SYS_POSITION sp
+        <where>
+            sp.POSITION_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysPosition" resultMap="sysPositionMap">
+        select <include  refid="SQL_SYS_POSITION_COLUMN"/>
+        from SYS_POSITION sp
+        <where>
+            <include  refid="SQL_SYS_POSITION_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysPosition" resultType="int">
+        select count(
+            sp.POSITION_ID_
+        ) as counts
+        from SYS_POSITION sp
+        <where>
+            <include  refid="SQL_SYS_POSITION_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysPosition" resultType="int">
+        select count(
+            sp.POSITION_ID_
+        ) as counts
+        from SYS_POSITION sp
+        <where>
+            <if test="positionId != null">
+                AND sp.POSITION_ID_ != #{positionId}
+            </if>
+            <if test="tenantId != null">
+                AND sp.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="orgId != null">
+                AND sp.ORG_ID_ = #{orgId}
+            </if>
+            <if test="jobId != null">
+                AND sp.JOB_ID_ = #{jobId}
+            </if>
+            <if test="positionCode != null and positionCode.length() != 0">
+                AND sp.POSITION_CODE_ = #{positionCode}
+            </if>
+            <if test="positionName != null and positionName.length() != 0">
+                AND sp.POSITION_NAME_ = #{positionName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sp.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sp.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="fid != null">
+                AND sp.FID_ = #{fid}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sp.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sp.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sp.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sp.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sp.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sp.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sp.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getPosIdsByFid" parameterType="Long" resultType="String" databaseId="mysql">
+        select get_pos_children(#{posFID}) from dual
+    </select>
+    
+    <!-- oracle递归查询树,拼装成与mysql相同结果样式 -->
+    <select id="getPosIdsByFid" parameterType="Long" resultType="String" databaseId="oracle">
+        SELECT '$,'||wm_concat(POSITION_ID_)
+          FROM SYS_POSITION
+         WHERE IS_DELETE_ = 0
+         START WITH POSITION_ID_ = #{posFID}
+        CONNECT BY PRIOR POSITION_ID_ = FID_
+    </select>
+
+</mapper>

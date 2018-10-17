@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.task.SysTaskHandlerMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_TASK_HANDLER_COLUMN">
+        sth.TASK_HANDLER_ID_ taskHandlerId,
+        sth.TASK_ID_ taskId,
+        sth.USER_ID_ userId,
+        sth.CRT_TIME_ crtTime,
+        sth.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_TASK_HANDLER_WHERE">
+        <if test="id != null">
+            AND sth.TASK_HANDLER_ID_ = #{id}
+        </if>
+        <if test="taskId != null">
+            AND sth.TASK_ID_ = #{taskId}
+        </if>
+        <if test="userId != null">
+            AND sth.USER_ID_ = #{userId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysTaskHandler">
+        select <include refid="SQL_SYS_TASK_HANDLER_COLUMN"/>
+        from SYS_TASK_HANDLER sth
+        <where>
+            sth.TASK_HANDLER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysTaskHandler" resultType="SysTaskHandler">
+        select <include refid="SQL_SYS_TASK_HANDLER_COLUMN"/>
+        from SYS_TASK_HANDLER sth
+        <where>
+            <include refid="SQL_SYS_TASK_HANDLER_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sth.TASK_HANDLER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysTaskHandler" resultType="int">
+        select count(
+            sth.TASK_HANDLER_ID_
+        ) as counts
+        from SYS_TASK_HANDLER sth
+        <where>
+            <include refid="SQL_SYS_TASK_HANDLER_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysTaskHandler" resultType="int">
+        select count(
+            sth.TASK_HANDLER_ID_
+        ) as counts
+        from SYS_TASK_HANDLER sth
+        <where>
+            <if test="id != null">
+                AND sth.TASK_HANDLER_ID_ != #{id}
+            </if>
+            <if test="taskId != null">
+                AND sth.TASK_ID_ = #{taskId}
+            </if>
+            <if test="userId != null">
+                AND sth.USER_ID_ = #{userId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

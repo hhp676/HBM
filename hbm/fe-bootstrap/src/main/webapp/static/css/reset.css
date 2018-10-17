@@ -1,0 +1,127 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	font-family:"微软雅黑";}
+.head-logo{
+	width:32px;
+	height:32px;
+	display:block;
+	float:left;
+	margin-top:6px;
+	}
+.logo-txt{
+	height:30px;
+	line-height:30px;
+	color:#fff;
+	font-size:16px;
+	font-family:"微软雅黑";
+	margin-top:7px;
+	float:left;
+	padding-left:15px;
+	}
+#sidebar-collapse{
+	left:230px;
+	}
+.page-header .header-title h1{
+	font-size:15px;
+	}
+.panel-title-index{
+	height:18px;
+	line-height:18px;
+	font-size:15px;
+	padding:0;
+	color:#666;
+	display:block;
+	 
+	}
+.numberTitle{
+	color:#2dc3e8;
+	}
+ 
+.hello{
+	 font-size:15px;
+	 display:block;
+	 height:45px;
+	 line-height:45px;
+	 color:#fff;
+	 padding-right:10px;
+	 }
+.hello:hover{
+	color:#fff;
+	}
+.userIcon{
+	height:30px !important;
+	overflow:hidden;
+	width:30px !important;
+	margin-right:13px;
+	float:left;
+	margin-left:16px;
+	border-radius:30px;
+	}
+.changeSkin{
+	height:30px;
+	margin-top:8px;
+	width:30px;
+	margin-left:20px;
+	margin-right:10px;
+	border-radius:30px;
+	cursor:pointer;
+	border-left: 2px solid #fb6e52; 
+	overflow:hidden;
+	float:left;
+	}
+.changeSkin img{
+	width:30px;
+	height:30px;
+	}
+.user_name{
+	height:30px;
+	line-height:30px;
+	float:left;
+	margin-top:8px;
+	color:#fff;
+	font-size:14px;
+	}
+.exit{
+	height:33px;
+	width:29px;
+	float:left;
+	cursor:pointer;
+	display:block;
+	margin-top:7px;
+	}
+ .jobChoice{
+	 height:25px;
+	 line-height:25px;
+	 margin-top:10px;
+	 color:#666;
+	 margin-left:15px;
+	 font-size:14px;
+	 padding:0px;
+	 border:none;
+	 border-radius:3px;
+	 width:80px;
+	 padding-left:10px;
+	 }
+ .tabSelect{
+	 background:#fff;
+	 position:relative;
+	 box-shadow:0 0 5px #aaa;
+	 z-index:88;
+	 height:45px;
+	 }
+.tabul{
+	height:30px;
+	padding-left:20px;
+	width:100%;
+	box-sizing:border-box;
+	}
+.tabul li{
+	width:120px;
+	height:32px;
+	display:block;
+	float:left;
+	position:relative;
+	margin-right:20px;
+	z-index:9999;
+	}

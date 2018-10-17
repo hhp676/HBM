@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <description>Shiro redis 安全配置</description>
+
+    <!-- Shiro Cache, 采用Redis, 对应sessionManager不需要处理session过期的问题，委托给redis缓存处理 -->
+    <bean id="shiroCacheManager" class="com.hginfo.hbm.fe.core.shiro.cache.RedisShiroCacheManager">
+        <property name="redisTemplate" ref="shiroRedisTemplate" />
+        <property name="expiration" value="1800" />
+    </bean>
+
+    <bean id="sessionManager" class="com.hginfo.hbm.fe.core.shiro.HgWebSessionManager">
+        <property name="deleteInvalidSessions" value="false" />
+        <property name="sessionValidationSchedulerEnabled" value="false" />
+        <property name="sessionDAO" ref="sessionDAO" />
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <property name="sessionIdUrlRewritingEnabled" value="false" />
+    </bean>
+    <!-- 采用Redis 的 shiro cache 配置完成 -->
+
+    <!-- redis 相关配置 -->
+    <bean id="shiroRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="shiroRedisConnectionFactory" />
+    </bean>
+
+    <bean id="shiroRedisConnectionFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:database="${shiro.redis.database}">
+        <constructor-arg ref="shiroRedisClusterConfiguration" />
+        <constructor-arg ref="shiroRedisPoolConfig" />
+    </bean>
+
+    <bean id="shiroRedisClusterConfiguration"
+          class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+        <property name="maxRedirects" value="${shiro.redis.maxRedirects}" />
+        <property name="clusterNodes">
+            <set>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="${shiro.redis.host1}" />
+                    <constructor-arg name="port" value="${shiro.redis.port1}" />
+                </bean>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="${shiro.redis.host2}" />
+                    <constructor-arg name="port" value="${shiro.redis.port2}" />
+                </bean>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="${shiro.redis.host3}" />
+                    <constructor-arg name="port" value="${shiro.redis.port3}" />
+                </bean>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="${shiro.redis.host4}" />
+                    <constructor-arg name="port" value="${shiro.redis.port4}" />
+                </bean>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="${shiro.redis.host5}" />
+                    <constructor-arg name="port" value="${shiro.redis.port5}" />
+                </bean>
+                <bean class="org.springframework.data.redis.connection.RedisClusterNode">
+                    <constructor-arg name="host" value="${shiro.redis.host6}" />
+                    <constructor-arg name="port" value="${shiro.redis.port6}" />
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="shiroRedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${shiro.redis.maxTotal}" />
+        <property name="maxIdle" value="${shiro.redis.maxIdle}" />
+        <property name="maxWaitMillis" value="${shiro.redis.maxWait}" />
+        <property name="testOnBorrow" value="${shiro.redis.testOnBorrow}" />
+    </bean>
+
+    <bean id="shiroRedisPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="99" />
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="locations">
+            <list>
+                <value>classpath:shiro/redis.properties</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

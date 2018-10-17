@@ -1,0 +1,21 @@
+{
+  "name": "bower",
+  "authors": [
+    "suiguangshuai <suiguangshuai@hongguaninfo.com>"
+  ],
+  "description": "bower",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/main/webapp/static/js-libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "https://github.com/jquery/jquery.git#1.12.4"
+  }
+}

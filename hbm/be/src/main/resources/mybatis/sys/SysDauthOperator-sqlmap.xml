@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthOperatorMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_OPERATOR_COLUMN">
+        sdo.OPERATOR_ID_ operatorId,
+        sdo.TENANT_ID_ tenantId,
+        sdo.OPERATOR_CODE_ operatorCode,
+        sdo.OPERATOR_NAME_ operatorName,
+        sdo.ENG_NAME_ engName,
+        sdo.I18N_CODE_ i18nCode,
+        sdo.OPERATOR_VALUE_ operatorValue,
+        sdo.DESCR_ descr,
+        sdo.IS_DELETE_ isDelete,
+        sdo.IS_FINAL_ isFinal,
+        sdo.CRT_TIME_ crtTime,
+        sdo.UPD_TIME_ updTime,
+        sdo.CRT_USER_ID_ crtUserId,
+        sdo.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_OPERATOR_WHERE">
+        <if test="operatorId != null">
+            AND sdo.OPERATOR_ID_ = #{operatorId}
+        </if>
+        <if test="tenantId != null">
+            AND sdo.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="operatorCode != null and operatorCode.length() != 0">
+            AND sdo.OPERATOR_CODE_ = #{operatorCode}
+        </if>
+        <if test="operatorName != null and operatorName.length() != 0">
+            AND sdo.OPERATOR_NAME_ = #{operatorName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sdo.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sdo.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="operatorValue != null and operatorValue.length() != 0">
+            AND sdo.OPERATOR_VALUE_ = #{operatorValue}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdo.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdo.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdo.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdo.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdo.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdo.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdo.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysDauthOperator">
+        select <include  refid="SQL_SYS_DAUTH_OPERATOR_COLUMN" />
+        from SYS_DAUTH_OPERATOR sdo
+        <where>
+            sdo.OPERATOR_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthOperator" resultType="SysDauthOperator">
+        select <include  refid="SQL_SYS_DAUTH_OPERATOR_COLUMN"/>
+        from SYS_DAUTH_OPERATOR sdo
+        <where>
+            <include  refid="SQL_SYS_DAUTH_OPERATOR_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdo.OPERATOR_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthOperator" resultType="int">
+        select count(
+            sdo.OPERATOR_ID_
+        ) as counts
+        from SYS_DAUTH_OPERATOR sdo
+        <where>
+            <include  refid="SQL_SYS_DAUTH_OPERATOR_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthOperator" resultType="int">
+        select count(
+            sdo.OPERATOR_ID_
+        ) as counts
+        from SYS_DAUTH_OPERATOR sdo
+        <where>
+            <if test="operatorId != null">
+                AND sdo.OPERATOR_ID_ != #{operatorId}
+            </if>
+            <if test="tenantId != null">
+                AND sdo.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="operatorCode != null and operatorCode.length() != 0">
+                AND sdo.OPERATOR_CODE_ = #{operatorCode}
+            </if>
+            <if test="operatorName != null and operatorName.length() != 0">
+                AND sdo.OPERATOR_NAME_ = #{operatorName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sdo.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sdo.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="operatorValue != null and operatorValue.length() != 0">
+                AND sdo.OPERATOR_VALUE_ = #{operatorValue}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdo.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdo.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdo.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdo.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdo.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdo.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdo.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getDauthOperators" parameterType="long" resultType="SysDauthOperator">
+        select 
+            <include  refid="SQL_SYS_DAUTH_OPERATOR_COLUMN"/>
+        from SYS_DAUTH_OPERATOR sdo
+        <where>
+            and sdo.IS_DELETE_ = 0
+            and exists (
+                select sdos.SUPPORT_ID_
+                from 
+                    SYS_DAUTH_OPERATOR_SUPPORT sdos
+                    left join SYS_DAUTH_FILTER_TYPE sdft on sdos.filter_type_id_ = sdft.filter_type_id_
+                where 
+                    sdo.OPERATOR_ID_ = sdos.OPERATOR_ID_
+                    and sdos.IS_DELETE_ = 0
+                    and sdft.IS_DELETE_ = 0
+                    and sdos.FILTER_TYPE_ID_ = #{filterTypeId}
+            )
+        </where>
+    </select>
+
+</mapper>

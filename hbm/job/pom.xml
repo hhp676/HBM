@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hginfo.hdf</groupId>
+        <artifactId>hbm</artifactId>
+        <version>3.0.5-rc1</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>hbm-job</artifactId>
+    <name>HBM :: JOB</name>
+    <packaging>pom</packaging>
+    <description>hbm-job is a distributed scheduled task solution, based on the XXL-JOB version of V1.7.1.</description>
+
+    <modules>
+        <module>core</module>
+        <module>admin</module>
+    </modules>
+
+</project>

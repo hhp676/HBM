@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysExtendFieldDefMapper">
+
+    <sql id="SQL_SYS_EXTEND_FIELD_DEF_COLUMN">
+        sefd.EXTEND_DEF_ID_ extendDefId,
+        sefd.TABLE_CODE_ tableCode,
+        sefd.FIELD_CODE_ fieldCode,
+        sefd.FIELD_NAME_ fieldName,
+        sefd.FILED_TYPE_ filedType,
+        sefd.DEFAULT_VALUE_ defaultValue,
+        sefd.DESCR_ descr,
+        sefd.IS_DELETE_ isDelete,
+        sefd.IS_FINAL_ isFinal,
+        sefd.CRT_TIME_ crtTime,
+        sefd.UPD_TIME_ updTime,
+        sefd.CRT_USER_ID_ crtUserId,
+        sefd.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_EXTEND_FIELD_DEF_WHERE">
+        <if test="extendDefId != null">
+            AND sefd.EXTEND_DEF_ID_ = #{extendDefId}
+        </if>
+        <if test="tableCode !=null and tableCode.length()!=0 ">
+            AND sefd.TABLE_CODE_=#{tableCode}
+        </if>
+        <if test="fieldCode !=null and fieldCode.length()!=0 ">
+            AND sefd.FIELD_CODE_=#{fieldCode}
+        </if>
+        <if test="fieldName !=null and fieldName.length()!=0 ">
+            AND sefd.FIELD_NAME_=#{fieldName}
+        </if>
+        <if test="filedType !=null and filedType.length()!=0 ">
+            AND sefd.FILED_TYPE_=#{filedType}
+        </if>
+        <if test="defaultValue !=null and defaultValue.length()!=0 ">
+            AND sefd.DEFAULT_VALUE_=#{defaultValue}
+        </if>
+        <if test="descr !=null and descr.length()!=0 ">
+            AND sefd.DESCR_=#{descr}
+        </if>
+        <if test="isDelete !=null ">
+            AND sefd.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND sefd.IS_FINAL_=#{isFinal}
+        </if>
+        <if test="crtTime !=null ">
+            AND sefd.CRT_TIME_=#{crtTime}
+        </if>
+        <if test="updTime !=null ">
+            AND sefd.UPD_TIME_=#{updTime}
+        </if>
+        <if test="crtUserId !=null ">
+            AND sefd.CRT_USER_ID_=#{crtUserId}
+        </if>
+        <if test="updUserId !=null ">
+            AND sefd.UPD_USER_ID_=#{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysExtendFieldDef">
+        select <include  refid="SQL_SYS_EXTEND_FIELD_DEF_COLUMN"/>
+        from sys_extend_field_def sefd
+        <where>
+                sefd.EXTEND_DEF_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysExtendFieldDef" resultType="SysExtendFieldDef">
+        select <include  refid="SQL_SYS_EXTEND_FIELD_DEF_COLUMN"/>
+        from sys_extend_field_def sefd
+        <where>
+            <include  refid="SQL_SYS_EXTEND_FIELD_DEF_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sefd.EXTEND_DEF_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysExtendFieldDef" resultType="int">
+        select count(sefd.EXTEND_DEF_ID_) as counts
+        from sys_extend_field_def sefd
+        <where>
+            <include  refid="SQL_SYS_EXTEND_FIELD_DEF_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysExtendFieldDef" resultType="int">
+        select count(
+            sefd.EXTEND_DEF_ID_
+        ) as counts
+        from SYS_EXTEND_FIELD_DEF sefd
+        <where>
+            <if test="extendDefId != null">
+                AND sefd.EXTEND_DEF_ID_ != #{extendDefId}
+            </if>
+            <if test="tableCode != null and tableCode.length() != 0">
+                AND sefd.TABLE_CODE_ = #{tableCode}
+            </if>
+            <if test="fieldCode != null and fieldCode.length() != 0">
+                AND sefd.FIELD_CODE_ = #{fieldCode}
+            </if>
+            <if test="fieldName != null and fieldName.length() != 0">
+                AND sefd.FIELD_NAME_ = #{fieldName}
+            </if>
+            <if test="filedType != null and filedType.length() != 0">
+                AND sefd.FILED_TYPE_ = #{filedType}
+            </if>
+            <if test="defaultValue != null and defaultValue.length() != 0">
+                AND sefd.DEFAULT_VALUE_ = #{defaultValue}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sefd.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sefd.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sefd.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sefd.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sefd.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sefd.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sefd.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

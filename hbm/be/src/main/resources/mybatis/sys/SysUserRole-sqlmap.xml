@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysUserRoleMapper">
+
+    <!-- result map -->
+    <resultMap type="SysUserRole" id="sysUserRoleMap">
+        <id property="userRoleId" column="userRoleId" />
+        <result property="userId" column="userId" />
+        <result property="roleId" column="roleId" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <association property="sysRole" column="roleId" select="com.hginfo.hbm.be.mapper.sys.SysRoleMapper.getById" />
+        <association property="sysUser" column="userId" select="com.hginfo.hbm.be.mapper.sys.SysUserMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_USER_ROLE_COLUMN">
+        sur.USER_ROLE_ID_ userRoleId,
+        sur.USER_ID_ userId,
+        sur.ROLE_ID_ roleId,
+        sur.IS_FINAL_ isFinal,
+        sur.CRT_TIME_ crtTime,
+        sur.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_USER_ROLE_WHERE">
+        <if test="userRoleId != null">
+            AND sur.USER_ROLE_ID_ = #{userRoleId}
+        </if>
+        <if test="userId != null">
+            AND sur.USER_ID_ = #{userId}
+        </if>
+        <if test="roleId != null">
+            AND sur.ROLE_ID_ = #{roleId}
+        </if>
+        <if test="isFinal != null">
+            AND sur.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sur.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sur.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysUserRoleMap">
+        select <include  refid="SQL_SYS_USER_ROLE_COLUMN" />
+        from SYS_USER_ROLE sur
+        <where>
+            sur.USER_ROLE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysUserRole" resultMap="sysUserRoleMap">
+        select <include  refid="SQL_SYS_USER_ROLE_COLUMN"/>
+        from SYS_USER_ROLE sur
+        LEFT JOIN sys_user su ON su.USER_ID_ = sur.USER_ID_
+        left join sys_user_position sup on sur.USER_ID_=sup.USER_ID_
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_ROLE_WHERE"/>
+        </where>
+        group by sur.USER_ROLE_ID_,sur.USER_ID_,sur.ROLE_ID_,sur.IS_FINAL_,sur.CRT_TIME_,sur.CRT_USER_ID_
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sur.USER_ROLE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysUserRole" resultType="int">
+        select count(counts) from (
+            select count(
+                sur.USER_ROLE_ID_
+            ) as counts
+            from SYS_USER_ROLE sur
+            LEFT JOIN sys_user su ON su.USER_ID_ = sur.USER_ID_
+            left join sys_user_position sup on sur.USER_ID_=sup.USER_ID_
+            left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+            <where>
+                <include  refid="SQL_SYS_USER_ROLE_WHERE"/>
+            </where>
+            group by sur.USER_ROLE_ID_
+        ) tmp
+    </select>
+    
+    <!-- Query All  -->
+    <select id="getGroupList" parameterType="SysUserRole" resultMap="sysUserRoleMap">
+        select 
+            SUR.USER_ROLE_ID_ userRoleId, 
+            SUR.USER_ID_ userId, 
+            SUR.ROLE_ID_ roleId
+        from SYS_USER_ROLE sur
+        LEFT JOIN sys_user su ON su.USER_ID_ = sur.USER_ID_
+        left join sys_user_position sup on sur.USER_ID_=sup.USER_ID_
+        left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+        <where>
+            <include  refid="SQL_SYS_USER_ROLE_WHERE"/>
+        </where>
+        GROUP BY SUR.USER_ROLE_ID_, SUR.USER_ID_, SUR.ROLE_ID_
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getGroupListCount" parameterType="SysUserRole" resultType="int">
+        select count(1) from (
+            select count(1) 
+            from SYS_USER_ROLE sur
+            LEFT JOIN sys_user su ON su.USER_ID_ = sur.USER_ID_
+            left join sys_user_position sup on sur.USER_ID_=sup.USER_ID_
+            left join sys_position sp on sup.POSITION_ID_ = sp.POSITION_ID_
+            <where>
+                <include  refid="SQL_SYS_USER_ROLE_WHERE"/>
+            </where>
+            GROUP BY SUR.USER_ROLE_ID_, SUR.USER_ID_, SUR.ROLE_ID_
+        ) temp
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysUserRole" resultType="int">
+        select count(
+            sur.USER_ROLE_ID_
+        ) as counts
+        from SYS_USER_ROLE sur
+        <where>
+            <if test="userRoleId != null">
+                AND sur.USER_ROLE_ID_ != #{userRoleId}
+            </if>
+            <if test="userId != null">
+                AND sur.USER_ID_ = #{userId}
+            </if>
+            <if test="roleId != null">
+                AND sur.ROLE_ID_ = #{roleId}
+            </if>
+            <if test="isFinal != null">
+                AND sur.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sur.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sur.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

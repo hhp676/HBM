@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobLogMapper">
+	
+	<resultMap id="XxlJobLog" type="com.xxl.job.admin.core.model.XxlJobLog" >
+		<result column="id_" property="id" />
+
+		<result column="job_group_" property="jobGroup" />
+		<result column="job_id_" property="jobId" />
+
+		<result column="glue_type_" property="glueType" />
+
+		<result column="executor_address_" property="executorAddress" />
+		<result column="executor_handler_" property="executorHandler" />
+	    <result column="executor_param_" property="executorParam" />
+	    
+	    <result column="trigger_time_" property="triggerTime" />
+	    <result column="trigger_code_" property="triggerCode" />
+	    <result column="trigger_msg_" property="triggerMsg" />
+	    
+	    <result column="handle_time_" property="handleTime" />
+	    <result column="handle_code_" property="handleCode" />
+	    <result column="handle_msg_" property="handleMsg" />
+	    
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id_,
+		t.job_group_,
+		t.job_id_,
+		t.glue_type_,
+		t.executor_address_,
+		t.executor_handler_,
+		t.executor_param_,
+		t.trigger_time_,
+		t.trigger_code_,
+		t.trigger_msg_,
+		t.handle_time_,
+		t.handle_code_,
+		t.handle_msg_
+	</sql>
+    
+    <sql id="pageList_select">
+        SELECT <include refid="Base_Column_List" />
+        FROM JOB_TRIGGER_LOG  t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="jobGroup != null and jobGroup != ''">
+                AND t.job_group_ = #{jobGroup}
+            </if>
+            <if test="jobId gt 0">
+                AND t.job_id_ = #{jobId}
+            </if>
+            
+            <if test="triggerCode != null and triggerCode != ''">
+                AND t.trigger_code_ = #{triggerCode}
+            </if>
+            <if test="handleCode != null and handleCode != ''">
+                AND t.handle_code_ = #{handleCode}
+            </if>
+            
+            <if test="triggerTimeStart != null">
+                AND t.trigger_time_ <![CDATA[ >= ]]> #{triggerTimeStart}
+            </if>
+            <if test="triggerTimeEnd != null">
+                AND t.trigger_time_ <![CDATA[ <= ]]> #{triggerTimeEnd}
+            </if>
+        </trim>
+        ORDER BY id_ DESC
+    </sql>
+	
+	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobLog">
+		<choose>  
+            <when test="_databaseId == 'oracle'">
+                SELECT * FROM ( 
+                    SELECT row_.*, rownum rownum_ 
+                    FROM ( 
+                        <include refid="pageList_select" />
+                    ) row_ 
+                 ) 
+                 WHERE 
+                    rownum_ <![CDATA[ <= ]]> #{offset} + #{pagesize}
+                    AND rownum_ <![CDATA[ > ]]> #{offset}
+            </when>
+            <otherwise>
+                <include refid="pageList_select" />
+        		LIMIT #{offset}, #{pagesize}
+            </otherwise>
+        </choose>
+	</select>
+	
+	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT count(1)
+		FROM JOB_TRIGGER_LOG  t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup != null and jobGroup != ''">
+				AND t.job_group_ = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND t.job_id_ = #{jobId}
+			</if>
+            
+            <if test="triggerCode != null and triggerCode != ''">
+                AND t.trigger_code_ = #{triggerCode}
+            </if>
+            <if test="handleCode != null and handleCode != ''">
+                AND t.handle_code_ = #{handleCode}
+            </if>
+            
+			<if test="triggerTimeStart != null">
+				AND t.trigger_time_ <![CDATA[ >= ]]> #{triggerTimeStart}
+			</if>
+			<if test="triggerTimeEnd != null">
+				AND t.trigger_time_ <![CDATA[ <= ]]> #{triggerTimeEnd}
+			</if>
+		</trim>
+	</select>
+	
+	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobLog">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_TRIGGER_LOG  t
+		WHERE t.id_ = #{id}
+	</select>
+
+    
+    <sql id="save_sql">
+        INSERT INTO JOB_TRIGGER_LOG (
+            <if test="_databaseId == 'oracle'">
+                id_, 
+            </if>
+            job_group_,
+            job_id_
+        ) VALUES (
+            <if test="_databaseId == 'oracle'">
+                #{id}, 
+            </if>
+            #{jobGroup},
+            #{jobId}
+        )
+    </sql>
+	
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
+		<include refid="save_sql" />
+	</insert>
+    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" databaseId="oracle" >
+        <selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id"> 
+            SELECT seq_job_trigger_log_id.nextval from dual 
+        </selectKey> 
+        <include refid="save_sql" />
+    </insert>
+
+	<update id="updateTriggerInfo">
+		UPDATE JOB_TRIGGER_LOG
+		SET
+		    glue_type_= #{glueType},
+			trigger_time_= #{triggerTime},
+			trigger_code_= #{triggerCode},
+			trigger_msg_= #{triggerMsg},
+			executor_address_= #{executorAddress},
+			executor_handler_=#{executorHandler},
+			executor_param_= #{executorParam}
+		WHERE id_= #{id}
+	</update>
+
+	<update id="updateHandleInfo">
+		UPDATE JOB_TRIGGER_LOG
+		SET 
+			handle_time_= #{handleTime}, 
+			handle_code_= #{handleCode},
+			handle_msg_= #{handleMsg} 
+		WHERE id_= #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from JOB_TRIGGER_LOG
+		WHERE job_id_ = #{jobId}
+	</delete>
+
+	<select id="triggerCountByHandleCode" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM JOB_TRIGGER_LOG  t
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="_parameter gt 0">
+				AND t.handle_code_ = #{handleCode}
+			</if>
+		</trim>
+	</select>
+
+    <select id="triggerCountByDay" parameterType="java.util.Map" resultType="CaseIgnoreMap" >
+        SELECT 
+            <choose>  
+                <when test="_databaseId == 'oracle'">
+                    to_char(trigger_time_,'yyyy-mm-dd') triggerDay, 
+                </when>
+                <otherwise>
+                    DATE_FORMAT(trigger_time_,'%Y-%m-%d') triggerDay, 
+                </otherwise>
+            </choose>
+            COUNT(id_) triggerCount
+        FROM JOB_TRIGGER_LOG
+        WHERE trigger_time_ BETWEEN #{from} and #{to}
+		<if test="handleCode gt 0">
+			AND handle_code_ = #{handleCode}
+		</if>
+        <choose>  
+            <when test="_databaseId == 'oracle'">
+                GROUP BY to_char(trigger_time_,'yyyy-mm-dd')
+            </when>
+            <otherwise>
+                GROUP BY triggerDay
+            </otherwise>
+        </choose>
+    </select>
+    
+    <sql id="clearLog_selectId">
+        SELECT id_ FROM JOB_TRIGGER_LOG  t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="jobGroup gt 0">
+                AND t.job_group_ = #{jobGroup}
+            </if>
+            <if test="jobId gt 0">
+                AND t.job_id_ = #{jobId}
+            </if>
+        </trim>
+        ORDER BY t.trigger_time_ desc
+    </sql>
+
+	<delete id="clearLog" parameterType="java.util.Map" >
+		delete from JOB_TRIGGER_LOG
+		<trim prefix="WHERE" prefixOverrides="AND | OR" >
+			<if test="jobGroup gt 0">
+				AND job_group_ = #{jobGroup}
+			</if>
+			<if test="jobId gt 0">
+				AND job_id_ = #{jobId}
+			</if>
+			<if test="clearBeforeTime != null">
+				AND trigger_time_ <![CDATA[ <= ]]> #{clearBeforeTime}
+			</if>
+			<if test="clearBeforeNum gt 0">
+				AND id_ NOT in(
+					SELECT id_ FROM(
+						<choose>  
+                            <when test="_databaseId == 'oracle'">
+                                select * from ( 
+                                    <include refid="clearLog_selectId" />
+                                 ) where rownum <![CDATA[ <= ]]> #{clearBeforeNum}
+                            </when>
+                            <otherwise>
+                                <include refid="clearLog_selectId" />
+        						LIMIT 0, #{clearBeforeNum}
+                            </otherwise>
+                        </choose>
+					) t1
+				)
+			</if>
+		</trim>
+	</delete>
+	
+</mapper>

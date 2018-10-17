@@ -1,0 +1,377 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hginfo.hdp</groupId>
+		<artifactId>hdp-parent</artifactId>
+		<version>3.1.0-release</version>
+	</parent>
+
+	<groupId>com.hginfo.hdf</groupId>
+	<artifactId>hdf</artifactId>
+	<version>3.0.5-rc1</version>
+	<name>HDF</name>
+	<packaging>pom</packaging>
+
+	<description>hdf is a Hongguaninfo Develepment Platform</description>
+	<url>http://cc.hongguaninfo.com/hdf/</url>
+	<inceptionYear>2016-2020</inceptionYear>
+	<organization>
+		<name>Shanghai Hongguan Information Technology Co., Ltd.</name>
+		<url>http://www.hongguaninfo.com</url>
+	</organization>
+
+	<scm>
+		<connection>scm:svn:https://192.168.2.5:8443/svn/HDP/develop/trunk/hdf/</connection>
+		<developerConnection>scm:svn:https://192.168.2.5:8443/svn/HDP/develop/trunk/hdf/</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>henry</id>
+			<name>Henry Sui</name>
+			<email>suiguangshuai@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Project leader</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>yuyanlin</id>
+			<name>Yuyanlin</name>
+			<email>yuyanlin@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>shichengqun</id>
+			<name>Shichengqun</name>
+			<email>shichengqun@hongguaninfo.com</email>
+			<organization>CC</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>licheng</id>
+			<name>Licheng</name>
+			<email>licheng@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>yangfeng</id>
+			<name>Yangfeng</name>
+			<email>yangfeng@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>qiujingde</id>
+			<name>Qiujingde</name>
+			<email>qiujingde@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>yuqing</id>
+			<name>Yuqing</name>
+			<email>yuqing@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>yinyanzhen</id>
+			<name>Yinyanzhen</name>
+			<email>yinyanzhen@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>mahonghua</id>
+			<name>mahonghua</name>
+			<email>mahonghua@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>zhangdianbo</id>
+			<name>zhangdianbo</name>
+			<email>zhangdianbo@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+
+		<!-- tester -->
+		<developer>
+			<id>chuhaiyan</id>
+			<name>chuhaiyan</name>
+			<email>chuhaiyan@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>tester</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<id>houzhaohua</id>
+			<name>houzhaohua</name>
+			<email>houshaohua@hongguaninfo.com</email>
+			<organization>cc</organization>
+			<roles>
+				<role>tester</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>hbm</module>
+	</modules>
+
+	<distributionManagement>
+		<repository>
+			<id>hg-releases</id>
+			<name>Hg Releases Releases</name>
+			<url>http://repo.hongguaninfo.com/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>hg-snapshots</id>
+			<name>Hg Snapshots Repository</name>
+			<url>http://repo.hongguaninfo.com/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+
+		<!-- <repository> <id>nexus-releases</id> <name>Nexus Release Repository</name> 
+			<url>http://192.168.8.138/nexus/content/repositories/releases</url> </repository> 
+			<snapshotRepository> <id>nexus-snapshots</id> <name>Nexus Snapshot Repository</name> 
+			<url>http://192.168.8.138/nexus/content/repositories/snapshots</url> </snapshotRepository> -->
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>Hg Nexus Repository</name>
+			<url>http://repo.hongguaninfo.com/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<!-- 设定插件仓库 如有Nexus私服 <pluginRepositories> <pluginRepository> <id>nexus</id> 
+		<name>Hg Nexus Repository</name> <url>http://repo.hongguaninfo.com/nexus/content/groups/public</url> 
+		<snapshots> <enabled>false</enabled> </snapshots> </pluginRepository> </pluginRepositories> -->
+
+	<!-- 属性配置 -->
+	<properties>
+		<!-- lib version -->
+		<hlog.version>3.0.5-rc1</hlog.version>
+		<hutils.version>3.0.5-rc1</hutils.version>
+		<hvalidate.version>3.0.5-rc1</hvalidate.version>
+		<hdubbo.version>3.0.5-rc1</hdubbo.version>
+		<hmonitor.version>3.0.5-rc1</hmonitor.version>
+		<hbpm.version>3.0.5-rc1</hbpm.version>
+	</properties>
+
+	<!-- 依赖管理 -->
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- hbm-base -->
+			<dependency>
+				<groupId>com.hginfo.hdf</groupId>
+				<artifactId>hbm-base</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- hbm-core -->
+			<dependency>
+				<groupId>com.hginfo.hdf</groupId>
+				<artifactId>hbm-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- hbm-fe-core -->
+			<dependency>
+				<groupId>com.hginfo.hdf</groupId>
+				<artifactId>hbm-fe-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- hbm-be -->
+			<dependency>
+				<groupId>com.hginfo.hdf</groupId>
+				<artifactId>hbm-be</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- hbm-job-core -->
+			<dependency>
+				<groupId>com.hginfo.hdf</groupId>
+				<artifactId>hbm-job-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+            
+            <!-- hbm-agent-hbpm -->
+            <dependency>
+                <groupId>com.hginfo.hdf</groupId>
+                <artifactId>hbm-agent-hbpm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+			<!-- hlog -->
+			<dependency>
+				<groupId>com.hginfo.hcore</groupId>
+				<artifactId>hlog</artifactId>
+				<version>${hlog.version}</version>
+			</dependency>
+
+			<!-- hutils -->
+			<dependency>
+				<groupId>com.hginfo.hcore</groupId>
+				<artifactId>hutils</artifactId>
+				<version>${hutils.version}</version>
+			</dependency>
+
+			<!-- hvalidate -->
+			<dependency>
+				<groupId>com.hginfo.hcore</groupId>
+				<artifactId>hvalidate</artifactId>
+				<version>${hvalidate.version}</version>
+			</dependency>
+
+			<!-- hdubbo -->
+			<dependency>
+				<groupId>com.hginfo.hcore</groupId>
+				<artifactId>hdubbo</artifactId>
+				<version>${hdubbo.version}</version>
+			</dependency>
+
+			<!-- hdubbo -->
+			<dependency>
+				<groupId>com.hginfo.hcore</groupId>
+				<artifactId>hmonitor</artifactId>
+				<version>${hmonitor.version}</version>
+			</dependency>
+
+			<!-- hbpm -->
+			<dependency>
+				<groupId>com.hginfo.htp</groupId>
+				<artifactId>hbpm-api</artifactId>
+				<version>${hbpm.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.hginfo.htp</groupId>
+				<artifactId>hbpm-service-activiti</artifactId>
+				<version>${hbpm.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.hginfo.htp</groupId>
+				<artifactId>hbpm-agent-api</artifactId>
+				<version>${hbpm.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- 插件配置 -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<tagBase>https://192.168.2.5:8443/svn/HDP/develop/tags/</tagBase>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<!-- compiler插件, 设定JDK版本 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>${java.source.version}</source>
+						<target>${java.source.version}</target>
+						<showWarnings>true</showWarnings>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+				</plugin>
+
+				<!-- javadoc插件 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<aggregate>true</aggregate>
+						<tags>
+							<!-- 不生成author标签 -->
+							<tag>
+								<name>author</name>
+								<placement>X</placement>
+							</tag>
+						</tags>
+						<!-- 关闭doclint -->
+						<additionalparam>-Xdoclint:none</additionalparam>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<phase>install</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- flyway 数据库版本控制 -->
+				<plugin>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-maven-plugin</artifactId>
+					<version>4.1.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- 报告配置 -->
+	<reporting>
+		<plugins>
+
+		</plugins>
+	</reporting>
+</project>

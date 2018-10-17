@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Dao层缓存，默认不启用，暂时只支持redis
+    <bean class="com.hginfo.hbm.be.cache.HCacheDaoAspect">
+        <property name="cacheManager" ref="hRedisCacheManager" />
+    </bean>
+
+
+    <bean id="hRedisCacheManager" class="com.hginfo.hbm.be.cache.redis.HRedisCacheManager">
+        <property name="idFactory" ref="identityidFactory" />
+        <property name="redisTemplate" ref="redisTemplate" />
+    </bean>
+    -->
+
+</beans>

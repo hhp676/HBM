@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysStaffInfoMapper">
+
+    <!-- result map -->
+    <resultMap type="SysStaffInfo" id="sysStaffInfoMap">
+        <id property="staffId" column="staffId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="staffCode" column="staffCode" />
+        <result property="staffStatus" column="staffStatus" />
+        <result property="userId" column="userId" />
+        <result property="entryTime" column="entryTime" />
+        <result property="quitTime" column="quitTime" />
+        <result property="idCard" column="idCard" />
+        <result property="bankCard" column="bankCard" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_STAFF_INFO_COLUMN">
+        ssi.STAFF_ID_ staffId,
+        ssi.TENANT_ID_ tenantId,
+        ssi.STAFF_CODE_ staffCode,
+        ssi.STAFF_STATUS_ staffStatus,
+        ssi.USER_ID_ userId,
+        ssi.ENTRY_TIME_ entryTime,
+        ssi.QUIT_TIME_ quitTime,
+        ssi.ID_CARD_ idCard,
+        ssi.BANK_CARD_ bankCard,
+        ssi.DESCR_ descr,
+        ssi.IS_DELETE_ isDelete,
+        ssi.IS_FINAL_ isFinal,
+        ssi.CRT_TIME_ crtTime,
+        ssi.UPD_TIME_ updTime,
+        ssi.CRT_USER_ID_ crtUserId,
+        ssi.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_STAFF_INFO_WHERE">
+        <if test="staffId != null">
+            AND ssi.STAFF_ID_ = #{staffId}
+        </if>
+        <if test="tenantId != null">
+            AND ssi.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="staffCode != null and staffCode.length() != 0">
+            AND ssi.STAFF_CODE_ = #{staffCode}
+        </if>
+        <if test="staffStatus != null">
+            AND ssi.STAFF_STATUS_ = #{staffStatus}
+        </if>
+        <if test="userId != null">
+            AND ssi.USER_ID_ = #{userId}
+        </if>
+        <if test="entryTime != null">
+            AND ssi.ENTRY_TIME_ = #{entryTime}
+        </if>
+        <if test="quitTime != null">
+            AND ssi.QUIT_TIME_ = #{quitTime}
+        </if>
+        <if test="idCard != null and idCard.length() != 0">
+            AND ssi.ID_CARD_ = #{idCard}
+        </if>
+        <if test="bankCard != null and bankCard.length() != 0">
+            AND ssi.BANK_CARD_ = #{bankCard}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND ssi.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND ssi.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND ssi.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND ssi.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND ssi.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND ssi.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND ssi.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysStaffInfoMap">
+        select <include  refid="SQL_SYS_STAFF_INFO_COLUMN" />
+        from SYS_STAFF_INFO ssi
+        <where>
+            ssi.STAFF_ID_ = #{idValue}
+        </where>
+    </select>
+    <select id="getByUserId" parameterType="long" resultMap="sysStaffInfoMap">
+        select <include  refid="SQL_SYS_STAFF_INFO_COLUMN" />
+        from SYS_STAFF_INFO ssi
+        <where>
+            ssi.USER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysStaffInfo" resultMap="sysStaffInfoMap">
+        select <include  refid="SQL_SYS_STAFF_INFO_COLUMN"/>
+        from SYS_STAFF_INFO ssi
+        <where>
+            <include  refid="SQL_SYS_STAFF_INFO_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                ssi.STAFF_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysStaffInfo" resultType="int">
+        select count(
+            ssi.STAFF_ID_
+        ) as counts
+        from SYS_STAFF_INFO ssi
+        <where>
+            <include  refid="SQL_SYS_STAFF_INFO_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysStaffInfo" resultType="int">
+        select count(
+            ssi.STAFF_ID_
+        ) as counts
+        from SYS_STAFF_INFO ssi
+        <where>
+            <if test="staffId != null">
+                AND ssi.STAFF_ID_ != #{staffId}
+            </if>
+            <if test="tenantId != null">
+                AND ssi.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="staffCode != null and staffCode.length() != 0">
+                AND ssi.STAFF_CODE_ = #{staffCode}
+            </if>
+            <if test="staffStatus != null">
+                AND ssi.STAFF_STATUS_ = #{staffStatus}
+            </if>
+            <if test="userId != null">
+                AND ssi.USER_ID_ = #{userId}
+            </if>
+            <if test="entryTime != null">
+                AND ssi.ENTRY_TIME_ = #{entryTime}
+            </if>
+            <if test="quitTime != null">
+                AND ssi.QUIT_TIME_ = #{quitTime}
+            </if>
+            <if test="idCard != null and idCard.length() != 0">
+                AND ssi.ID_CARD_ = #{idCard}
+            </if>
+            <if test="bankCard != null and bankCard.length() != 0">
+                AND ssi.BANK_CARD_ = #{bankCard}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND ssi.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND ssi.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND ssi.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND ssi.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND ssi.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND ssi.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND ssi.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

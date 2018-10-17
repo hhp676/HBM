@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- redis分布式锁，依赖redisTemplate -->
+    <bean id="redisLock" class="com.hginfo.hbm.core.lock.RedisLock">
+        <property name="redisTemplate" ref="stringRedisTemplate" />
+        <property name="idFactory" ref="identityidFactory" />
+        <property name="lockExpiration" value="30000" />
+    </bean>
+
+    <bean id="doRepeatCheckAndLock" class="com.hginfo.hbm.core.lock.DoRepeatCheckAndLock">
+        <property name="redisLock" ref="redisLock" />
+        <property name="redisTemplate" ref="stringRedisTemplate" />
+    </bean>
+
+</beans>

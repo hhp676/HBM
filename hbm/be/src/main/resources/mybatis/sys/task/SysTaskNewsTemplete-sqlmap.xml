@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.task.SysTaskNewsTempleteMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_TASK_NEWS_TEMPLETE_COLUMN">
+        stnt.TASK_NEWS_TEMPLETE_ID_ taskNewsTempleteId,
+        stnt.TASK_TYPE_ID_ taskTypeId,
+        stnt.NEWS_TYPE_ID_ newsTypeId,
+        stnt.NEWS_DO_NODE_ newsDoNode,
+        stnt.NEWS_TEMPLETE_ID_ newsTempleteId,
+        stnt.IS_DELETE_ isDelete,
+        stnt.IS_FINAL_ isFinal,
+        stnt.CRT_TIME_ crtTime,
+        stnt.UPD_TIME_ updTime,
+        stnt.CRT_USER_ID_ crtUserId,
+        stnt.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_TASK_NEWS_TEMPLETE_WHERE">
+        <if test="taskNewsTempleteId != null">
+            AND stnt.TASK_NEWS_TEMPLETE_ID_ = #{taskNewsTempleteId}
+        </if>
+        <if test="taskTypeId != null">
+            AND stnt.TASK_TYPE_ID_ = #{taskTypeId}
+        </if>
+        <if test="newsTypeId != null">
+            AND stnt.NEWS_TYPE_ID_ = #{newsTypeId}
+        </if>
+        <if test="newsDoNode != null">
+            AND stnt.NEWS_DO_NODE_ = #{newsDoNode}
+        </if>
+        <if test="newsTempleteId != null">
+            AND stnt.NEWS_TEMPLETE_ID_ = #{newsTempleteId}
+        </if>
+        <if test="isDelete != null">
+            AND stnt.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND stnt.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND stnt.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND stnt.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND stnt.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND stnt.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysTaskNewsTemplete">
+        select <include refid="SQL_SYS_TASK_NEWS_TEMPLETE_COLUMN"/>
+        from SYS_TASK_NEWS_TEMPLETE stnt
+        <where>
+            stnt.TASK_NEWS_TEMPLETE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysTaskNewsTemplete" resultType="SysTaskNewsTemplete">
+        select <include refid="SQL_SYS_TASK_NEWS_TEMPLETE_COLUMN"/>
+        from SYS_TASK_NEWS_TEMPLETE stnt
+        <where>
+            <include refid="SQL_SYS_TASK_NEWS_TEMPLETE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                stnt.TASK_NEWS_TEMPLETE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysTaskNewsTemplete" resultType="int">
+        select count(
+            stnt.TASK_NEWS_TEMPLETE_ID_
+        ) as counts
+        from SYS_TASK_NEWS_TEMPLETE stnt
+        <where>
+            <include refid="SQL_SYS_TASK_NEWS_TEMPLETE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysTaskNewsTemplete" resultType="int">
+        select count(
+            stnt.TASK_NEWS_TEMPLETE_ID_
+        ) as counts
+        from SYS_TASK_NEWS_TEMPLETE stnt
+        <where>
+            <if test="taskNewsTempleteId != null">
+                AND stnt.TASK_NEWS_TEMPLETE_ID_ != #{taskNewsTempleteId}
+            </if>
+            <if test="taskTypeId != null">
+                AND stnt.TASK_TYPE_ID_ = #{taskTypeId}
+            </if>
+            <if test="newsTypeId != null">
+                AND stnt.NEWS_TYPE_ID_ = #{newsTypeId}
+            </if>
+            <if test="newsTempleteId != null">
+                AND stnt.NEWS_TEMPLETE_ID_ = #{newsTempleteId}
+            </if>
+            <if test="isDelete != null">
+                AND stnt.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND stnt.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND stnt.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND stnt.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND stnt.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND stnt.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

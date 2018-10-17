@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysMetadataEntityMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_METADATA_ENTITY_COLUMN">
+        sme.ENTITY_ID_ entityId,
+        sme.TENANT_ID_ tenantId,
+        sme.ENTITY_CODE_ entityCode,
+        sme.ENTITY_NAME_ entityName,
+        sme.ENG_NAME_ engName,
+        sme.I18N_CODE_ i18nCode,
+        sme.TABLE_NAME_ tableName,
+        sme.TABLE_ALIAS_ tableAlias,
+        sme.DESCR_ descr,
+        sme.IS_DELETE_ isDelete,
+        sme.IS_FINAL_ isFinal,
+        sme.CRT_TIME_ crtTime,
+        sme.UPD_TIME_ updTime,
+        sme.CRT_USER_ID_ crtUserId,
+        sme.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_METADATA_ENTITY_WHERE">
+        <if test="entityId != null">
+            AND sme.ENTITY_ID_ = #{entityId}
+        </if>
+        <if test="tenantId != null">
+            AND sme.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="entityCode != null and entityCode.length() != 0">
+            AND sme.ENTITY_CODE_ = #{entityCode}
+        </if>
+        <if test="entityName != null and entityName.length() != 0">
+            AND sme.ENTITY_NAME_ = #{entityName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sme.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sme.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="tableName != null and tableName.length() != 0">
+            AND sme.TABLE_NAME_ = #{tableName}
+        </if>
+        <if test="tableAlias != null and tableAlias.length() != 0">
+            AND sme.TABLE_ALIAS_ = #{tableAlias}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sme.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sme.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sme.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sme.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sme.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sme.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sme.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysMetadataEntity">
+        select <include  refid="SQL_SYS_METADATA_ENTITY_COLUMN" />
+        from SYS_METADATA_ENTITY sme
+        <where>
+            sme.ENTITY_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysMetadataEntity" resultType="SysMetadataEntity">
+        select <include  refid="SQL_SYS_METADATA_ENTITY_COLUMN"/>
+        from SYS_METADATA_ENTITY sme
+        <where>
+            <include  refid="SQL_SYS_METADATA_ENTITY_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sme.TABLE_NAME_ asc, sme.ENTITY_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysMetadataEntity" resultType="int">
+        select count(
+            sme.ENTITY_ID_
+        ) as counts
+        from SYS_METADATA_ENTITY sme
+        <where>
+            <include  refid="SQL_SYS_METADATA_ENTITY_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysMetadataEntity" resultType="int">
+        select count(
+            sme.ENTITY_ID_
+        ) as counts
+        from SYS_METADATA_ENTITY sme
+        <where>
+            <if test="entityId != null">
+                AND sme.ENTITY_ID_ != #{entityId}
+            </if>
+            <if test="tenantId != null">
+                AND sme.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="entityCode != null and entityCode.length() != 0">
+                AND sme.ENTITY_CODE_ = #{entityCode}
+            </if>
+            <if test="entityName != null and entityName.length() != 0">
+                AND sme.ENTITY_NAME_ = #{entityName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sme.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sme.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="tableName != null and tableName.length() != 0">
+                AND sme.TABLE_NAME_ = #{tableName}
+            </if>
+            <if test="tableAlias != null and tableAlias.length() != 0">
+                AND sme.TABLE_ALIAS_ = #{tableAlias}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sme.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sme.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sme.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sme.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sme.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sme.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sme.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getMySQLMetaTables" parameterType="com.hginfo.hbm.base.vo.MetaTable" resultType="com.hginfo.hbm.base.vo.MetaTable">
+        SELECT 
+            TABLE_SCHEMA databaseName,
+            TABLE_NAME tableName,
+            TABLE_COMMENT AS tableDesc 
+        FROM INFORMATION_SCHEMA.TABLES
+        <where> 
+            TABLE_SCHEMA = #{schema} 
+            AND TABLE_TYPE = 'BASE TABLE'
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,91 @@
+table, div, span, p, form, ol, ul, li, dl, dt, dd, textarea {
+	font-size: 12px;
+}
+
+body {
+	font-family: helvetica, tahoma, verdana, sans-serif;
+	padding: 0px;
+	font-size: 13px;
+	margin: 0;
+}
+
+h2 {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0;
+	margin-bottom: 15px;
+}
+
+.changeform table tr {
+	height: 30px;
+}
+
+#indexTop {
+	height: 80px;
+	background: url('../../images/page/bg.jpg') repeat-x;
+}
+
+#indexTop_new {
+	overflow: hidden;
+	height: 45px;
+}
+
+#indexNorth_layout {
+	background-color: #7f99be;
+}
+
+.tt-inner {
+	display: inline-block;
+	line-height: 12px;
+	padding-top: 2px;
+}
+
+.tt-inner img {
+	border: 0;
+}
+
+
+.footer {
+	text-align: center;
+	color: #15428B;
+	margin: 0px;
+	padding: 0px;
+	line-height: 18px;
+	font-weight: bold;
+}
+
+#indexSouth {
+	overflow:hidden;
+	height: 20px;
+	background: #D2E0F2;
+}
+
+
+
+.datagrid-row-selected {
+	background-color: #7f99be;
+}
+
+.accordion-header-selected {
+	background-color: #eee;
+}
+/*输入框的样式*/
+.textboxspan {
+	padding: 0;
+	position: relative;
+	border: 1px solid #D3D3D3;
+	background-color: #fff;
+	vertical-align: middle;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+}
+
+.easyui-datagrid-layout{display:none}
+
+.panel-loading-hg{}

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysAttachmentMapper">
+
+    <!-- result map -->
+    <resultMap type="SysAttachment" id="sysAttachmentMap">
+        <id property="attId" column="attId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="attCode" column="attCode" />
+        <result property="fileId" column="fileId" />
+        <result property="bizCode" column="bizCode" />
+        <result property="bizId" column="bizId" />
+        <result property="subBizId" column="subBizId" />
+        <result property="attName" column="attName" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysFile" column="fileId" select="com.hginfo.hbm.be.mapper.sys.SysFileMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_ATTACHMENT_COLUMN">
+        sa.ATT_ID_ attId,
+        sa.TENANT_ID_ tenantId,
+        sa.ATT_CODE_ attCode,
+        sa.FILE_ID_ fileId,
+        sa.BIZ_CODE_ bizCode,
+        sa.BIZ_ID_ bizId,
+        sa.SUB_BIZ_ID_ subBizId,
+        sa.ATT_NAME_ attName,
+        sa.DESCR_ descr,
+        sa.IS_DELETE_ isDelete,
+        sa.IS_FINAL_ isFinal,
+        sa.CRT_TIME_ crtTime,
+        sa.UPD_TIME_ updTime,
+        sa.CRT_USER_ID_ crtUserId,
+        sa.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_ATTACHMENT_WHERE">
+        <if test="attId != null">
+            AND sa.ATT_ID_ = #{attId}
+        </if>
+        <if test="tenantId != null">
+            AND sa.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="attCode != null and attCode.length() != 0">
+            AND sa.ATT_CODE_ = #{attCode}
+        </if>
+        <if test="fileId != null">
+            AND sa.FILE_ID_ = #{fileId}
+        </if>
+        <if test="bizCode != null and bizCode.length() != 0">
+            AND sa.BIZ_CODE_ = #{bizCode}
+        </if>
+        <if test="bizId != null">
+            AND sa.BIZ_ID_ = #{bizId}
+        </if>
+        <if test="subBizId != null">
+            AND sa.SUB_BIZ_ID_ = #{subBizId}
+        </if>
+        <if test="attName != null and attName.length() != 0">
+            AND sa.ATT_NAME_ = #{attName}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sa.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sa.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sa.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sa.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sa.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sa.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sa.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysAttachmentMap">
+        select <include  refid="SQL_SYS_ATTACHMENT_COLUMN" />
+        from SYS_ATTACHMENT sa
+        <where>
+            sa.ATT_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysAttachment" resultMap="sysAttachmentMap">
+        select <include  refid="SQL_SYS_ATTACHMENT_COLUMN"/>
+        from SYS_ATTACHMENT sa
+        left join sys_file sf on sa.FILE_ID_=sf.FILE_ID_
+        <where>
+            <include  refid="SQL_SYS_ATTACHMENT_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sa.ATT_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysAttachment" resultType="int">
+        select count(
+            sa.ATT_ID_
+        ) as counts
+        from SYS_ATTACHMENT sa
+        left join sys_file sf on sa.FILE_ID_=sf.FILE_ID_
+        <where>
+            <include  refid="SQL_SYS_ATTACHMENT_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysAttachment" resultType="int">
+        select count(
+            sa.ATT_ID_
+        ) as counts
+        from SYS_ATTACHMENT sa
+        <where>
+            <if test="attId != null">
+                AND sa.ATT_ID_ != #{attId}
+            </if>
+            <if test="tenantId != null">
+                AND sa.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="attCode != null and attCode.length() != 0">
+                AND sa.ATT_CODE_ = #{attCode}
+            </if>
+            <if test="fileId != null">
+                AND sa.FILE_ID_ = #{fileId}
+            </if>
+            <if test="bizCode != null and bizCode.length() != 0">
+                AND sa.BIZ_CODE_ = #{bizCode}
+            </if>
+            <if test="bizId != null">
+                AND sa.BIZ_ID_ = #{bizId}
+            </if>
+            <if test="subBizId != null">
+                AND sa.SUB_BIZ_ID_ = #{subBizId}
+            </if>
+            <if test="attName != null and attName.length() != 0">
+                AND sa.ATT_NAME_ = #{attName}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sa.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sa.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sa.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sa.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sa.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sa.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sa.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

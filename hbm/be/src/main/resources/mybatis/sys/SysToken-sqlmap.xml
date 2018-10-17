@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysTokenMapper">
+
+    <!-- result map -->
+    <resultMap type="SysToken" id="sysTokenMap">
+        <id property="tokenId" column="tokenId" />
+        <result property="accountId" column="accountId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="tokenSign" column="tokenSign" />
+        <result property="tokenType" column="tokenType" />
+        <result property="extension" column="extension" />
+        <result property="dueTime" column="dueTime" />
+        <result property="loginCount" column="loginCount" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysAccount" column="accountId" select="com.hginfo.hbm.be.mapper.sys.SysAccountMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_TOKEN_COLUMN">
+        st.TOKEN_ID_ tokenId,
+        st.ACCOUNT_ID_ accountId,
+        st.TENANT_ID_ tenantId,
+        st.TOKEN_SIGN_ tokenSign,
+        st.TOKEN_TYPE_ tokenType,
+        st.EXTENSION_ extension,
+        st.DUE_TIME_ dueTime,
+        st.LOGIN_COUNT_ loginCount,
+        st.IS_DELETE_ isDelete,
+        st.IS_FINAL_ isFinal,
+        st.CRT_TIME_ crtTime,
+        st.UPD_TIME_ updTime,
+        st.CRT_USER_ID_ crtUserId,
+        st.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_TOKEN_WHERE">
+        <if test="tokenId != null">
+            AND st.TOKEN_ID_ = #{tokenId}
+        </if>
+        <if test="accountId != null">
+            AND st.ACCOUNT_ID_ = #{accountId}
+        </if>
+        <if test="tenantId != null">
+            AND st.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="tokenSign != null and tokenSign.length() != 0">
+            AND st.TOKEN_SIGN_ = #{tokenSign}
+        </if>
+        <if test="tokenType != null">
+            AND st.TOKEN_TYPE_ = #{tokenType}
+        </if>
+        <if test="extension != null and extension.length() != 0">
+            AND st.EXTENSION_ = #{extension}
+        </if>
+        <if test="dueTime != null">
+            AND st.DUE_TIME_ = #{dueTime}
+        </if>
+        <if test="loginCount != null">
+            AND st.LOGIN_COUNT_ = #{loginCount}
+        </if>
+        <if test="isDelete != null">
+            AND st.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND st.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND st.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND st.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND st.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND st.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysTokenMap">
+        select <include  refid="SQL_SYS_TOKEN_COLUMN" />
+        from SYS_TOKEN st
+        <where>
+            st.TOKEN_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysToken" resultMap="sysTokenMap">
+        select <include  refid="SQL_SYS_TOKEN_COLUMN"/>
+        from SYS_TOKEN st
+        <where>
+            <include  refid="SQL_SYS_TOKEN_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                st.TOKEN_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysToken" resultType="int">
+        select count(
+            st.TOKEN_ID_
+        ) as counts
+        from SYS_TOKEN st
+        <where>
+            <include  refid="SQL_SYS_TOKEN_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysToken" resultType="int">
+        select count(
+            st.TOKEN_ID_
+        ) as counts
+        from SYS_TOKEN st
+        <where>
+            <if test="tokenId != null">
+                AND st.TOKEN_ID_ != #{tokenId}
+            </if>
+            <if test="accountId != null">
+                AND st.ACCOUNT_ID_ = #{accountId}
+            </if>
+            <if test="tenantId != null">
+                AND st.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="tokenSign != null and tokenSign.length() != 0">
+                AND st.TOKEN_SIGN_ = #{tokenSign}
+            </if>
+            <if test="tokenType != null">
+                AND st.TOKEN_TYPE_ = #{tokenType}
+            </if>
+            <if test="extension != null and extension.length() != 0">
+                AND st.EXTENSION_ = #{extension}
+            </if>
+            <if test="dueTime != null">
+                AND st.DUE_TIME_ = #{dueTime}
+            </if>
+            <if test="loginCount != null">
+                AND st.LOGIN_COUNT_ = #{loginCount}
+            </if>
+            <if test="isDelete != null">
+                AND st.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND st.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND st.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND st.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND st.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND st.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

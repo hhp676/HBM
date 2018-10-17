@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysFileMapper">
+
+    <sql id="SQL_SYS_FILE_COLUMN">
+        sf.FILE_ID_ fileId,
+        sf.TENANT_ID_ tenantId,
+        sf.FILE_TYPE_ fileType,
+        sf.REAL_NAME_ realName,
+        sf.FILE_NAME_ fileName,
+        sf.FILE_SIZE_ fileSize,
+        sf.RELATIVE_PATH_ relativePath,
+        sf.DESCR_ descr,
+        sf.IS_DELETE_ isDelete,
+        sf.IS_FINAL_ isFinal,
+        sf.CRT_TIME_ crtTime,
+        sf.UPD_TIME_ updTime,
+        sf.CRT_USER_ID_ crtUserId,
+        sf.UPD_USER_ID_ updUserId,
+        sa.ATT_ID_ attId,
+        sa.TENANT_ID_ tenantId,
+        sa.ATT_CODE_ attCode,
+        sa.FILE_ID_ fileId,
+        sa.BIZ_CODE_ bizCode,
+        sa.BIZ_ID_ bizId,
+        sa.SUB_BIZ_ID_ subBizId,
+        sa.ATT_NAME_ attName
+       
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_FILE_WHERE">
+        <if test="fileId != null">
+            AND sf.FILE_ID_ = #{fileId}
+        </if>
+        <if test="tenantId !=null ">
+            AND sf.TENANT_ID_=#{tenantId}
+        </if>
+        <if test="fileType !=null and fileType.length()!=0 ">
+            AND sf.FILE_TYPE_=#{fileType}
+        </if>
+        <if test="realName !=null and realName.length()!=0 ">
+            AND sf.REAL_NAME_=#{realName}
+        </if>
+        <if test="fileName !=null and fileName.length()!=0 ">
+            AND sf.FILE_NAME_=#{fileName}
+        </if>
+        <if test="fileSize !=null and fileSize.length()!=0 ">
+            AND sf.FILE_SIZE_=#{fileSize}
+        </if>
+        <if test="relativePath !=null and relativePath.length()!=0 ">
+            AND sf.RELATIVE_PATH_=#{relativePath}
+        </if>
+        <if test="descr !=null and descr.length()!=0 ">
+            AND sf.DESCR_=#{descr}
+        </if>
+        <if test="isDelete !=null ">
+            AND sf.IS_DELETE_=#{isDelete}
+        </if>
+        <if test="isFinal !=null ">
+            AND sf.IS_FINAL_=#{isFinal}
+        </if>
+        <if test="crtTime !=null ">
+            AND sf.CRT_TIME_=#{crtTime}
+        </if>
+        <if test="updTime !=null ">
+            AND sf.UPD_TIME_=#{updTime}
+        </if>
+        <if test="crtUserId !=null ">
+            AND sf.CRT_USER_ID_=#{crtUserId}
+        </if>
+        <if test="updUserId !=null ">
+            AND sf.UPD_USER_ID_=#{updUserId}
+        </if>
+        <if test="attName !=null and attName.length()!=0 ">
+            AND sa.ATT_NAME_=#{attName}
+        </if>
+        <if test="bizCode !=null and bizCode.length()!=0 ">
+            AND sa.BIZ_CODE_=#{bizCode}
+        </if>
+        <if test="attCode !=null and attCode.length()!=0 ">
+            AND sa.ATT_CODE_=#{attCode}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysFile">
+        select <include  refid="SQL_SYS_FILE_COLUMN"/>
+        from sys_file sf,sys_attachment sa
+        <where>
+             sa.FILE_ID_ = sf.FILE_ID_ and 
+                sf.FILE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysFile" resultType="SysFile">
+        select <include  refid="SQL_SYS_FILE_COLUMN"/>
+        from sys_file sf ,sys_attachment sa
+        <where>
+            sa.FILE_ID_ = sf.FILE_ID_
+            <include  refid="SQL_SYS_FILE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sf.FILE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysFile" resultType="int">
+        select count(sf.FILE_ID_) as counts
+        from sys_file sf ,sys_attachment sa
+        <where>
+            sa.FILE_ID_ = sf.FILE_ID_
+            <include  refid="SQL_SYS_FILE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysFile" resultType="int">
+        select count(
+            sf.FILE_ID_
+        ) as counts
+        from SYS_FILE sf
+        <where>
+            <if test="fileId != null">
+                AND sf.FILE_ID_ != #{fileId}
+            </if>
+            <if test="tenantId != null">
+                AND sf.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="fileType != null and fileType.length() != 0">
+                AND sf.FILE_TYPE_ = #{fileType}
+            </if>
+            <if test="realName != null and realName.length() != 0">
+                AND sf.REAL_NAME_ = #{realName}
+            </if>
+            <if test="fileName != null and fileName.length() != 0">
+                AND sf.FILE_NAME_ = #{fileName}
+            </if>
+            <if test="fileSize != null and fileSize.length() != 0">
+                AND sf.FILE_SIZE_ = #{fileSize}
+            </if>
+            <if test="relativePath != null and relativePath.length() != 0">
+                AND sf.RELATIVE_PATH_ = #{relativePath}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sf.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sf.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sf.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sf.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sf.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sf.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sf.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

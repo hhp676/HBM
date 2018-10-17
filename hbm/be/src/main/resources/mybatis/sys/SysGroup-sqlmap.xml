@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysGroupMapper">
+
+    <!-- result map -->
+    <resultMap type="SysGroup" id="sysGroupMap">
+        <id property="groupId" column="groupId" />
+        <result property="orgId" column="orgId" />
+        <result property="groupCode" column="groupCode" />
+        <result property="groupName" column="groupName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysOrganization" column="orgId" select="com.hginfo.hbm.be.mapper.sys.SysOrganizationMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_GROUP_COLUMN">
+        sg.GROUP_ID_ groupId,
+        sg.ORG_ID_ orgId,
+        sg.GROUP_CODE_ groupCode,
+        sg.GROUP_NAME_ groupName,
+        sg.ENG_NAME_ engName,
+        sg.I18N_CODE_ i18nCode,
+        sg.DESCR_ descr,
+        sg.IS_DELETE_ isDelete,
+        sg.IS_FINAL_ isFinal,
+        sg.CRT_TIME_ crtTime,
+        sg.UPD_TIME_ updTime,
+        sg.CRT_USER_ID_ crtUserId,
+        sg.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_GROUP_WHERE">
+        <if test="groupId != null">
+            AND sg.GROUP_ID_ = #{groupId}
+        </if>
+        <if test="orgId != null">
+            AND sg.ORG_ID_ = #{orgId}
+        </if>
+        <if test="groupCode != null and groupCode.length() != 0">
+            AND sg.GROUP_CODE_ like '%${groupCode}%'
+        </if>
+        <if test="groupName != null and groupName.length() != 0">
+            AND sg.GROUP_NAME_ like '%${groupName}%'
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND sg.ENG_NAME_ like '%${engName}%'
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND sg.I18N_CODE_ like '%${i18nCode}%'
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sg.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sg.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sg.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sg.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sg.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sg.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sg.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysGroupMap">
+        select <include  refid="SQL_SYS_GROUP_COLUMN" />
+        from SYS_GROUP sg
+        <where>
+            sg.GROUP_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysGroup" resultMap="sysGroupMap">
+        select <include  refid="SQL_SYS_GROUP_COLUMN"/>
+        from SYS_GROUP sg
+        <where>
+            <include  refid="SQL_SYS_GROUP_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysGroup" resultType="int">
+        select count(
+            sg.GROUP_ID_
+        ) as counts
+        from SYS_GROUP sg
+        <where>
+            <include  refid="SQL_SYS_GROUP_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysGroup" resultType="int">
+        select count(
+            sg.GROUP_ID_
+        ) as counts
+        from SYS_GROUP sg
+        <where>
+            <if test="groupId != null">
+                AND sg.GROUP_ID_ != #{groupId}
+            </if>
+            <if test="orgId != null">
+                AND sg.ORG_ID_ = #{orgId}
+            </if>
+            <if test="groupCode != null and groupCode.length() != 0">
+                AND sg.GROUP_CODE_ = #{groupCode}
+            </if>
+            <if test="groupName != null and groupName.length() != 0">
+                AND sg.GROUP_NAME_ = #{groupName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND sg.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND sg.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sg.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sg.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sg.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sg.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sg.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sg.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sg.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

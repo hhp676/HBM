@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+    <!-- 集群开启 <distributable /> -->
+
+    <!-- 应用名称 -->
+    <display-name>hbm</display-name>
+
+    <!-- 初始化参数 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+			classpath*:spring/applicationContext-*.xml,
+            classpath*:srv/applicationContext-*.xml
+		</param-value>
+    </context-param>
+
+    <!-- 装载 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- 处理缓冲泄露 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+
+    <!-- 默认filter -->
+    <filter>
+        <filter-name>defaultFilter</filter-name>
+        <filter-class>com.hginfo.hbm.fe.core.filter.DefaultFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>defaultFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <!-- shiro配置 -->
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 字符编码过滤 -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- druid监控 -->
+    <filter>
+        <filter-name>DruidWebStatFilter</filter-name>
+        <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>exclusions</param-name>
+            <!-- <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value> -->
+            <param-value>/static/*,/druid/*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>sessionStatMaxCount</param-name>
+            <param-value>500</param-value>
+        </init-param>
+        <init-param>
+            <param-name>principalSessionName</param-name>
+            <param-value>SESSION_USER</param-value>
+        </init-param>
+        <init-param>
+            <param-name>profileEnable</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>DruidWebStatFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidStatView</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CXFServlet</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CXFServlet</servlet-name>
+        <url-pattern>/wservices/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- spring mvc -->
+    <servlet>
+        <servlet-name>springServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+                classpath*:/spring/spring-mvc-*.xml,
+                classpath*:/srv/spring-mvc-*.xml
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+
+    <!-- 一些默认页面 -->
+    <welcome-file-list>
+        <welcome-file>/</welcome-file>
+    </welcome-file-list>
+
+    <!-- database -->
+    <resource-ref>
+        <description>Database Source</description>
+        <res-ref-name>jdbc/hbm</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <resource-ref>
+        <description>Database Source</description>
+        <res-ref-name>jdbc/test</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <!-- http请求方法限制 <security-constrainrest<web-resource-collectiorest<web-resource-name>arest/web-resource-name>
+        <url-pattern>/*</url-pattern> <http-method>PUT</http-method> <http-method>DELETE</http-method> 
+        <http-method>OPTIONS</http-method> <http-method>TRACE</http-methodrest/web-resource-collection>
+        <auth-constraint> </auth-constraint> </security-constraint> <security-constraint> 
+     rest<web-resource-collectiorest<web-resource-name>adp-activirest/web-resource-name>
+        <url-pattern>/service/*</url-pattern> <http-method>OPTIONS</http-method> 
+      rest/web-resource-collection> <auth-constraint> </auth-constraint> </security-constraint>
+        <login-config> <auth-method>BASIC</auth-method> </login-config> -->
+
+</web-app>

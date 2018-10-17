@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+    default-autowire="byName">
+
+    <!-- mybatis的数据库语言标识 -->
+    <bean id="vendorProperties"  
+    class="org.springframework.beans.factory.config.PropertiesFactoryBean">  
+        <property name="properties">  
+            <props>  
+                <!-- 属性值须与com.alibaba.druid.util.JdbcConstants中各个数据库的值相同 -->
+                <prop key="Oracle">oracle</prop>  
+                <prop key="MySQL">mysql</prop>  
+            </props>  
+        </property>  
+    </bean>
+    
+    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">  
+        <property name="properties" ref="vendorProperties" />  
+    </bean>
+    
+    <!-- myBatis配置SqlSessionFactoryBean -->
+    <bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:/mybatis/mybatis-config.xml" />
+        <!-- typeAliasesPackage 多值可逗号分隔 -->
+        <property name="typeAliasesPackage" value="com.hginfo.hbm.base.entity" />
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:/mybatis/**/*-sqlmap.xml</value>
+            </list>
+        </property>
+        <property name="databaseIdProvider" ref="databaseIdProvider" />
+    </bean>
+
+    <!-- 通过扫描的模式，扫描mapper目录下，所有的mapper都继承SqlMapper接口的接口 -->
+    <!-- 可使用逗号或分号建立多个basePackage -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- basePackage 多值可分号分隔 -->
+        <property name="basePackage" value="com.hginfo.hbm.be.mapper" />
+        <property name="markerInterface"
+            value="com.hginfo.hbm.be.mapper.base.BaseSqlMapper" />
+        <property name="sqlSessionFactoryBeanName" value="mySqlSessionFactory" />
+    </bean>
+
+</beans>

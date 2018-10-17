@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.task.SysTaskTypeMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_TASK_TYPE_COLUMN">
+        stt.TASK_TYPE_ID_ taskTypeId,
+        stt.fID_ fid,
+        stt.TASK_TYPE_CODE_ taskTypeCode,
+        stt.TASK_TYPE_NAME_ taskTypeName,
+        stt.HANDLE_WIN_HEIGHT_ handleWinHeight,
+        stt.HANDLE_WIN_WIDTH_ handleWinWidth,
+        stt.TASK_HANDLE_MODE_ taskHandleMode,
+        stt.DESCR_ descr,
+        stt.IS_DELETE_ isDelete,
+        stt.IS_FINAL_ isFinal,
+        stt.CRT_TIME_ crtTime,
+        stt.UPD_TIME_ updTime,
+        stt.CRT_USER_ID_ crtUserId,
+        stt.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_TASK_TYPE_WHERE">
+        <if test="id != null">
+            AND stt.TASK_TYPE_ID_ = #{id}
+        </if>
+        <if test="taskTypeCode != null and taskTypeCode.length() != 0">
+            AND stt.TASK_TYPE_CODE_ = #{taskTypeCode}
+        </if>
+        <if test="taskTypeName != null and taskTypeName.length() != 0">
+            AND stt.TASK_TYPE_NAME_ = #{taskTypeName}
+        </if>
+        <if test="taskHandleMode != null">
+            AND stt.TASK_HANDLE_MODE_ = #{taskHandleMode}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND stt.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND stt.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND stt.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND stt.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND stt.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND stt.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND stt.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysTaskType">
+        select <include refid="SQL_SYS_TASK_TYPE_COLUMN"/>
+        from SYS_TASK_TYPE stt
+        <where>
+            stt.TASK_TYPE_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysTaskType" resultType="SysTaskType">
+        select <include refid="SQL_SYS_TASK_TYPE_COLUMN"/>
+        from SYS_TASK_TYPE stt
+        <where>
+            <include refid="SQL_SYS_TASK_TYPE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                stt.TASK_TYPE_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysTaskType" resultType="int">
+        select count(
+            stt.TASK_TYPE_ID_
+        ) as counts
+        from SYS_TASK_TYPE stt
+        <where>
+            <include refid="SQL_SYS_TASK_TYPE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysTaskType" resultType="int">
+        select count(
+            stt.TASK_TYPE_ID_
+        ) as counts
+        from SYS_TASK_TYPE stt
+        <where>
+            <if test="id != null">
+                AND stt.TASK_TYPE_ID_ != #{id}
+            </if>
+            <if test="taskTypeCode != null and taskTypeCode.length() != 0">
+                AND stt.TASK_TYPE_CODE_ = #{taskTypeCode}
+            </if>
+            <if test="taskTypeName != null and taskTypeName.length() != 0">
+                AND stt.TASK_TYPE_NAME_ = #{taskTypeName}
+            </if>
+            <if test="taskHandleMode != null">
+                AND stt.TASK_HANDLE_MODE_ = #{taskHandleMode}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND stt.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND stt.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND stt.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND stt.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND stt.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND stt.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND stt.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

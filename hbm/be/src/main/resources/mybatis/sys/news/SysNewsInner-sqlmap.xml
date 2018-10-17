@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.news.SysNewsInnerMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_NEWS_INNER_COLUMN">
+        sni.NEWS_INNER_ID_ newsInnerId,
+        sni.NEWS_ID_ newsId,
+        sni.USER_ID_ userId,
+        sni.TIMER_LV_ timerLv,
+        sni.IMPORTANT_LV_ importantLv,
+        sni.NEWS_TITLE_ newsTitle,
+        sni.NEWS_CONTENT_ newsContent,
+        sni.NEWS_STATUS_ newsStatus,
+        sni.IS_DELETE_ isDelete,
+        sni.IS_FINAL_ isFinal,
+        sni.CRT_TIME_ crtTime,
+        sni.UPD_TIME_ updTime,
+        sni.CRT_USER_ID_ crtUserId,
+        sni.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_NEWS_INNER_WHERE">
+        <if test="newsInnerId != null">
+            AND sni.NEWS_INNER_ID_ = #{newsInnerId}
+        </if>
+        <if test="newsId != null">
+            AND sni.NEWS_ID_ = #{newsId}
+        </if>
+        <if test="sysNews != null">
+          <if test="sysNews.newsFrom != null and sysNews.newsFrom.length() != 0">
+            AND sn.NEWS_FROM_ = #{sysNews.newsFrom}
+          </if>
+          <if test="sysNews.isInit != null">
+            AND sn.IS_INIT_ = #{sysNews.isInit}
+          </if>
+          <if test="sysNews.isDelete != null">
+            AND sn.IS_DELETE_ = #{sysNews.isDelete}
+          </if>
+        </if>
+        <if test="bo != null">
+          <if test="bo.newsTitleLike != null and bo.newsTitleLike.length() != 0">
+               AND sni.NEWS_TITLE_ like '%${bo.newsTitleLike}%'
+          </if>
+          <if test="bo.queryStartTime != null">
+               AND sni.CRT_TIME_ > #{bo.queryStartTime}
+          </if>
+          <if test="bo.queryEndTime != null">
+               AND sni.CRT_TIME_ &lt; #{bo.queryEndTime}
+          </if>
+        </if>
+        <if test="userId != null">
+            AND sni.USER_ID_ = #{userId}
+        </if>
+        <if test="timerLv != null">
+            AND sni.TIMER_LV_ = #{timerLv}
+        </if>
+        <if test="importantLv != null">
+            AND sni.IMPORTANT_LV_ = #{importantLv}
+        </if>
+        <if test="newsTitle != null and newsTitle.length() != 0">
+            AND sni.NEWS_TITLE_ = #{newsTitle}
+        </if>
+        <if test="newsContent != null and newsContent.length() != 0">
+            AND sni.NEWS_CONTENT_ = #{newsContent}
+        </if>
+        <if test="newsStatus != null">
+            AND sni.NEWS_STATUS_ = #{newsStatus}
+        </if>
+        <if test="isDelete != null">
+            AND sni.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sni.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sni.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sni.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sni.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sni.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysNewsInner">
+        select <include refid="SQL_SYS_NEWS_INNER_COLUMN"/>
+        from SYS_NEWS_INNER sni
+        <where>
+            sni.NEWS_INNER_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysNewsInner" resultType="SysNewsInner">
+        select <include refid="SQL_SYS_NEWS_INNER_COLUMN"/>
+        from SYS_NEWS_INNER sni
+        left join sys_news sn on sni.NEWS_ID_ = sn.NEWS_ID_
+        <where>
+            <include refid="SQL_SYS_NEWS_INNER_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY sni.NEWS_STATUS_, sni.NEWS_INNER_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysNewsInner" resultType="int">
+        select count(
+            sni.NEWS_INNER_ID_
+        ) as counts
+        from SYS_NEWS_INNER sni
+        left join sys_news sn on sni.NEWS_ID_ = sn.NEWS_ID_
+        <where>
+            <include refid="SQL_SYS_NEWS_INNER_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysNewsInner" resultType="int">
+        select count(
+            sni.NEWS_INNER_ID_
+        ) as counts
+        from SYS_NEWS_INNER sni
+        <where>
+            <if test="newsInnerId != null">
+                AND sni.NEWS_INNER_ID_ != #{newsInnerId}
+            </if>
+            <if test="newsId != null">
+                AND sni.NEWS_ID_ = #{newsId}
+            </if>
+            <if test="userId != null">
+                AND sni.USER_ID_ = #{userId}
+            </if>
+            <if test="timerLv != null">
+                AND sni.TIMER_LV_ = #{timerLv}
+            </if>
+            <if test="importantLv != null">
+                AND sni.IMPORTANT_LV_ = #{importantLv}
+            </if>
+            <if test="newsTitle != null and newsTitle.length() != 0">
+                AND sni.NEWS_TITLE_ = #{newsTitle}
+            </if>
+            <if test="newsContent != null and newsContent.length() != 0">
+                AND sni.NEWS_CONTENT_ = #{newsContent}
+            </if>
+            <if test="newsStatus != null">
+                AND sni.NEWS_STATUS_ = #{newsStatus}
+            </if>
+            <if test="isDelete != null">
+                AND sni.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sni.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sni.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sni.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sni.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sni.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

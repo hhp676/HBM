@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysDauthOperatorSupportMapper">
+
+    <!-- result map -->
+    <resultMap type="SysDauthOperatorSupport" id="sysDauthOperatorSupportMap">
+        <id property="supportId" column="supportId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="filterTypeId" column="filterTypeId" />
+        <result property="operatorId" column="operatorId" />
+        <result property="valueType" column="valueType" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="dauthFilterType" column="filterTypeId" select="com.hginfo.hbm.be.mapper.sys.SysDauthFilterTypeMapper.getById" />
+        <association property="dauthOperator" column="operatorId" select="com.hginfo.hbm.be.mapper.sys.SysDauthOperatorMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_DAUTH_OPERATOR_SUPPORT_COLUMN">
+        sdos.SUPPORT_ID_ supportId,
+        sdos.TENANT_ID_ tenantId,
+        sdos.FILTER_TYPE_ID_ filterTypeId,
+        sdos.OPERATOR_ID_ operatorId,
+        sdos.VALUE_TYPE_ valueType,
+        sdos.DESCR_ descr,
+        sdos.IS_DELETE_ isDelete,
+        sdos.IS_FINAL_ isFinal,
+        sdos.CRT_TIME_ crtTime,
+        sdos.UPD_TIME_ updTime,
+        sdos.CRT_USER_ID_ crtUserId,
+        sdos.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_DAUTH_OPERATOR_SUPPORT_WHERE">
+        <if test="supportId != null">
+            AND sdos.SUPPORT_ID_ = #{supportId}
+        </if>
+        <if test="tenantId != null">
+            AND sdos.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="filterTypeId != null">
+            AND sdos.FILTER_TYPE_ID_ = #{filterTypeId}
+        </if>
+        <if test="operatorId != null">
+            AND sdos.OPERATOR_ID_ = #{operatorId}
+        </if>
+        <if test="valueType != null">
+            AND sdos.VALUE_TYPE_ = #{valueType}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND sdos.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND sdos.IS_DELETE_ = #{isDelete}
+            and sdo.IS_DELETE_ = #{isDelete}
+            and sdft.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND sdos.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND sdos.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND sdos.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND sdos.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND sdos.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysDauthOperatorSupportMap">
+        select <include  refid="SQL_SYS_DAUTH_OPERATOR_SUPPORT_COLUMN" />
+        from SYS_DAUTH_OPERATOR_SUPPORT sdos
+        <where>
+            sdos.SUPPORT_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysDauthOperatorSupport" resultMap="sysDauthOperatorSupportMap">
+        select <include  refid="SQL_SYS_DAUTH_OPERATOR_SUPPORT_COLUMN"/>
+        from SYS_DAUTH_OPERATOR_SUPPORT sdos
+        left join SYS_DAUTH_OPERATOR sdo on sdos.operator_id_ = sdo.operator_id_
+        left join SYS_DAUTH_FILTER_TYPE sdft on sdos.filter_type_id_ = sdft.filter_type_id_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_OPERATOR_SUPPORT_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                sdft.filter_type_id_ asc, sdos.value_type_ desc, sdos.SUPPORT_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysDauthOperatorSupport" resultType="int">
+        select count(
+            sdos.SUPPORT_ID_
+        ) as counts
+        from SYS_DAUTH_OPERATOR_SUPPORT sdos
+        left join SYS_DAUTH_OPERATOR sdo on sdos.operator_id_ = sdo.operator_id_
+        left join SYS_DAUTH_FILTER_TYPE sdft on sdos.filter_type_id_ = sdft.filter_type_id_
+        <where>
+            <include  refid="SQL_SYS_DAUTH_OPERATOR_SUPPORT_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysDauthOperatorSupport" resultType="int">
+        select count(
+            sdos.SUPPORT_ID_
+        ) as counts
+        from SYS_DAUTH_OPERATOR_SUPPORT sdos
+        <where>
+            <if test="supportId != null">
+                AND sdos.SUPPORT_ID_ != #{supportId}
+            </if>
+            <if test="tenantId != null">
+                AND sdos.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="filterTypeId != null">
+                AND sdos.FILTER_TYPE_ID_ = #{filterTypeId}
+            </if>
+            <if test="operatorId != null">
+                AND sdos.OPERATOR_ID_ = #{operatorId}
+            </if>
+            <if test="valueType != null">
+                AND sdos.VALUE_TYPE_ = #{valueType}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND sdos.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND sdos.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND sdos.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND sdos.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND sdos.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND sdos.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND sdos.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+    
+    <select id="getDauthValueTypes" resultType="int">
+        select distinct(sdos.VALUE_TYPE_)
+        from SYS_DAUTH_OPERATOR_SUPPORT sdos
+        left join SYS_DAUTH_OPERATOR sdo on sdos.operator_id_ = sdo.operator_id_
+        left join SYS_DAUTH_FILTER_TYPE sdft on sdos.filter_type_id_ = sdft.filter_type_id_
+        <where>
+            and sdos.IS_DELETE_ = 0
+            and sdo.IS_DELETE_ = 0
+            and sdft.IS_DELETE_ = 0
+            and sdos.FILTER_TYPE_ID_ = #{filterTypeId}
+            and sdos.OPERATOR_ID_ = #{operatorId}
+        </where>
+    </select>
+
+    <!-- 唯一约束检查 -->
+    <select id="uniqueKeys1" parameterType="SysDauthOperatorSupport" resultType="int">
+        select count(
+            sdos.SUPPORT_ID_
+        ) as counts
+        from SYS_DAUTH_OPERATOR_SUPPORT sdos
+        <where>
+            AND sdos.FILTER_TYPE_ID_ = #{filterTypeId}
+            AND sdos.OPERATOR_ID_ = #{operatorId}
+            AND sdos.VALUE_TYPE_ = #{valueType}
+            <if test="supportId != null">
+                AND sdos.SUPPORT_ID_ != #{supportId}
+            </if>
+        </where>
+    </select>
+</mapper>

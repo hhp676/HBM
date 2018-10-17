@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XxlJobGroupMapper">
+	
+	<resultMap id="XxlJobGroup" type="com.xxl.job.admin.core.model.XxlJobGroup" >
+		<result column="id_" property="id" />
+	    <result column="app_name_" property="appName" />
+	    <result column="title_" property="title" />
+	    <result column="order_" property="order" />
+		<result column="address_type_" property="addressType" />
+		<result column="address_list_" property="addressList" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		t.id_,
+		t.app_name_,
+		t.title_,
+		t.order_,
+		t.address_type_,
+		t.address_list_
+	</sql>
+
+	<select id="findAll" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_TRIGGER_GROUP  t
+		ORDER BY t.order_ ASC
+	</select>
+
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup">
+		INSERT INTO JOB_TRIGGER_GROUP (
+            <if test="_databaseId == 'oracle'">
+                id_, 
+            </if>
+            app_name_, 
+            title_, 
+            order_, 
+            address_type_, 
+            address_list_
+        )
+		values ( 
+            <if test="_databaseId == 'oracle'">
+                seq_job_triger_group_id.nextval, 
+            </if>
+            #{appName}, 
+            #{title}, 
+            #{order}, 
+            #{addressType}, 
+            #{addressList}
+       )
+	</insert>
+
+	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" >
+		UPDATE JOB_TRIGGER_GROUP
+		SET app_name_ = #{appName},
+			title_ = #{title},
+			order_ = #{order},
+			address_type_ = #{addressType},
+			address_list_ = #{addressList}
+		WHERE id_ = #{id}
+	</update>
+
+	<delete id="remove" parameterType="java.lang.Integer" >
+		DELETE FROM JOB_TRIGGER_GROUP
+		WHERE id_ = #{id}
+	</delete>
+
+	<select id="load" parameterType="java.lang.Integer" resultMap="XxlJobGroup">
+		SELECT <include refid="Base_Column_List" />
+		FROM JOB_TRIGGER_GROUP  t
+		WHERE t.id_ = #{id}
+	</select>
+
+</mapper>

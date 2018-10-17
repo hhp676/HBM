@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysIconMapper">
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_ICON_COLUMN">
+        si.ICON_ID_ iconId,
+        si.ICON_TYPE_ iconType,
+        si.SKIN_CODE_ skinCode,
+        si.ICON_CSS_ iconCss,
+        si.IMAGE_PATH_ imagePath,
+        si.IMAGE_PATH_2_ imagePath2,
+        si.IMAGE_PATH_3_ imagePath3,
+        si.TIP_ tip,
+        si.SORT_NO_ sortNo,
+        si.IS_VISIBLE isVisible,
+        si.IS_DELETE_ isDelete,
+        si.IS_FINAL_ isFinal,
+        si.DESCR_ descr,
+        si.UPD_TIME_ updTime,
+        si.CRT_TIME_ crtTime,
+        si.UPD_USER_ID_ updUserId,
+        si.CRT_USER_ID_ crtUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_ICON_WHERE">
+        <if test="iconId != null">
+            AND si.ICON_ID_ = #{iconId}
+        </if>
+        <if test="iconType != null and iconType.length() != 0">
+            AND si.ICON_TYPE_ = #{iconType}
+        </if>
+        <if test="skinCode != null and skinCode.length() != 0">
+            AND si.SKIN_CODE_ = #{skinCode}
+        </if>
+        <if test="iconCss != null and iconCss.length() != 0">
+            AND si.ICON_CSS_ = #{iconCss}
+        </if>
+        <if test="imagePath != null and imagePath.length() != 0">
+            AND si.IMAGE_PATH_ = #{imagePath}
+        </if>
+        <if test="imagePath2 != null and imagePath2.length() != 0">
+            AND si.IMAGE_PATH_2_ = #{imagePath2}
+        </if>
+        <if test="imagePath3 != null and imagePath3.length() != 0">
+            AND si.IMAGE_PATH_3_ = #{imagePath3}
+        </if>
+        <if test="tip != null and tip.length() != 0">
+            AND si.TIP_ = #{tip}
+        </if>
+        <if test="sortNo != null">
+            AND si.SORT_NO_ = #{sortNo}
+        </if>
+        <if test="isVisible != null">
+            AND si.IS_VISIBLE = #{isVisible}
+        </if>
+        <if test="isDelete != null">
+            AND si.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND si.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND si.DESCR_ = #{descr}
+        </if>
+        <if test="updTime != null">
+            AND si.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtTime != null">
+            AND si.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updUserId != null">
+            AND si.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="crtUserId != null">
+            AND si.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SysIcon">
+        select <include  refid="SQL_SYS_ICON_COLUMN" />
+        from SYS_ICON si
+        <where>
+            si.ICON_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysIcon" resultType="SysIcon">
+        select <include  refid="SQL_SYS_ICON_COLUMN"/>
+        from SYS_ICON si
+        <where>
+            <include  refid="SQL_SYS_ICON_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                si.ICON_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysIcon" resultType="int">
+        select count(
+            si.ICON_ID_
+        ) as counts
+        from SYS_ICON si
+        <where>
+            <include  refid="SQL_SYS_ICON_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysIcon" resultType="int">
+        select count(
+            si.ICON_ID_
+        ) as counts
+        from SYS_ICON si
+        <where>
+            <if test="iconId != null">
+                AND si.ICON_ID_ != #{iconId}
+            </if>
+            <if test="iconType != null and iconType.length() != 0">
+                AND si.ICON_TYPE_ = #{iconType}
+            </if>
+            <if test="skinCode != null and skinCode.length() != 0">
+                AND si.SKIN_CODE_ = #{skinCode}
+            </if>
+            <if test="iconCss != null and iconCss.length() != 0">
+                AND si.ICON_CSS_ = #{iconCss}
+            </if>
+            <if test="imagePath != null and imagePath.length() != 0">
+                AND si.IMAGE_PATH_ = #{imagePath}
+            </if>
+            <if test="imagePath2 != null and imagePath2.length() != 0">
+                AND si.IMAGE_PATH_2_ = #{imagePath2}
+            </if>
+            <if test="imagePath3 != null and imagePath3.length() != 0">
+                AND si.IMAGE_PATH_3_ = #{imagePath3}
+            </if>
+            <if test="tip != null and tip.length() != 0">
+                AND si.TIP_ = #{tip}
+            </if>
+            <if test="sortNo != null">
+                AND si.SORT_NO_ = #{sortNo}
+            </if>
+            <if test="isVisible != null">
+                AND si.IS_VISIBLE = #{isVisible}
+            </if>
+            <if test="isDelete != null">
+                AND si.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND si.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND si.DESCR_ = #{descr}
+            </if>
+            <if test="updTime != null">
+                AND si.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtTime != null">
+                AND si.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updUserId != null">
+                AND si.UPD_USER_ID_ = #{updUserId}
+            </if>
+            <if test="crtUserId != null">
+                AND si.CRT_USER_ID_ = #{crtUserId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

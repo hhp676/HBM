@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.FeGroupStudentMapper">
+
+    <resultMap type="FeGroupStudent" id="feGroupStudentMap">  
+        <id property="joinId" column="joinId" />  
+        <result property="studentId" column="studentId" />  
+        <result property="groupId" column="groupId" />
+        <association property="student" column="studentId" select="com.hginfo.hbm.be.mapper.FeStudentMapper.getById" />
+        <association property="group" column="groupId" select="com.hginfo.hbm.be.mapper.FeGroupMapper.getById" />
+    </resultMap>
+
+    <sql id="SQL_FEGROUPSTUDENT_COLUMN">
+        fgs.JOIN_ID_ joinId,
+        fgs.STUDENT_ID_ studentId,
+        fgs.GROUP_ID_ groupId
+    </sql>
+
+    <sql id="SQL_FE_GROUP_STUDENT_WHERE">
+        <if test="student.studentName != null">
+            and fs.student_name_ like '%${student.studentName}%'
+        </if>
+    </sql>
+    
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="feGroupStudentMap">
+        select <include  refid="SQL_FEGROUPSTUDENT_COLUMN"/>
+        from fe_group_student  fgs
+        <where>
+                fgs.JOIN_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="FeGroupStudent" resultMap="feGroupStudentMap">
+        select <include  refid="SQL_FEGROUPSTUDENT_COLUMN"/>
+        from fe_group_student fgs
+        left join fe_student fs on fgs.student_id_ = fs.student_id_
+        <where>
+            <include  refid="SQL_FE_GROUP_STUDENT_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                fgs.JOIN_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="FeGroupStudent" resultType="int">
+        select count(fgs.JOIN_ID_) as counts
+        from fe_group_student fgs
+        left join fe_student fs on fgs.student_id_ = fs.student_id_
+        <where>
+            <include  refid="SQL_FE_GROUP_STUDENT_WHERE"/>
+        </where>
+    </select>
+
+</mapper>

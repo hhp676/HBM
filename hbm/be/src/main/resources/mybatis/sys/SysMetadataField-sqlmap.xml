@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.sys.SysMetadataFieldMapper">
+
+    <!-- result map -->
+    <resultMap type="SysMetadataField" id="sysMetadataFieldMap">
+        <id property="fieldId" column="fieldId" />
+        <result property="tenantId" column="tenantId" />
+        <result property="entityId" column="entityId" />
+        <result property="filterTypeId" column="filterTypeId" />
+        <result property="fieldCode" column="fieldCode" />
+        <result property="fieldName" column="fieldName" />
+        <result property="engName" column="engName" />
+        <result property="i18nCode" column="i18nCode" />
+        <result property="columnName" column="columnName" />
+        <result property="descr" column="descr" />
+        <result property="isDelete" column="isDelete" />
+        <result property="isFinal" column="isFinal" />
+        <result property="crtTime" column="crtTime" />
+        <result property="updTime" column="updTime" />
+        <result property="crtUserId" column="crtUserId" />
+        <result property="updUserId" column="updUserId" />
+        <association property="sysDauthFilterType" column="filterTypeId" select="com.hginfo.hbm.be.mapper.sys.SysDauthFilterTypeMapper.getById" />
+        <association property="sysMetadataEntity" column="entityId" select="com.hginfo.hbm.be.mapper.sys.SysMetadataEntityMapper.getById" />
+    </resultMap>
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SYS_METADATA_FIELD_COLUMN">
+        smf.FIELD_ID_ fieldId,
+        smf.TENANT_ID_ tenantId,
+        smf.ENTITY_ID_ entityId,
+        smf.FILTER_TYPE_ID_ filterTypeId,
+        smf.FIELD_CODE_ fieldCode,
+        smf.FIELD_NAME_ fieldName,
+        smf.ENG_NAME_ engName,
+        smf.I18N_CODE_ i18nCode,
+        smf.COLUMN_NAME_ columnName,
+        smf.DESCR_ descr,
+        smf.IS_DELETE_ isDelete,
+        smf.IS_FINAL_ isFinal,
+        smf.CRT_TIME_ crtTime,
+        smf.UPD_TIME_ updTime,
+        smf.CRT_USER_ID_ crtUserId,
+        smf.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SYS_METADATA_FIELD_WHERE">
+        <if test="fieldId != null">
+            AND smf.FIELD_ID_ = #{fieldId}
+        </if>
+        <if test="tenantId != null">
+            AND smf.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="entityId != null">
+            AND smf.ENTITY_ID_ = #{entityId}
+        </if>
+        <if test="filterTypeId != null">
+            AND smf.FILTER_TYPE_ID_ = #{filterTypeId}
+        </if>
+        <if test="fieldCode != null and fieldCode.length() != 0">
+            AND smf.FIELD_CODE_ = #{fieldCode}
+        </if>
+        <if test="fieldName != null and fieldName.length() != 0">
+            AND smf.FIELD_NAME_ = #{fieldName}
+        </if>
+        <if test="engName != null and engName.length() != 0">
+            AND smf.ENG_NAME_ = #{engName}
+        </if>
+        <if test="i18nCode != null and i18nCode.length() != 0">
+            AND smf.I18N_CODE_ = #{i18nCode}
+        </if>
+        <if test="columnName != null and columnName.length() != 0">
+            AND smf.COLUMN_NAME_ = #{columnName}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND smf.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND smf.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND smf.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND smf.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND smf.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND smf.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND smf.UPD_USER_ID_ = #{updUserId}
+        </if>
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultMap="sysMetadataFieldMap">
+        select <include  refid="SQL_SYS_METADATA_FIELD_COLUMN" />
+        from SYS_METADATA_FIELD smf
+        <where>
+            smf.FIELD_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SysMetadataField" resultMap="sysMetadataFieldMap">
+        select <include  refid="SQL_SYS_METADATA_FIELD_COLUMN"/>
+        from SYS_METADATA_FIELD smf
+        left join SYS_DAUTH_FILTER_TYPE sdft on smf.FILTER_TYPE_ID_ = sdft.FILTER_TYPE_ID_
+        left join SYS_METADATA_ENTITY sme on smf.ENTITY_ID_ = sme.ENTITY_ID_
+        <where>
+            <include  refid="SQL_SYS_METADATA_FIELD_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+                smf.FIELD_ID_ desc
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SysMetadataField" resultType="int">
+        select count(
+            smf.FIELD_ID_
+        ) as counts
+        from SYS_METADATA_FIELD smf
+        left join SYS_DAUTH_FILTER_TYPE sdft on smf.FILTER_TYPE_ID_ = sdft.FILTER_TYPE_ID_
+        left join SYS_METADATA_ENTITY sme on smf.ENTITY_ID_ = sme.ENTITY_ID_
+        <where>
+            <include  refid="SQL_SYS_METADATA_FIELD_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SysMetadataField" resultType="int">
+        select count(
+            smf.FIELD_ID_
+        ) as counts
+        from SYS_METADATA_FIELD smf
+        <where>
+            <if test="fieldId != null">
+                AND smf.FIELD_ID_ != #{fieldId}
+            </if>
+            <if test="tenantId != null">
+                AND smf.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="entityId != null">
+                AND smf.ENTITY_ID_ = #{entityId}
+            </if>
+            <if test="filterTypeId != null">
+                AND smf.FILTER_TYPE_ID_ = #{filterTypeId}
+            </if>
+            <if test="fieldCode != null and fieldCode.length() != 0">
+                AND smf.FIELD_CODE_ = #{fieldCode}
+            </if>
+            <if test="fieldName != null and fieldName.length() != 0">
+                AND smf.FIELD_NAME_ = #{fieldName}
+            </if>
+            <if test="engName != null and engName.length() != 0">
+                AND smf.ENG_NAME_ = #{engName}
+            </if>
+            <if test="i18nCode != null and i18nCode.length() != 0">
+                AND smf.I18N_CODE_ = #{i18nCode}
+            </if>
+            <if test="columnName != null and columnName.length() != 0">
+                AND smf.COLUMN_NAME_ = #{columnName}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND smf.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND smf.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND smf.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND smf.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND smf.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND smf.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND smf.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

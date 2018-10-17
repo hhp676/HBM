@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- sqlmapper 层 -->
+<mapper namespace="com.hginfo.hbm.be.mapper.srv.SrvInterfaceMapper">
+
+
+    <!-- sqlColumn -->
+    <sql id="SQL_SRV_INTERFACE_COLUMN">
+        si.IF_ID_ ifId,
+        si.TENANT_ID_ tenantId,
+        si.REQ_URI_ reqUri,
+        si.REQ_METHOD reqMethod,
+        si.ENABLED_ enabled,
+        si.IF_SWITCH_ ifSwitch,
+        si.CLASS_NAME_ className,
+        si.METHOD_NAME_ methodName,
+        si.PARAMETERS_ parameters,
+        si.DESCR_ descr,
+        si.IS_DELETE_ isDelete,
+        si.IS_FINAL_ isFinal,
+        si.CRT_TIME_ crtTime,
+        si.UPD_TIME_ updTime,
+        si.CRT_USER_ID_ crtUserId,
+        si.UPD_USER_ID_ updUserId
+    </sql>
+
+    <!-- sqlWhere -->
+    <sql id="SQL_SRV_INTERFACE_WHERE">
+        <if test="ifId != null">
+            AND si.IF_ID_ = #{ifId}
+        </if>
+        <if test="tenantId != null">
+            AND si.TENANT_ID_ = #{tenantId}
+        </if>
+        <if test="reqUri != null and reqUri.length() != 0">
+            AND si.REQ_URI_ = #{reqUri}
+        </if>
+        <if test="reqMethod != null and reqMethod.length() != 0">
+            AND si.REQ_METHOD = #{reqMethod}
+        </if>
+        <if test="enabled != null">
+            AND si.ENABLED_ = #{enabled}
+        </if>
+        <if test="ifSwitch != null">
+            AND si.IF_SWITCH_ = #{ifSwitch}
+        </if>
+        <if test="className != null and className.length() != 0">
+            AND si.CLASS_NAME_ = #{className}
+        </if>
+        <if test="methodName != null and methodName.length() != 0">
+            AND si.METHOD_NAME_ = #{methodName}
+        </if>
+        <if test="parameters != null and parameters.length() != 0">
+            AND si.PARAMETERS_ = #{parameters}
+        </if>
+        <if test="descr != null and descr.length() != 0">
+            AND si.DESCR_ = #{descr}
+        </if>
+        <if test="isDelete != null">
+            AND si.IS_DELETE_ = #{isDelete}
+        </if>
+        <if test="isFinal != null">
+            AND si.IS_FINAL_ = #{isFinal}
+        </if>
+        <if test="crtTime != null">
+            AND si.CRT_TIME_ = #{crtTime}
+        </if>
+        <if test="updTime != null">
+            AND si.UPD_TIME_ = #{updTime}
+        </if>
+        <if test="crtUserId != null">
+            AND si.CRT_USER_ID_ = #{crtUserId}
+        </if>
+        <if test="updUserId != null">
+            AND si.UPD_USER_ID_ = #{updUserId}
+        </if>
+
+        <if test="bo.reqUri != null and bo.reqUri.length() != 0">
+            AND si.REQ_URI_ like  '%${bo.reqUri}%'
+        </if>
+        <if test="bo.className != null and bo.className.length() != 0">
+            AND si.CLASS_NAME_ LIKE '%${bo.className}%'
+        </if>
+        <if test="bo.methodName != null and bo.methodName.length() != 0">
+            AND si.METHOD_NAME_ LIKE '%${bo.methodName}%'
+        </if>
+
+        <if test="filterStr !=null and filterStr.length()!=0">
+            ${filterStr}
+        </if>
+    </sql>
+
+    <!-- According to the id check record  -->
+    <select id="getById" parameterType="long" resultType="SrvInterface">
+        select <include refid="SQL_SRV_INTERFACE_COLUMN"/>
+        from SRV_INTERFACE si
+        <where>
+            si.IF_ID_ = #{idValue}
+        </where>
+    </select>
+
+    <!-- Query All  -->
+    <select id="getList" parameterType="SrvInterface" resultType="SrvInterface">
+        select <include refid="SQL_SRV_INTERFACE_COLUMN"/>
+        from SRV_INTERFACE si
+        <where>
+            <include refid="SQL_SRV_INTERFACE_WHERE"/>
+        </where>
+        <if test="orderStr != null and orderStr.length() != 0">
+            ORDER BY ${orderStr}
+        </if>
+        <if test="orderStr == null or orderStr.length() == 0">
+            ORDER BY
+            si.ENABLED_ desc,si.CLASS_NAME_ ASC
+        </if>
+    </select>
+
+    <!-- Statistical line   -->
+    <select id="getListCount" parameterType="SrvInterface" resultType="int">
+        select count(
+            si.IF_ID_
+        ) as counts
+        from SRV_INTERFACE si
+        <where>
+            <include refid="SQL_SRV_INTERFACE_WHERE"/>
+        </where>
+    </select>
+
+    <!-- check unique count -->
+    <select id="checkUniqueCount" parameterType="SrvInterface" resultType="int">
+        select count(
+            si.IF_ID_
+        ) as counts
+        from SRV_INTERFACE si
+        <where>
+            <if test="ifId != null">
+                AND si.IF_ID_ != #{ifId}
+            </if>
+            <if test="tenantId != null">
+                AND si.TENANT_ID_ = #{tenantId}
+            </if>
+            <if test="reqUri != null and reqUri.length() != 0">
+                AND si.REQ_URI_ = #{reqUri}
+            </if>
+            <if test="reqMethod != null and reqMethod.length() != 0">
+                AND si.REQ_METHOD = #{reqMethod}
+            </if>
+            <if test="enabled != null">
+                AND si.ENABLED_ = #{enabled}
+            </if>
+            <if test="ifSwitch != null">
+                AND si.IF_SWITCH_ = #{ifSwitch}
+            </if>
+            <if test="className != null and className.length() != 0">
+                AND si.CLASS_NAME_ = #{className}
+            </if>
+            <if test="methodName != null and methodName.length() != 0">
+                AND si.METHOD_NAME_ = #{methodName}
+            </if>
+            <if test="parameters != null and parameters.length() != 0">
+                AND si.PARAMETERS_ = #{parameters}
+            </if>
+            <if test="descr != null and descr.length() != 0">
+                AND si.DESCR_ = #{descr}
+            </if>
+            <if test="isDelete != null">
+                AND si.IS_DELETE_ = #{isDelete}
+            </if>
+            <if test="isFinal != null">
+                AND si.IS_FINAL_ = #{isFinal}
+            </if>
+            <if test="crtTime != null">
+                AND si.CRT_TIME_ = #{crtTime}
+            </if>
+            <if test="updTime != null">
+                AND si.UPD_TIME_ = #{updTime}
+            </if>
+            <if test="crtUserId != null">
+                AND si.CRT_USER_ID_ = #{crtUserId}
+            </if>
+            <if test="updUserId != null">
+                AND si.UPD_USER_ID_ = #{updUserId}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 统计分析 -->
+
+
+</mapper>
